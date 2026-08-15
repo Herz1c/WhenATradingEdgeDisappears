@@ -7,10 +7,15 @@ of merely copying metrics from training reports.
 from __future__ import annotations
 
 import argparse
-import json
 from pathlib import Path
 
-from reproduce_public_evidence import BRIER_OUT, build_brier_summary
+from reproduce_public_evidence import (
+    BRIER_OUT,
+    _canonical_json,
+    _check_json,
+    _write_canonical,
+    build_brier_summary,
+)
 
 
 def _render(summary: dict) -> str:
@@ -35,13 +40,15 @@ def main() -> int:
     parser.add_argument("--check", action="store_true")
     args = parser.parse_args()
     fresh = build_brier_summary()
-    expected = json.dumps(fresh, indent=2, sort_keys=True) + "\n"
     if args.check:
-        if not BRIER_OUT.is_file() or BRIER_OUT.read_text(encoding="utf-8") != expected:
-            raise SystemExit(f"stale generated artifact: {BRIER_OUT}")
+        # Delegated rather than reimplemented. This entry point previously kept
+        # its own copy of the comparison, which silently kept the bit exact and
+        # newline dependent behaviour after reproduce_public_evidence.py was
+        # fixed. Sharing the implementation is what stops that recurring.
+        _check_json(BRIER_OUT, fresh)
         print("brier_summary.json is current")
         return 0
-    BRIER_OUT.write_text(expected, encoding="utf-8")
+    _write_canonical(BRIER_OUT, _canonical_json(fresh))
     print(BRIER_OUT.relative_to(Path(__file__).resolve().parents[1]))
     print(_render(fresh))
     return 0
