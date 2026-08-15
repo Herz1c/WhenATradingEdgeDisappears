@@ -312,10 +312,29 @@ def _canonical_json(payload: dict[str, Any]) -> str:
     return json.dumps(payload, indent=2, sort_keys=True) + "\n"
 
 
+def _write_canonical(path: Path, text: str) -> None:
+    """Write LF regardless of platform.
+
+    Path.write_text would translate LF to CRLF on Windows, which makes the
+    generated artifact depend on the machine that produced it and breaks
+    _check_canonical on any other platform.
+    """
+    path.write_bytes(text.encode("utf-8"))
+
+
+def _read_canonical(path: Path) -> str:
+    """Read a generated artifact with newlines normalized.
+
+    Path.read_text applies universal newlines on Windows only, so comparing its
+    result against LF text silently passes there and fails on Linux.
+    """
+    return path.read_bytes().decode("utf-8").replace("\r\n", "\n")
+
+
 def _check_json(path: Path, payload: dict[str, Any]) -> None:
     if not path.is_file():
         raise SystemExit(f"missing generated artifact: {path.relative_to(ROOT)}")
-    if path.read_text(encoding="utf-8") != _canonical_json(payload):
+    if _read_canonical(path) != _canonical_json(payload):
         raise SystemExit(f"stale generated artifact: {path.relative_to(ROOT)}")
 
 
@@ -337,9 +356,9 @@ def main() -> int:
         print("public evidence artifacts are current")
         return 0
 
-    BRIER_OUT.write_text(_canonical_json(brier), encoding="utf-8")
+    _write_canonical(BRIER_OUT, _canonical_json(brier))
     AUDIT_DIR.mkdir(parents=True, exist_ok=True)
-    AUDIT_OUT.write_text(_canonical_json(audit), encoding="utf-8")
+    _write_canonical(AUDIT_OUT, _canonical_json(audit))
     np.savez_compressed(
         NULL_OUT,
         null_max_mean_daily_pnl=null_max,

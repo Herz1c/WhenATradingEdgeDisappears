@@ -57,11 +57,14 @@ def main() -> int:
     register = json.loads(SOURCE.read_text(encoding="utf-8"))
     expected = render(register)
     if args.check:
-        current = OUTPUT.read_text(encoding="utf-8") if OUTPUT.exists() else ""
+        # Normalize newlines: Path.read_text only applies universal newlines on
+        # Windows, so a CRLF file compares equal there and unequal on Linux.
+        current = OUTPUT.read_bytes().decode("utf-8").replace("\r\n", "\n") if OUTPUT.exists() else ""
         if current != expected:
             raise SystemExit(f"stale generated claim register: {OUTPUT}")
         return 0
-    OUTPUT.write_text(expected, encoding="utf-8")
+    # write_bytes so the generated file is LF on every platform.
+    OUTPUT.write_bytes(expected.encode("utf-8"))
     print(OUTPUT)
     return 0
 
