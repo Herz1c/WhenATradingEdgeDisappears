@@ -9,6 +9,7 @@ from __future__ import annotations
 import argparse
 import hashlib
 import json
+import math
 from pathlib import Path
 from typing import Any
 
@@ -331,11 +332,58 @@ def _read_canonical(path: Path) -> str:
     return path.read_bytes().decode("utf-8").replace("\r\n", "\n")
 
 
+# Recomputation is compared numerically rather than by string equality. The
+# scores pass through np.exp and np.log, whose last unit in the last place
+# differs between the C library on Windows and the one on Linux, so a bit exact
+# comparison of full precision float64 text can only ever pass on the machine
+# that generated the artifact. That would contradict the reproduction claim this
+# script exists to support. The same cross build allowance is already made for
+# checkpoint inference in tools/reproduce_tcn_mini.py.
+#
+# The tolerance is far tighter than any real staleness: a genuine change moves
+# these numbers in the fourth decimal, not the thirteenth.
+_REL_TOL = 1e-9
+_ABS_TOL = 1e-12
+
+
+def _first_difference(expected: Any, actual: Any, path: str = "") -> str | None:
+    """Return a readable description of the first mismatch, or None if equal."""
+    if isinstance(expected, bool) or isinstance(actual, bool):
+        return None if expected is actual else f"{path}: {actual!r} != {expected!r}"
+    if isinstance(expected, (int, float)) and isinstance(actual, (int, float)):
+        if math.isclose(float(actual), float(expected), rel_tol=_REL_TOL, abs_tol=_ABS_TOL):
+            return None
+        return f"{path}: {actual!r} != {expected!r} (delta {float(actual) - float(expected):.3e})"
+    if type(expected) is not type(actual):
+        return f"{path}: type {type(actual).__name__} != {type(expected).__name__}"
+    if isinstance(expected, dict):
+        if expected.keys() != actual.keys():
+            return f"{path}: key set differs at {sorted(expected.keys() ^ actual.keys())}"
+        for key in expected:
+            found = _first_difference(expected[key], actual[key], f"{path}.{key}" if path else key)
+            if found is not None:
+                return found
+        return None
+    if isinstance(expected, list):
+        if len(expected) != len(actual):
+            return f"{path}: length {len(actual)} != {len(expected)}"
+        for index, (want, got) in enumerate(zip(expected, actual)):
+            found = _first_difference(want, got, f"{path}[{index}]")
+            if found is not None:
+                return found
+        return None
+    return None if expected == actual else f"{path}: {actual!r} != {expected!r}"
+
+
 def _check_json(path: Path, payload: dict[str, Any]) -> None:
     if not path.is_file():
         raise SystemExit(f"missing generated artifact: {path.relative_to(ROOT)}")
-    if _read_canonical(path) != _canonical_json(payload):
-        raise SystemExit(f"stale generated artifact: {path.relative_to(ROOT)}")
+    stored = json.loads(_read_canonical(path))
+    difference = _first_difference(payload, stored, path.name)
+    if difference is not None:
+        raise SystemExit(
+            f"stale generated artifact: {path.relative_to(ROOT)}\n  first difference -> {difference}"
+        )
 
 
 def main() -> int:
@@ -351,8 +399,20 @@ def main() -> int:
         if not NULL_OUT.is_file():
             raise SystemExit(f"missing generated artifact: {NULL_OUT.relative_to(ROOT)}")
         stored = np.load(NULL_OUT, allow_pickle=False)
-        if not np.array_equal(stored["null_max_mean_daily_pnl"], null_max):
-            raise SystemExit(f"stale generated artifact: {NULL_OUT.relative_to(ROOT)}")
+        stored_null = stored["null_max_mean_daily_pnl"]
+        if stored_null.shape != null_max.shape:
+            raise SystemExit(
+                f"stale generated artifact: {NULL_OUT.relative_to(ROOT)}\n"
+                f"  shape {stored_null.shape} != {null_max.shape}"
+            )
+        # Same cross build allowance as _check_json above.
+        if not np.allclose(stored_null, null_max, rtol=_REL_TOL, atol=_ABS_TOL):
+            worst = int(np.argmax(np.abs(stored_null - null_max)))
+            raise SystemExit(
+                f"stale generated artifact: {NULL_OUT.relative_to(ROOT)}\n"
+                f"  largest difference at draw {worst}: "
+                f"{stored_null[worst]!r} != {null_max[worst]!r}"
+            )
         print("public evidence artifacts are current")
         return 0
 

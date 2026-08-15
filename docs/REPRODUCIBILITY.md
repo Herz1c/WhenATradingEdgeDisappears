@@ -16,6 +16,14 @@ rows, primary and sensitivity bootstrap intervals, and 847-candidate White's Rea
 Check. It then compares those calculations with the committed JSON and null-distribution
 artifacts.
 
+That comparison is numerical with a relative tolerance of 1e-9, not an exact match on the
+stored decimal text. The scores pass through `exp` and `log`, whose results differ in the
+last unit in the last place between the C library on Windows and the one on Linux, so
+requiring identical digits would make the check pass only on the machine that produced the
+artifacts. The tolerance is roughly nine orders of magnitude tighter than any real change:
+stale artifacts move these numbers in the fourth decimal, not the thirteenth. The same
+cross build allowance applies to checkpoint inference below.
+
 ## Checkpoint inference
 
 PyTorch is optional because it is large:
