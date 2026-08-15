@@ -1,0 +1,52 @@
+{
+ "days": 5,
+ "total": {
+  "trades": 262,
+  "wins": 130,
+  "pnl": 23.9012,
+  "unresolved": 0,
+  "win_rate": 0.4962
+ },
+ "bootstrap": {
+  "total_pnl_ci90": [
+   -15.95,
+   60.36
+  ],
+  "p_total_leq_0": 0.1509,
+  "gate_ci90_excludes_0": false
+ },
+ "per_strategy": {
+  "late_tcn_50_75_all_day": {
+   "trades": 181,
+   "wins": 87,
+   "pnl": 21.0174
+  },
+  "early_tcn_75_120_utc02_13": {
+   "trades": 81,
+   "wins": 43,
+   "pnl": 2.8838
+  }
+ },
+ "by_day": {
+  "2026-07-03": {
+   "trades": 2,
+   "pnl": 5.8987
+  },
+  "2026-07-04": {
+   "trades": 27,
+   "pnl": 12.4849
+  },
+  "2026-07-05": {
+   "trades": 9,
+   "pnl": 2.9237
+  },
+  "2026-07-10": {
+   "trades": 31,
+   "pnl": 16.2333
+  },
+  "2026-07-11": {
+   "trades": 193,
+   "pnl": -13.6394
+  }
+ }
+}

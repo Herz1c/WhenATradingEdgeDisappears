@@ -1,0 +1,38 @@
+{
+  "classification": "SANITIZED PROSPECTIVE SHADOW-DECISION EVIDENCE; NOT A PERFORMANCE SCORE",
+  "days": {
+    "2026-07-12": {
+      "decision_counts": {
+        "ENTER": 59,
+        "SKIP_NO_EDGE": 14991,
+        "SKIP_SOURCE": 11125
+      },
+      "first_iso": "2026-07-12T09:33:00.000+00:00",
+      "last_iso": "2026-07-12T23:59:06.800+00:00",
+      "published_enter_records": 59,
+      "source_bytes": 92391707,
+      "source_relative_path": "logs/tcn_shadow_bot_direct_capture_v6/tcn_decisions_2026-07-12.jsonl",
+      "source_sha256": "3d9190e6b4f4c711b6c27d2abec020d8924fdd4584cecb06d9c03dea33fe1444"
+    },
+    "2026-07-13": {
+      "decision_counts": {
+        "ENTER": 105,
+        "SKIP_NO_EDGE": 11700,
+        "SKIP_SOURCE": 7456
+      },
+      "first_iso": "2026-07-13T00:03:45.000+00:00",
+      "last_iso": "2026-07-13T21:39:09.800+00:00",
+      "published_enter_records": 105,
+      "source_bytes": 70932924,
+      "source_relative_path": "logs/tcn_shadow_bot_direct_capture_v6/tcn_decisions_2026-07-13.jsonl",
+      "source_sha256": "7dc45da21764632efe487bafd1a4954fdb3283dedda49ff4ca74112c0f3b7dd9"
+    }
+  },
+  "limits": [
+    "Only ENTER rows are published; per-day counts preserve the complete decision denominator.",
+    "Local paths, session identifiers, full feature vectors, and private raw data were removed.",
+    "The logs are locally dated and hashed but are not independently timestamped.",
+    "These records demonstrate shadow-system operation, not fillability, PnL, or a trading edge."
+  ],
+  "total_enter_records": 164
+}

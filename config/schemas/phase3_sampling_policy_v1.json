@@ -1,0 +1,35 @@
+{
+  "sampling_policy_name": "phase3_sampling_policy_v1",
+  "market_interval_views": {
+    "preopen": {
+      "offset_from_market_open_ms": -1000
+    },
+    "first15s": {
+      "offset_from_market_open_ms": 15000
+    },
+    "first30s": {
+      "offset_from_market_open_ms": 30000
+    }
+  },
+  "resolution_snapshot_dataset_v1_coarse": {
+    "start": "market_open",
+    "end": "t_to_close=60s",
+    "step_ms": 1000
+  },
+  "resolution_snapshot_dataset_v1_dense_close": [
+    {
+      "start": "t_to_close=60s",
+      "end": "t_to_close=10s",
+      "step_ms": 250
+    },
+    {
+      "start": "t_to_close=10s",
+      "end": "strictly_before_close",
+      "step_ms": 100
+    }
+  ],
+  "event_triggered_expansion": {
+    "enabled": false,
+    "status": "deferred_for_later_phase3_extension"
+  }
+}

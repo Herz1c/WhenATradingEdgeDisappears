@@ -1,0 +1,651 @@
+dataset_name: microstructure_sequence_dataset_v1
+notes:
+- sequence_length_actual is int16 because event128 cannot be represented by signed
+  int8.
+- Target columns are labels only and must remain leakage_only=true.
+- tabular stores only aggregated tabular columns; event64/event128 store tabular columns
+  plus sequence arrays.
+- events_event_type uses pad as an explicit padding sentinel for prepended padding
+  positions.
+columns:
+  sequence_id:
+    dtype: string
+    nullable: false
+    leakage_only: false
+    training_eligible: false
+    source: derived_quality
+    description: Stable sample identifier shared across tabular, event64, and event128
+      variants for the same market_slug, token_asset_id, anchor_ts_ns, and anchor_source.
+  market_slug:
+    dtype: string
+    nullable: false
+    leakage_only: false
+    training_eligible: false
+    source: derived_identity
+    description: Phase 8 microstructure sequence dataset column `market_slug`.
+  token_asset_id:
+    dtype: string
+    nullable: false
+    leakage_only: false
+    training_eligible: false
+    source: derived_identity
+    description: Phase 8 microstructure sequence dataset column `token_asset_id`.
+  token_side_normalized:
+    dtype: string
+    nullable: false
+    leakage_only: false
+    training_eligible: false
+    source: derived_identity
+    description: Phase 8 microstructure sequence dataset column `token_side_normalized`.
+  anchor_ts_ns:
+    dtype: int64
+    nullable: false
+    leakage_only: false
+    training_eligible: false
+    source: derived_identity
+    description: Phase 8 microstructure sequence dataset column `anchor_ts_ns`.
+  anchor_source:
+    dtype: string
+    nullable: false
+    leakage_only: false
+    training_eligible: false
+    source: derived_identity
+    description: Phase 8 microstructure sequence dataset column `anchor_source`.
+  events_recv_ts_ns:
+    dtype: list<int64>
+    nullable: true
+    leakage_only: false
+    training_eligible: true
+    source: polymarket_l2
+    description: Phase 8 microstructure sequence dataset column `events_recv_ts_ns`.
+  events_dt_from_anchor_s:
+    dtype: list<float64>
+    nullable: true
+    leakage_only: false
+    training_eligible: true
+    source: polymarket_l2
+    description: Phase 8 microstructure sequence dataset column `events_dt_from_anchor_s`.
+  events_dt_from_prev_s:
+    dtype: list<float64>
+    nullable: true
+    leakage_only: false
+    training_eligible: true
+    source: polymarket_l2
+    description: Phase 8 microstructure sequence dataset column `events_dt_from_prev_s`.
+  events_event_type:
+    dtype: list<string>
+    nullable: true
+    leakage_only: false
+    training_eligible: true
+    source: polymarket_l2
+    description: 'Normalized event type for each event in sequence. Valid values:
+      book_state, top_of_book, trade, tick_update, other, pad. Value ''pad'' indicates
+      a padding position at the start of the sequence for samples with fewer than
+      N actual events.'
+  events_best_bid:
+    dtype: list<float64>
+    nullable: true
+    leakage_only: false
+    training_eligible: true
+    source: polymarket_l2
+    description: Phase 8 microstructure sequence dataset column `events_best_bid`.
+  events_best_ask:
+    dtype: list<float64>
+    nullable: true
+    leakage_only: false
+    training_eligible: true
+    source: polymarket_l2
+    description: Phase 8 microstructure sequence dataset column `events_best_ask`.
+  events_mid:
+    dtype: list<float64>
+    nullable: true
+    leakage_only: false
+    training_eligible: true
+    source: polymarket_l2
+    description: Phase 8 microstructure sequence dataset column `events_mid`.
+  events_spread:
+    dtype: list<float64>
+    nullable: true
+    leakage_only: false
+    training_eligible: true
+    source: polymarket_l2
+    description: Phase 8 microstructure sequence dataset column `events_spread`.
+  events_microprice:
+    dtype: list<float64>
+    nullable: true
+    leakage_only: false
+    training_eligible: true
+    source: polymarket_l2
+    description: Phase 8 microstructure sequence dataset column `events_microprice`.
+  events_bid_depth_total:
+    dtype: list<float64>
+    nullable: true
+    leakage_only: false
+    training_eligible: true
+    source: polymarket_l2
+    description: Phase 8 microstructure sequence dataset column `events_bid_depth_total`.
+  events_ask_depth_total:
+    dtype: list<float64>
+    nullable: true
+    leakage_only: false
+    training_eligible: true
+    source: polymarket_l2
+    description: Phase 8 microstructure sequence dataset column `events_ask_depth_total`.
+  events_imbalance:
+    dtype: list<float64>
+    nullable: true
+    leakage_only: false
+    training_eligible: true
+    source: polymarket_l2
+    description: Phase 8 microstructure sequence dataset column `events_imbalance`.
+  events_last_trade_price:
+    dtype: list<float64>
+    nullable: true
+    leakage_only: false
+    training_eligible: true
+    source: polymarket_l2
+    description: Phase 8 microstructure sequence dataset column `events_last_trade_price`.
+  events_trade_size:
+    dtype: list<float64>
+    nullable: true
+    leakage_only: false
+    training_eligible: true
+    source: polymarket_l2
+    description: Phase 8 microstructure sequence dataset column `events_trade_size`.
+  events_trade_side:
+    dtype: list<string>
+    nullable: true
+    leakage_only: false
+    training_eligible: true
+    source: polymarket_l2
+    description: Phase 8 microstructure sequence dataset column `events_trade_side`.
+  events_tick_size:
+    dtype: list<float64>
+    nullable: true
+    leakage_only: false
+    training_eligible: true
+    source: polymarket_l2
+    description: Phase 8 microstructure sequence dataset column `events_tick_size`.
+  sequence_length_actual:
+    dtype: int16
+    nullable: false
+    leakage_only: false
+    training_eligible: true
+    source: derived_quality
+    description: Phase 8 microstructure sequence dataset column `sequence_length_actual`.
+  sequence_padded:
+    dtype: bool
+    nullable: false
+    leakage_only: false
+    training_eligible: true
+    source: derived_quality
+    description: Phase 8 microstructure sequence dataset column `sequence_padded`.
+  event_count_1s:
+    dtype: int32
+    nullable: false
+    leakage_only: false
+    training_eligible: true
+    source: polymarket_l2
+    description: Phase 8 microstructure sequence dataset column `event_count_1s`.
+  event_count_3s:
+    dtype: int32
+    nullable: false
+    leakage_only: false
+    training_eligible: true
+    source: polymarket_l2
+    description: Phase 8 microstructure sequence dataset column `event_count_3s`.
+  event_count_5s:
+    dtype: int32
+    nullable: false
+    leakage_only: false
+    training_eligible: true
+    source: polymarket_l2
+    description: Phase 8 microstructure sequence dataset column `event_count_5s`.
+  event_count_15s:
+    dtype: int32
+    nullable: false
+    leakage_only: false
+    training_eligible: true
+    source: polymarket_l2
+    description: Phase 8 microstructure sequence dataset column `event_count_15s`.
+  quote_update_count_1s:
+    dtype: int32
+    nullable: false
+    leakage_only: false
+    training_eligible: true
+    source: polymarket_l2
+    description: Phase 8 microstructure sequence dataset column `quote_update_count_1s`.
+  quote_update_count_3s:
+    dtype: int32
+    nullable: false
+    leakage_only: false
+    training_eligible: true
+    source: polymarket_l2
+    description: Phase 8 microstructure sequence dataset column `quote_update_count_3s`.
+  quote_update_count_5s:
+    dtype: int32
+    nullable: false
+    leakage_only: false
+    training_eligible: true
+    source: polymarket_l2
+    description: Phase 8 microstructure sequence dataset column `quote_update_count_5s`.
+  trade_count_1s:
+    dtype: int32
+    nullable: false
+    leakage_only: false
+    training_eligible: true
+    source: polymarket_l2
+    description: Phase 8 microstructure sequence dataset column `trade_count_1s`.
+  trade_count_3s:
+    dtype: int32
+    nullable: false
+    leakage_only: false
+    training_eligible: true
+    source: polymarket_l2
+    description: Phase 8 microstructure sequence dataset column `trade_count_3s`.
+  trade_count_5s:
+    dtype: int32
+    nullable: false
+    leakage_only: false
+    training_eligible: true
+    source: polymarket_l2
+    description: Phase 8 microstructure sequence dataset column `trade_count_5s`.
+  signed_trade_size_1s:
+    dtype: float64
+    nullable: true
+    leakage_only: false
+    training_eligible: true
+    source: polymarket_l2
+    description: Phase 8 microstructure sequence dataset column `signed_trade_size_1s`.
+  signed_trade_size_3s:
+    dtype: float64
+    nullable: true
+    leakage_only: false
+    training_eligible: true
+    source: polymarket_l2
+    description: Phase 8 microstructure sequence dataset column `signed_trade_size_3s`.
+  signed_trade_size_5s:
+    dtype: float64
+    nullable: true
+    leakage_only: false
+    training_eligible: true
+    source: polymarket_l2
+    description: Phase 8 microstructure sequence dataset column `signed_trade_size_5s`.
+  absolute_trade_size_1s:
+    dtype: float64
+    nullable: true
+    leakage_only: false
+    training_eligible: true
+    source: polymarket_l2
+    description: Phase 8 microstructure sequence dataset column `absolute_trade_size_1s`.
+  absolute_trade_size_3s:
+    dtype: float64
+    nullable: true
+    leakage_only: false
+    training_eligible: true
+    source: polymarket_l2
+    description: Phase 8 microstructure sequence dataset column `absolute_trade_size_3s`.
+  absolute_trade_size_5s:
+    dtype: float64
+    nullable: true
+    leakage_only: false
+    training_eligible: true
+    source: polymarket_l2
+    description: Phase 8 microstructure sequence dataset column `absolute_trade_size_5s`.
+  spread_mean_5s:
+    dtype: float64
+    nullable: true
+    leakage_only: false
+    training_eligible: true
+    source: polymarket_l2
+    description: Phase 8 microstructure sequence dataset column `spread_mean_5s`.
+  spread_min_5s:
+    dtype: float64
+    nullable: true
+    leakage_only: false
+    training_eligible: true
+    source: polymarket_l2
+    description: Phase 8 microstructure sequence dataset column `spread_min_5s`.
+  spread_max_5s:
+    dtype: float64
+    nullable: true
+    leakage_only: false
+    training_eligible: true
+    source: polymarket_l2
+    description: Phase 8 microstructure sequence dataset column `spread_max_5s`.
+  imbalance_mean_5s:
+    dtype: float64
+    nullable: true
+    leakage_only: false
+    training_eligible: true
+    source: polymarket_l2
+    description: Phase 8 microstructure sequence dataset column `imbalance_mean_5s`.
+  imbalance_last:
+    dtype: float64
+    nullable: true
+    leakage_only: false
+    training_eligible: true
+    source: polymarket_l2
+    description: Phase 8 microstructure sequence dataset column `imbalance_last`.
+  imbalance_slope_5s:
+    dtype: float64
+    nullable: true
+    leakage_only: false
+    training_eligible: true
+    source: polymarket_l2
+    description: Phase 8 microstructure sequence dataset column `imbalance_slope_5s`.
+  mid_return_1s:
+    dtype: float64
+    nullable: true
+    leakage_only: false
+    training_eligible: true
+    source: polymarket_l2
+    description: Phase 8 microstructure sequence dataset column `mid_return_1s`.
+  mid_return_3s:
+    dtype: float64
+    nullable: true
+    leakage_only: false
+    training_eligible: true
+    source: polymarket_l2
+    description: Phase 8 microstructure sequence dataset column `mid_return_3s`.
+  mid_return_5s:
+    dtype: float64
+    nullable: true
+    leakage_only: false
+    training_eligible: true
+    source: polymarket_l2
+    description: Phase 8 microstructure sequence dataset column `mid_return_5s`.
+  quote_churn_rate_5s:
+    dtype: float64
+    nullable: true
+    leakage_only: false
+    training_eligible: true
+    source: polymarket_l2
+    description: Phase 8 microstructure sequence dataset column `quote_churn_rate_5s`.
+  depth_change_rate_5s:
+    dtype: float64
+    nullable: true
+    leakage_only: false
+    training_eligible: true
+    source: polymarket_l2
+    description: Phase 8 microstructure sequence dataset column `depth_change_rate_5s`.
+  one_sided_book:
+    dtype: bool
+    nullable: false
+    leakage_only: false
+    training_eligible: true
+    source: polymarket_l2
+    description: Phase 8 microstructure sequence dataset column `one_sided_book`.
+  crossed_book:
+    dtype: bool
+    nullable: false
+    leakage_only: false
+    training_eligible: true
+    source: polymarket_l2
+    description: Phase 8 microstructure sequence dataset column `crossed_book`.
+  stale_book:
+    dtype: bool
+    nullable: false
+    leakage_only: false
+    training_eligible: true
+    source: polymarket_l2
+    description: Phase 8 microstructure sequence dataset column `stale_book`.
+  sequence_completeness_rate:
+    dtype: float64
+    nullable: true
+    leakage_only: false
+    training_eligible: true
+    source: derived_quality
+    description: Phase 8 microstructure sequence dataset column `sequence_completeness_rate`.
+  price_to_beat:
+    dtype: float64
+    nullable: true
+    leakage_only: false
+    training_eligible: true
+    source: phase3_anchor
+    description: Phase 8 microstructure sequence dataset column `price_to_beat`.
+  live_btc_usd:
+    dtype: float64
+    nullable: true
+    leakage_only: false
+    training_eligible: true
+    source: phase3_anchor
+    description: Phase 8 microstructure sequence dataset column `live_btc_usd`.
+  delta_to_strike:
+    dtype: float64
+    nullable: true
+    leakage_only: false
+    training_eligible: true
+    source: phase3_anchor
+    description: Phase 8 microstructure sequence dataset column `delta_to_strike`.
+  abs_delta_to_strike:
+    dtype: float64
+    nullable: true
+    leakage_only: false
+    training_eligible: true
+    source: phase3_anchor
+    description: Phase 8 microstructure sequence dataset column `abs_delta_to_strike`.
+  delta_sign:
+    dtype: int8
+    nullable: false
+    leakage_only: false
+    training_eligible: true
+    source: phase3_anchor
+    description: Phase 8 microstructure sequence dataset column `delta_sign`.
+  t_since_open_s:
+    dtype: float64
+    nullable: true
+    leakage_only: false
+    training_eligible: true
+    source: phase3_anchor
+    description: Phase 8 microstructure sequence dataset column `t_since_open_s`.
+  t_to_close_s:
+    dtype: float64
+    nullable: true
+    leakage_only: false
+    training_eligible: true
+    source: phase3_anchor
+    description: Phase 8 microstructure sequence dataset column `t_to_close_s`.
+  phase_bucket:
+    dtype: string
+    nullable: false
+    leakage_only: false
+    training_eligible: true
+    source: phase3_anchor
+    description: Phase 8 microstructure sequence dataset column `phase_bucket`.
+  live_reference_trusted:
+    dtype: bool
+    nullable: false
+    leakage_only: false
+    training_eligible: true
+    source: phase3_anchor
+    description: Phase 8 microstructure sequence dataset column `live_reference_trusted`.
+  live_bias_mode:
+    dtype: string
+    nullable: false
+    leakage_only: false
+    training_eligible: true
+    source: phase3_anchor
+    description: Phase 8 microstructure sequence dataset column `live_bias_mode`.
+  live_applied_bias_age_seconds:
+    dtype: float64
+    nullable: true
+    leakage_only: false
+    training_eligible: true
+    source: phase3_anchor
+    description: Phase 8 microstructure sequence dataset column `live_applied_bias_age_seconds`.
+  mid_move_1s:
+    dtype: float64
+    nullable: true
+    leakage_only: true
+    training_eligible: false
+    source: future_l2_label
+    description: Phase 8 microstructure sequence dataset column `mid_move_1s`.
+  mid_move_3s:
+    dtype: float64
+    nullable: true
+    leakage_only: true
+    training_eligible: false
+    source: future_l2_label
+    description: Phase 8 microstructure sequence dataset column `mid_move_3s`.
+  mid_move_5s:
+    dtype: float64
+    nullable: true
+    leakage_only: true
+    training_eligible: false
+    source: future_l2_label
+    description: Phase 8 microstructure sequence dataset column `mid_move_5s`.
+  mid_move_15s:
+    dtype: float64
+    nullable: true
+    leakage_only: true
+    training_eligible: false
+    source: future_l2_label
+    description: Phase 8 microstructure sequence dataset column `mid_move_15s`.
+  mid_move_30s:
+    dtype: float64
+    nullable: true
+    leakage_only: true
+    training_eligible: false
+    source: future_l2_label
+    description: Phase 8 microstructure sequence dataset column `mid_move_30s`.
+  mid_move_sign_1s:
+    dtype: int8
+    nullable: false
+    leakage_only: true
+    training_eligible: false
+    source: future_l2_label
+    description: Phase 8 microstructure sequence dataset column `mid_move_sign_1s`.
+  mid_move_sign_3s:
+    dtype: int8
+    nullable: false
+    leakage_only: true
+    training_eligible: false
+    source: future_l2_label
+    description: Phase 8 microstructure sequence dataset column `mid_move_sign_3s`.
+  mid_move_sign_5s:
+    dtype: int8
+    nullable: false
+    leakage_only: true
+    training_eligible: false
+    source: future_l2_label
+    description: Phase 8 microstructure sequence dataset column `mid_move_sign_5s`.
+  mid_move_sign_15s:
+    dtype: int8
+    nullable: false
+    leakage_only: true
+    training_eligible: false
+    source: future_l2_label
+    description: Phase 8 microstructure sequence dataset column `mid_move_sign_15s`.
+  mid_move_sign_30s:
+    dtype: int8
+    nullable: false
+    leakage_only: true
+    training_eligible: false
+    source: future_l2_label
+    description: Phase 8 microstructure sequence dataset column `mid_move_sign_30s`.
+  max_favorable_excursion_5s:
+    dtype: float64
+    nullable: true
+    leakage_only: true
+    training_eligible: false
+    source: future_l2_label
+    description: Phase 8 microstructure sequence dataset column `max_favorable_excursion_5s`.
+  max_adverse_excursion_5s:
+    dtype: float64
+    nullable: true
+    leakage_only: true
+    training_eligible: false
+    source: future_l2_label
+    description: Phase 8 microstructure sequence dataset column `max_adverse_excursion_5s`.
+  max_favorable_excursion_15s:
+    dtype: float64
+    nullable: true
+    leakage_only: true
+    training_eligible: false
+    source: future_l2_label
+    description: Phase 8 microstructure sequence dataset column `max_favorable_excursion_15s`.
+  max_adverse_excursion_15s:
+    dtype: float64
+    nullable: true
+    leakage_only: true
+    training_eligible: false
+    source: future_l2_label
+    description: Phase 8 microstructure sequence dataset column `max_adverse_excursion_15s`.
+  hold_to_close_edge_vs_mid:
+    dtype: float64
+    nullable: true
+    leakage_only: true
+    training_eligible: false
+    source: future_l2_label
+    description: Phase 8 microstructure sequence dataset column `hold_to_close_edge_vs_mid`.
+  terminal_margin_to_strike:
+    dtype: float64
+    nullable: true
+    leakage_only: true
+    training_eligible: false
+    source: phase3_anchor
+    description: Phase 8 microstructure sequence dataset column `terminal_margin_to_strike`.
+  flip_happened_after_t:
+    dtype: bool
+    nullable: false
+    leakage_only: true
+    training_eligible: false
+    source: phase3_anchor
+    description: Phase 8 microstructure sequence dataset column `flip_happened_after_t`.
+  sequence_feature_eligible:
+    dtype: bool
+    nullable: false
+    leakage_only: false
+    training_eligible: false
+    source: derived_quality
+    description: Phase 8 microstructure sequence dataset column `sequence_feature_eligible`.
+  sequence_complete_eligible:
+    dtype: bool
+    nullable: false
+    leakage_only: false
+    training_eligible: false
+    source: derived_quality
+    description: Phase 8 microstructure sequence dataset column `sequence_complete_eligible`.
+  target_1s_available:
+    dtype: bool
+    nullable: false
+    leakage_only: false
+    training_eligible: false
+    source: derived_quality
+    description: Phase 8 microstructure sequence dataset column `target_1s_available`.
+  target_3s_available:
+    dtype: bool
+    nullable: false
+    leakage_only: false
+    training_eligible: false
+    source: derived_quality
+    description: Phase 8 microstructure sequence dataset column `target_3s_available`.
+  target_5s_available:
+    dtype: bool
+    nullable: false
+    leakage_only: false
+    training_eligible: false
+    source: derived_quality
+    description: Phase 8 microstructure sequence dataset column `target_5s_available`.
+  target_15s_available:
+    dtype: bool
+    nullable: false
+    leakage_only: false
+    training_eligible: false
+    source: derived_quality
+    description: Phase 8 microstructure sequence dataset column `target_15s_available`.
+  target_30s_available:
+    dtype: bool
+    nullable: false
+    leakage_only: false
+    training_eligible: false
+    source: derived_quality
+    description: Phase 8 microstructure sequence dataset column `target_30s_available`.
+  microstructure_exclusion_reason:
+    dtype: string
+    nullable: true
+    leakage_only: false
+    training_eligible: false
+    source: derived_quality
+    description: Phase 8 microstructure sequence dataset column `microstructure_exclusion_reason`.

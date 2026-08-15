@@ -1,0 +1,96 @@
+{
+  "lock_id": "tcn_v2_2",
+  "created_at": "2026-07-12",
+  "status": "research_candidate_forward_test_only",
+  "purpose": "v2.2 portfolio per user revision: constant-base sizing (5 shares, linear boost to 7.5 on large EV) with a hard -15 USD DD budget, ranked by total PnL among walk-forward survivors. Replaces tcn_v2_1 (micro-risk ratio objective) as the third forward-test strategy. NOT live approved.",
+  "selection_protocol": {
+    "search_tool": "tools/search_v2_2_policies.py",
+    "selection_era": "2026-06-23..2026-07-11 (15 days, spent)",
+    "rule": "max PnL s.t. selection maxDD >= -15, 2-fold WF prune, portfolio corr < 0.5 with combined-DD constraint",
+    "grid_size_sized_configs": 1876,
+    "eligible": 777,
+    "caveat": "selection-era numbers are NOT evidence; forward shadow from 2026-07-12 decides"
+  },
+  "dataset": "data/datasets/btc_5m_episodes_v2_200ms",
+  "model_artifacts": [
+    "artifacts/tcn_v2_c64_b7_ttc15_150_seed11",
+    "artifacts/tcn_v2_c64_b7_ttc15_150_seed7",
+    "artifacts/tcn_v2_c64_b7_ttc15_150_seed23",
+    "artifacts/tcn_v2_c64_b7_ttc15_150_seed42",
+    "artifacts/tcn_v2_c64_b7_ttc15_150_seed101"
+  ],
+  "model_type": "causal_residual_tcn_mean_prob_ensemble",
+  "probability": {
+    "kind": "per_member_platt",
+    "source": "val_platt_l2 from each member's tcn_report.json",
+    "combine": "mean of member probabilities; effective_delta = logit(p_ens) - logit(p_market)"
+  },
+  "sizing": {
+    "kind": "base_linear_ev",
+    "base": 5.0,
+    "k": 100.0,
+    "s_max": 7.5,
+    "size_scale": 1.0,
+    "note": "shares = min(7.5, 5 + 100*(EV - floor)); constant 5 with boost on big edge per user decision"
+  },
+  "cadence_s": 0.2,
+  "execution_assumptions": {
+    "buy_delay_s": 2.0,
+    "buy_slippage_cap": 0.03,
+    "sell_logic": "none",
+    "exit": "hold_to_resolution",
+    "fee_model": "0.072 * price * (1 - price)",
+    "max_entries_per_market": 3,
+    "entry_scope": "one entry per market per strategy_id; slot windows overlap (15-150 contains 75-120/75-150), so per-market exposure can reach ~22.5 shares — live needs TCN_MAX_MARKET_NOTIONAL_USD raised accordingly"
+  },
+  "strategies": [
+    {
+      "strategy_id": "v22_ttc15_150_b1.25_ev0.0422",
+      "enabled": true,
+      "ttc_min_s_exclusive": 15.0,
+      "ttc_max_s_inclusive": 150.0,
+      "utc_hours_allowed": "all",
+      "beta": 1.25,
+      "ev_min": 0.0422,
+      "price_min_exclusive": 0.20,
+      "price_max_exclusive": 0.80,
+      "side_selection": "buy side with higher EV, UP if ev_up >= ev_dn else DOWN",
+      "exit": "hold_to_resolution"
+    },
+    {
+      "strategy_id": "v22_ttc75_120_b1.25_ev0.0582",
+      "enabled": true,
+      "ttc_min_s_exclusive": 75.0,
+      "ttc_max_s_inclusive": 120.0,
+      "utc_hours_allowed": "all",
+      "beta": 1.25,
+      "ev_min": 0.0582,
+      "price_min_exclusive": 0.10,
+      "price_max_exclusive": 0.90,
+      "side_selection": "buy side with higher EV, UP if ev_up >= ev_dn else DOWN",
+      "exit": "hold_to_resolution"
+    },
+    {
+      "strategy_id": "v22_ttc75_150_b0.75_ev0.0335",
+      "enabled": true,
+      "ttc_min_s_exclusive": 75.0,
+      "ttc_max_s_inclusive": 150.0,
+      "utc_hours_allowed": "all",
+      "beta": 0.75,
+      "ev_min": 0.0335,
+      "price_min_exclusive": 0.20,
+      "price_max_exclusive": 0.80,
+      "side_selection": "buy side with higher EV, UP if ev_up >= ev_dn else DOWN",
+      "exit": "hold_to_resolution"
+    }
+  ],
+  "reference_metrics_selection_era_not_evidence": {
+    "slot1": {"trades": 669, "pnl": 90.40, "max_dd": -11.16, "win_rate": 0.598},
+    "combined": {"pnl": 228.48, "max_dd": -12.00, "worst_day": -12.00}
+  },
+  "validation_requirements_before_live": [
+    "Forward shadow >= 14 days from 2026-07-12 with realized-PnL CI90 excluding 0",
+    "Must beat tcn_double_strategy_v1 and tcn_v2_candidate on PnL with maxDD within -15 over identical days",
+    "Live only through --live triple gate with RiskGate and per-market notional cap sized for 3 overlapping slots"
+  ]
+}

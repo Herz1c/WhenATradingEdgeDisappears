@@ -1,0 +1,25 @@
+split_id: model_08_move_size_split_v1
+model_id: model_08_move_size
+version: v1
+method: anchored_walkforward
+ordering_column: anchor_ts_ns
+ordering_unit: sequence
+split_strategy: day_based
+train:
+  start_day: '2026-04-19'
+  end_day: '2026-04-21'
+validation:
+  start_day: '2026-04-22'
+  end_day: '2026-04-22'
+test:
+  start_day: '2026-04-23'
+  end_day: '2026-04-23'
+purge_days: 1
+embargo_days: 0
+min_train_rows: 1000
+min_val_rows: 1000
+min_test_rows: 1000
+auto_extend: true
+auto_extend_val_days: 1
+auto_extend_test_days: 1
+preserve_validation_rows_on_short_window: true

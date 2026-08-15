@@ -1,0 +1,68 @@
+# Extends execution_intent_dataset_v1_schema.yaml.
+schema_version: execution_intent_dataset_v2_enriched_schema_v1
+base_schema: execution_intent_dataset_v1_schema.yaml
+status: stub_until_models_1_to_9_trained
+
+model_output_columns:
+  p_bias_up:
+    dtype: float64
+    source: model_01_bias
+    leakage_only: false
+    training_eligible: true
+  p_up_fair:
+    dtype: float64
+    source: model_02_fair_resolution
+    leakage_only: false
+    training_eligible: true
+  fair_edge_vs_market:
+    dtype: float64
+    source: model_02_fair_resolution
+    leakage_only: false
+    training_eligible: true
+  p_fill_maker:
+    dtype: float64
+    source: model_03_fill_probability
+    leakage_only: false
+    training_eligible: true
+  expected_markout_1s:
+    dtype: float64
+    source: model_04_adverse_selection
+    leakage_only: false
+    training_eligible: true
+  p_adverse_fill:
+    dtype: float64
+    source: model_04_adverse_selection
+    leakage_only: false
+    training_eligible: true
+  p_flip_before_close:
+    dtype: float64
+    source: model_05_closing_flip
+    leakage_only: false
+    training_eligible: true
+  mispricing_score:
+    dtype: float64
+    source: model_06_mispricing
+    leakage_only: false
+    training_eligible: true
+  p_mid_up_5s:
+    dtype: float64
+    source: model_07_microstructure_direction
+    leakage_only: false
+    training_eligible: true
+  expected_move_cents:
+    dtype: float64
+    source: model_08_move_size
+    leakage_only: false
+    training_eligible: true
+  regime_state:
+    dtype: string
+    source: model_09_regime_encoder
+    leakage_only: false
+    training_eligible: true
+  action_label:
+    dtype: string
+    source: derived_from_outcomes
+    leakage_only: true
+    training_eligible: false
+    note: "Derived from pnl_to_resolution and fill outcomes. Leakage-only target."
+

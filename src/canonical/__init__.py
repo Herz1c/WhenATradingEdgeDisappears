@@ -1,0 +1,2 @@
+"""Canonical event base infrastructure."""
+

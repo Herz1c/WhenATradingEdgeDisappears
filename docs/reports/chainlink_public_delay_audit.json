@@ -1,0 +1,121 @@
+{
+  "parameters": {
+    "root": "data",
+    "artifact_dir": "docs",
+    "max_workers": 8,
+    "negative_window_seconds": 600.0,
+    "positive_window_seconds": 3600.0,
+    "price_tolerance_usd": 0.01,
+    "excluded_hours": [
+      "2026-04-20 07:00 UTC"
+    ]
+  },
+  "summary": {
+    "onchain_update_events": 114,
+    "matched_events": 2,
+    "unmatched_events": 112,
+    "match_coverage": 0.017543859649122806,
+    "mean_delay_seconds": 236.008672,
+    "median_delay_seconds": 236.008672,
+    "p5_delay_seconds": 35.26804582,
+    "p95_delay_seconds": 436.74929818,
+    "p99_delay_seconds": 454.592909396,
+    "min_delay_seconds": 12.9635318,
+    "max_delay_seconds": 459.0538122,
+    "negative_delay_matches": 0
+  },
+  "histogram_10s": [
+    {
+      "bucket": "[10, 20)",
+      "count": 1
+    },
+    {
+      "bucket": "[450, 460)",
+      "count": 1
+    }
+  ],
+  "breakdown_by_hour_of_day": [
+    {
+      "bucket": "11",
+      "matched_events": 1,
+      "mean_delay_seconds": 459.0538122,
+      "median_delay_seconds": 459.0538122,
+      "p95_delay_seconds": 459.0538122,
+      "min_delay_seconds": 459.0538122,
+      "max_delay_seconds": 459.0538122
+    },
+    {
+      "bucket": "15",
+      "matched_events": 1,
+      "mean_delay_seconds": 12.9635318,
+      "median_delay_seconds": 12.9635318,
+      "p95_delay_seconds": 12.9635318,
+      "min_delay_seconds": 12.9635318,
+      "max_delay_seconds": 12.9635318
+    }
+  ],
+  "breakdown_by_day_of_week": [
+    {
+      "bucket": "Monday",
+      "matched_events": 2,
+      "mean_delay_seconds": 236.008672,
+      "median_delay_seconds": 236.008672,
+      "p95_delay_seconds": 436.74929818,
+      "min_delay_seconds": 12.9635318,
+      "max_delay_seconds": 459.0538122
+    }
+  ],
+  "breakdown_by_volatility_regime": [
+    {
+      "bucket": "high",
+      "matched_events": 1,
+      "mean_delay_seconds": 12.9635318,
+      "median_delay_seconds": 12.9635318,
+      "p95_delay_seconds": 12.9635318,
+      "min_delay_seconds": 12.9635318,
+      "max_delay_seconds": 12.9635318
+    },
+    {
+      "bucket": "medium",
+      "matched_events": 1,
+      "mean_delay_seconds": 459.0538122,
+      "median_delay_seconds": 459.0538122,
+      "p95_delay_seconds": 459.0538122,
+      "min_delay_seconds": 459.0538122,
+      "max_delay_seconds": 459.0538122
+    }
+  ],
+  "matched_pairs": [
+    {
+      "onchain_recv_ts_ns": 1776684186972937200,
+      "onchain_recv_ts_iso": "2026-04-20T11:23:06.972937Z",
+      "onchain_price": 75135.89,
+      "round_id": "129127208515966881143",
+      "delayed_recv_ts_ns": 1776684646026749400,
+      "delayed_recv_ts_iso": "2026-04-20T11:30:46.026749Z",
+      "delayed_price": 75135.88095851075,
+      "delayed_display_ts_ns": 1776684642000000000,
+      "delayed_display_ts_iso": "2026-04-20T11:30:42Z",
+      "delivery_delay_seconds": 459.0538122,
+      "volatility_regime": "medium"
+    },
+    {
+      "onchain_recv_ts_ns": 1776698842318571500,
+      "onchain_recv_ts_iso": "2026-04-20T15:27:22.318572Z",
+      "onchain_price": 75597.93758307,
+      "round_id": "129127208515966881151",
+      "delayed_recv_ts_ns": 1776698855282103300,
+      "delayed_recv_ts_iso": "2026-04-20T15:27:35.282103Z",
+      "delayed_price": 75597.94,
+      "delayed_display_ts_ns": 1776698849000000000,
+      "delayed_display_ts_iso": "2026-04-20T15:27:29Z",
+      "delivery_delay_seconds": 12.9635318,
+      "volatility_regime": "high"
+    }
+  ],
+  "safe_causal_offset_recommendation": {
+    "status": "insufficient_exact_match_coverage",
+    "recommended_offset_seconds": 1800.0,
+    "reason": "Exact +/- 0.01 USD value matching produced too few plausible pairs to estimate a robust operational delay distribution. Keep the conservative 1800s availability floor in the dataset factory."
+  }
+}

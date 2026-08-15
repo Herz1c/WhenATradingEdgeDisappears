@@ -1,0 +1,27 @@
+version: execution_scenario_v1
+description: >
+  Phase 5 scenario grid contract. Scenarios are hypothetical post-only order
+  intents used to validate the execution simulator. They are not model actions
+  and are not optimized by a policy layer.
+columns:
+  intent_id: {dtype: string, nullable: false, leakage_only: false, training_eligible: false, source: scenario_grid, description: "Deterministic scenario intent id."}
+  market_slug: {dtype: string, nullable: false, leakage_only: false, training_eligible: true, source: phase8_anchor, description: "Market slug."}
+  token_asset_id: {dtype: string, nullable: false, leakage_only: false, training_eligible: true, source: phase8_anchor, description: "Token asset id."}
+  token_side_normalized: {dtype: string, nullable: false, leakage_only: false, training_eligible: true, source: phase8_anchor, description: "UP or DOWN token side."}
+  order_ts_ns: {dtype: int64, nullable: false, leakage_only: false, training_eligible: false, source: phase8_anchor, description: "Decision/order timestamp."}
+  market_close_ts_ns: {dtype: int64, nullable: false, leakage_only: false, training_eligible: false, source: market_registry_v1, description: "Market close timestamp."}
+  order_side: {dtype: string, nullable: false, leakage_only: false, training_eligible: true, source: scenario_grid, description: "buy or sell."}
+  limit_price: {dtype: float64, nullable: false, leakage_only: false, training_eligible: true, source: scenario_grid, description: "Passive limit price."}
+  order_size: {dtype: float64, nullable: false, leakage_only: false, training_eligible: true, source: scenario_grid, description: "Simulated size."}
+  price_level: {dtype: string, nullable: false, leakage_only: false, training_eligible: true, source: scenario_grid, description: "join_best_bid, improve_bid_1tick, inside_bid, join_best_ask, improve_ask_1tick, or inside_ask."}
+  post_only: {dtype: bool, nullable: false, leakage_only: false, training_eligible: true, source: scenario_grid, description: "Whether order is post-only."}
+  cancel_after_ns: {dtype: int64, nullable: true, leakage_only: false, training_eligible: true, source: scenario_grid, description: "Cancel delay; null means hold to close."}
+  replace_after_ns: {dtype: int64, nullable: true, leakage_only: false, training_eligible: true, source: scenario_grid, description: "Replace delay; null means no replace."}
+  replace_limit_price: {dtype: float64, nullable: true, leakage_only: false, training_eligible: true, source: scenario_grid, description: "Replacement passive limit price."}
+  replace_order_size: {dtype: float64, nullable: true, leakage_only: false, training_eligible: true, source: scenario_grid, description: "Replacement order size capped by remaining old-order quantity."}
+  replace_price_level: {dtype: string, nullable: true, leakage_only: false, training_eligible: true, source: scenario_grid, description: "Named replacement passive quote level."}
+  replace_post_only: {dtype: bool, nullable: false, leakage_only: false, training_eligible: true, source: scenario_grid, description: "Whether replacement order is post-only."}
+  holding_policy: {dtype: string, nullable: false, leakage_only: false, training_eligible: true, source: scenario_grid, description: "cancel_after_or_close or hold_to_close."}
+  source_sequence_id: {dtype: string, nullable: true, leakage_only: false, training_eligible: false, source: phase8_anchor, description: "Optional Phase 8 source sequence id."}
+  resolved_side: {dtype: string, nullable: true, leakage_only: true, training_eligible: false, source: market_registry_v1, description: "Canonical resolution side; outcome-only for PnL validation."}
+  scenario_name: {dtype: string, nullable: false, leakage_only: false, training_eligible: false, source: scenario_grid, description: "Scenario grid version/name."}

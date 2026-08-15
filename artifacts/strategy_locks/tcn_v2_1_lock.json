@@ -1,0 +1,89 @@
+{
+  "lock_id": "tcn_v2_1",
+  "created_at": "2026-07-12",
+  "status": "research_candidate_forward_test_only",
+  "purpose": "v2.1 portfolio: converts the v2 ensemble calibration advantage into PnL via per-member Platt probabilities, quantile-derived EV floors, and EV-proportional sizing. Selected by pre-registered R1 (pnl/|maxDD|) after 2-fold walk-forward prune on the spent selection era. Forward shadow from 2026-07-12 is the only honest OOS. NOT live approved.",
+  "selection_protocol": {
+    "search_tool": "tools/search_v2_1_policies.py",
+    "diagnosis": "artifacts/audit_v1/v2_transfer_diagnosis.json",
+    "selection_era": "2026-06-23..2026-07-11 (15 days, 1838 markets, includes spent holdout)",
+    "grid_size_sized_configs": 3216,
+    "wf_survivors": 711,
+    "portfolio_rule": "top R1 survivors, daily-PnL corr < 0.5, max 3 slots",
+    "caveat": "selection-era numbers are NOT evidence; forward window decides"
+  },
+  "dataset": "data/datasets/btc_5m_episodes_v2_200ms",
+  "model_artifacts": [
+    "artifacts/tcn_v2_c64_b7_ttc15_150_seed11",
+    "artifacts/tcn_v2_c64_b7_ttc15_150_seed7",
+    "artifacts/tcn_v2_c64_b7_ttc15_150_seed23",
+    "artifacts/tcn_v2_c64_b7_ttc15_150_seed42",
+    "artifacts/tcn_v2_c64_b7_ttc15_150_seed101"
+  ],
+  "model_type": "causal_residual_tcn_mean_prob_ensemble",
+  "probability": {
+    "kind": "per_member_platt",
+    "source": "val_platt_l2 from each member's tcn_report.json",
+    "combine": "mean of member probabilities; effective_delta = logit(p_ens) - logit(p_market)"
+  },
+  "sizing": {
+    "kind": "linear_ev",
+    "k": 200.0,
+    "s_max": 10.0,
+    "size_scale": 1.0,
+    "size_scale_for_live_budget": 5.26,
+    "budget_note": "size_scale 1.0 in shadow; 5.26 scales P5(daily) to -10 USD once promoted"
+  },
+  "cadence_s": 0.2,
+  "execution_assumptions": {
+    "buy_delay_s": 2.0,
+    "buy_slippage_cap": 0.03,
+    "sell_logic": "none",
+    "exit": "hold_to_resolution",
+    "fee_model": "0.072 * price * (1 - price)",
+    "max_entries_per_market": 2,
+    "entry_scope": "one entry per market per strategy_id"
+  },
+  "strategies": [
+    {
+      "strategy_id": "v21_ttc30_75_b0.75_ev0.0582",
+      "enabled": true,
+      "ttc_min_s_exclusive": 30.0,
+      "ttc_max_s_inclusive": 75.0,
+      "utc_hours_allowed": "all",
+      "beta": 0.75,
+      "ev_min": 0.0582,
+      "price_min_exclusive": 0.10,
+      "price_max_exclusive": 0.90,
+      "side_selection": "buy side with higher EV, UP if ev_up >= ev_dn else DOWN",
+      "exit": "hold_to_resolution",
+      "sizing": {"k": 200.0, "s_max": 10.0}
+    },
+    {
+      "strategy_id": "v21_ttc30_75_b1.25_ev0.0422",
+      "enabled": true,
+      "ttc_min_s_exclusive": 30.0,
+      "ttc_max_s_inclusive": 75.0,
+      "utc_hours_allowed": "all",
+      "beta": 1.25,
+      "ev_min": 0.0422,
+      "price_min_exclusive": 0.10,
+      "price_max_exclusive": 0.90,
+      "side_selection": "buy side with higher EV, UP if ev_up >= ev_dn else DOWN",
+      "exit": "hold_to_resolution",
+      "sizing": {"k": 200.0, "s_max": 5.0}
+    }
+  ],
+  "reference_metrics_selection_era_not_evidence": {
+    "slot1": {"trades": 62, "pnl": 10.04, "max_dd": -0.86, "win_rate": 0.613},
+    "slot2": {"trades": 308, "pnl": 29.0, "max_dd": -3.64, "win_rate": 0.636},
+    "combined": {"pnl": 39.04, "max_dd": -3.68, "worst_day": -3.68, "score": 10.605,
+                 "live_coverage_p5_daily": -1.9}
+  },
+  "validation_requirements_before_live": [
+    "Forward shadow >= 14 days from 2026-07-12 with realized-PnL CI90 excluding 0",
+    "Must beat tcn_double_strategy_v1 and tcn_v2_candidate on PnL/maxDD over identical days",
+    "Parity strict pass on the calibrated-ensemble path",
+    "Live only through --live triple gate with RiskGate (-10 USD daily cap) and size_scale applied"
+  ]
+}

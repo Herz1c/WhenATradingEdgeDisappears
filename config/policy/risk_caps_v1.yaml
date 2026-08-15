@@ -1,0 +1,8 @@
+risk_caps_v1:
+  per_market_size_cap_usdc: 100.0
+  per_day_loss_cap_usdc: 50.0
+  max_total_exposure_usdc: 500.0
+  max_open_orders: 20
+  latency_threshold_ms: 200
+  freshness_threshold_s: 30
+

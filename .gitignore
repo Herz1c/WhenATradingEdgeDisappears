@@ -1,0 +1,54 @@
+# --- Secrets (NEVER commit) ---
+API_Keys
+*.key
+*.pem
+.env
+.env.*
+!.env.example
+
+# --- Large data and runtime outputs (see docs/DATA_AVAILABILITY.md) ---
+data/
+logs/
+bot_state/
+.tmp/
+tmp/
+experiments/
+
+# --- Model weights and search output ---
+# Large/private training outputs remain ignored. The five small public-evidence
+# checkpoints below are an explicit exception and are required for mini inference.
+artifacts/**/*.pkl
+artifacts/**/*.npy
+artifacts/**/*.pt
+artifacts/**/*.pth
+artifacts/**/*.zip
+artifacts/**/*.zst
+artifacts/**/*.parquet
+!artifacts/evaluation_repro_v2/checkpoints/*.pt
+
+# --- Python ---
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+*.egg-info/
+*.egg
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.coverage
+.coverage.*
+htmlcov/
+.tox/
+.venv/
+venv/
+env/
+
+# --- OS / editor / local tooling state ---
+.DS_Store
+Thumbs.db
+*.swp
+*~
+.idea/
+.vscode/
+.claude/

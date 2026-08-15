@@ -1,0 +1,26 @@
+version: execution_validation_report_v1
+description: >
+  Phase 5 validation report contract. The report summarizes synthetic scenario
+  tests, real-data smoke replay, audit findings, simulator assumptions, and
+  readiness for Phase 6 dataset generation.
+required_sections:
+  - Phase 5 Execution Simulator Validation Report V1
+  - Synthetic Scenario Suite
+  - Real Data Smoke Validation
+  - Simulator Assumptions
+  - Audit Summary
+  - Readiness
+critical_gates:
+  - synthetic_failed_checks == 0
+  - synthetic_audit_critical_count == 0
+  - real_smoke_audit_critical_count == 0
+  - no fill at or before order_ts_ns
+  - no fill after cancel_effective_ts_ns
+  - crossing post-only orders are rejected
+  - replacement orders fill only after replace_effective_ts_ns
+  - partial fills are cumulative and expose fill_count
+  - submitted rows have trusted causal live_reference_events_v1 context
+  - fees and rebates reconcile through the configured fee schedule
+  - ledger reconciliation balances
+  - unavailable markouts are NaN
+  - PnL reconciliation holds for populated PnL rows

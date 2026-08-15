@@ -1,0 +1,78 @@
+feature_set_id: model_08_move_size_features_v1
+model_id: model_08_move_size
+version: v1
+created: '2026-04-28'
+feature_columns:
+- anchor_source
+- event_count_1s
+- event_count_3s
+- event_count_5s
+- event_count_15s
+- quote_update_count_1s
+- quote_update_count_3s
+- quote_update_count_5s
+- trade_count_1s
+- trade_count_3s
+- trade_count_5s
+- signed_trade_size_1s
+- signed_trade_size_3s
+- signed_trade_size_5s
+- absolute_trade_size_1s
+- absolute_trade_size_3s
+- absolute_trade_size_5s
+- spread_mean_5s
+- spread_min_5s
+- spread_max_5s
+- imbalance_mean_5s
+- imbalance_last
+- imbalance_slope_5s
+- mid_return_1s
+- mid_return_3s
+- mid_return_5s
+- quote_churn_rate_5s
+- depth_change_rate_5s
+- one_sided_book
+- crossed_book
+- stale_book
+- sequence_completeness_rate
+- price_to_beat
+- live_btc_usd
+- delta_to_strike
+- abs_delta_to_strike
+- delta_sign
+- t_since_open_s
+- t_to_close_s
+- phase_bucket
+- live_reference_trusted
+- live_bias_mode
+- live_applied_bias_age_seconds
+leakage_only_columns:
+- resolved_side
+- resolved_side_label
+- flip_happened_after_t
+- terminal_delta_to_strike
+- terminal_margin_to_strike
+- hold_to_close_edge_vs_mid
+- resolved_ts_ns
+- winning_asset_id
+- mid_move_1s
+- mid_move_3s
+- mid_move_5s
+- mid_move_15s
+- mid_move_30s
+- mid_move_sign_1s
+- mid_move_sign_3s
+- mid_move_sign_5s
+- mid_move_sign_15s
+- mid_move_sign_30s
+- max_favorable_excursion_5s
+- max_adverse_excursion_5s
+- max_favorable_excursion_15s
+- max_adverse_excursion_15s
+target_columns:
+  primary: mid_move_5s
+  auxiliary:
+  - max_favorable_excursion_5s
+  - max_adverse_excursion_5s
+  - max_favorable_excursion_15s
+  - max_adverse_excursion_15s

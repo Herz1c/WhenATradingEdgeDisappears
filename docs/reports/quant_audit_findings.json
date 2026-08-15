@@ -1,0 +1,504 @@
+{
+  "model_01_bias": {
+    "feature_set": {
+      "feature_set_id": "model_01_bias_features_v1",
+      "n_features": 93,
+      "n_leakage_only": 8
+    },
+    "variants": {
+      "first15s/lightgbm": {
+        "n_test_rows": 287,
+        "n_features_expected": 93,
+        "n_nan_cells_in_test_X": 2143,
+        "deployment_warning": null,
+        "calibration": {
+          "has_calibrator": true,
+          "calibrator_type": "IsotonicRegression",
+          "n_thresholds": 12,
+          "leakage_suspected": true,
+          "reason": "BaseTrainer._calibrate uses split.val; _evaluate computes val ECE on same set."
+        },
+        "n_eval_rows": 287,
+        "positive_rate": 0.5331010452961672,
+        "log_loss_raw": 0.6968110821855595,
+        "log_loss_calibrated": 0.6933469583578272,
+        "brier_raw": 0.25093280244216937,
+        "brier_calibrated": 0.24894747047761762,
+        "auc_raw": 0.5671154033752805,
+        "auc_calibrated": 0.5476051116964199,
+        "avg_precision": 0.5860100238748256,
+        "log_loss_baseline_constant": 0.690954218663925,
+        "model_beats_constant": false
+      },
+      "first15s/logistic_regression": {
+        "n_test_rows": 287,
+        "n_features_expected": 93,
+        "n_nan_cells_in_test_X": 2143,
+        "deployment_warning": "Saved model has NO NaN imputer. Production load+predict will crash on NaN inputs.",
+        "calibration": {
+          "has_calibrator": true,
+          "calibrator_type": "IsotonicRegression",
+          "n_thresholds": 16,
+          "leakage_suspected": true,
+          "reason": "BaseTrainer._calibrate uses split.val; _evaluate computes val ECE on same set."
+        },
+        "n_eval_rows": 287,
+        "positive_rate": 0.5331010452961672,
+        "log_loss_raw": 1.1718416508702032,
+        "log_loss_calibrated": 1.4689066509899813,
+        "brier_raw": 0.2821912627139735,
+        "brier_calibrated": 0.27891230594444105,
+        "auc_raw": 0.5764803433811335,
+        "auc_calibrated": 0.5686030631157937,
+        "avg_precision": 0.5953082119596405,
+        "log_loss_baseline_constant": 0.690954218663925,
+        "model_beats_constant": false
+      },
+      "first30s/lightgbm": {
+        "n_test_rows": 288,
+        "n_features_expected": 93,
+        "n_nan_cells_in_test_X": 1762,
+        "deployment_warning": null,
+        "calibration": {
+          "has_calibrator": true,
+          "calibrator_type": "IsotonicRegression",
+          "n_thresholds": 18,
+          "leakage_suspected": true,
+          "reason": "BaseTrainer._calibrate uses split.val; _evaluate computes val ECE on same set."
+        },
+        "n_eval_rows": 288,
+        "positive_rate": 0.5347222222222222,
+        "log_loss_raw": 0.6772341788630519,
+        "log_loss_calibrated": 0.6653610620824336,
+        "brier_raw": 0.2424315640638945,
+        "brier_calibrated": 0.2371042747470375,
+        "auc_raw": 0.603411513859275,
+        "auc_calibrated": 0.6124733475479744,
+        "avg_precision": 0.6515993532041358,
+        "log_loss_baseline_constant": 0.6907339733126091,
+        "model_beats_constant": true
+      },
+      "first30s/logistic_regression": {
+        "n_test_rows": 288,
+        "n_features_expected": 93,
+        "n_nan_cells_in_test_X": 1762,
+        "deployment_warning": "Saved model has NO NaN imputer. Production load+predict will crash on NaN inputs.",
+        "calibration": {
+          "has_calibrator": true,
+          "calibrator_type": "IsotonicRegression",
+          "n_thresholds": 20,
+          "leakage_suspected": true,
+          "reason": "BaseTrainer._calibrate uses split.val; _evaluate computes val ECE on same set."
+        },
+        "n_eval_rows": 288,
+        "positive_rate": 0.5347222222222222,
+        "log_loss_raw": 1.1946705133817035,
+        "log_loss_calibrated": 1.4772624343542444,
+        "brier_raw": 0.28006097806205166,
+        "brier_calibrated": 0.2839218478614893,
+        "auc_raw": 0.5860147315371196,
+        "auc_calibrated": 0.5746995541771662,
+        "avg_precision": 0.601328106081396,
+        "log_loss_baseline_constant": 0.6907339733126091,
+        "model_beats_constant": false
+      },
+      "preopen/lightgbm": {
+        "n_test_rows": 288,
+        "n_features_expected": 93,
+        "n_nan_cells_in_test_X": 2402,
+        "deployment_warning": null,
+        "calibration": {
+          "has_calibrator": true,
+          "calibrator_type": "IsotonicRegression",
+          "n_thresholds": 14,
+          "leakage_suspected": true,
+          "reason": "BaseTrainer._calibrate uses split.val; _evaluate computes val ECE on same set."
+        },
+        "n_eval_rows": 288,
+        "positive_rate": 0.5347222222222222,
+        "log_loss_raw": 0.6999517230948401,
+        "log_loss_calibrated": 0.7411282681171321,
+        "brier_raw": 0.2530545527577232,
+        "brier_calibrated": 0.2522776988122953,
+        "auc_raw": 0.5383310719131615,
+        "auc_calibrated": 0.5442915293661562,
+        "avg_precision": 0.5816921374420949,
+        "log_loss_baseline_constant": 0.6907339733126091,
+        "model_beats_constant": false
+      },
+      "preopen/logistic_regression": {
+        "n_test_rows": 288,
+        "n_features_expected": 93,
+        "n_nan_cells_in_test_X": 2402,
+        "deployment_warning": "Saved model has NO NaN imputer. Production load+predict will crash on NaN inputs.",
+        "calibration": {
+          "has_calibrator": true,
+          "calibrator_type": "IsotonicRegression",
+          "n_thresholds": 12,
+          "leakage_suspected": true,
+          "reason": "BaseTrainer._calibrate uses split.val; _evaluate computes val ECE on same set."
+        },
+        "n_eval_rows": 288,
+        "positive_rate": 0.5347222222222222,
+        "log_loss_raw": 0.8940405730994794,
+        "log_loss_calibrated": 0.7454876418850301,
+        "brier_raw": 0.29283943329665935,
+        "brier_calibrated": 0.2749182208922383,
+        "auc_raw": 0.46772630354719913,
+        "auc_calibrated": 0.46111164954448536,
+        "avg_precision": 0.5213772441511688,
+        "log_loss_baseline_constant": 0.6907339733126091,
+        "model_beats_constant": false
+      }
+    }
+  },
+  "model_02_fair_resolution": {
+    "feature_set": {
+      "feature_set_id": "model_02_fair_resolution_features_v1",
+      "n_features": 74,
+      "n_leakage_only": 8
+    },
+    "variants": {
+      "coarse/lightgbm": {
+        "n_test_rows": 69342,
+        "n_features_expected": 74,
+        "n_nan_cells_in_test_X": 221255,
+        "deployment_warning": null,
+        "calibration": {
+          "has_calibrator": true,
+          "calibrator_type": "IsotonicRegression",
+          "n_thresholds": 130,
+          "leakage_suspected": true,
+          "reason": "BaseTrainer._calibrate uses split.val; _evaluate computes val ECE on same set."
+        },
+        "n_eval_rows": 69342,
+        "positive_rate": 0.5350725390095469,
+        "log_loss_raw": 1.493195851416534,
+        "log_loss_calibrated": 0.6327790642808523,
+        "brier_raw": 0.3660032693852245,
+        "brier_calibrated": 0.21817949097059278,
+        "auc_raw": 0.7236436016762747,
+        "auc_calibrated": 0.7229510647287979,
+        "avg_precision": 0.7533508027501654,
+        "log_loss_baseline_constant": 0.6906849931214165,
+        "model_beats_constant": true
+      },
+      "coarse/logistic_regression": {
+        "n_test_rows": 69342,
+        "n_features_expected": 74,
+        "n_nan_cells_in_test_X": 221255,
+        "deployment_warning": "Saved model has NO NaN imputer. Production load+predict will crash on NaN inputs.",
+        "calibration": {
+          "has_calibrator": true,
+          "calibrator_type": "IsotonicRegression",
+          "n_thresholds": 96,
+          "leakage_suspected": true,
+          "reason": "BaseTrainer._calibrate uses split.val; _evaluate computes val ECE on same set."
+        },
+        "n_eval_rows": 69342,
+        "positive_rate": 0.5350725390095469,
+        "log_loss_raw": 1.094085786669515,
+        "log_loss_calibrated": 1.2793712688929322,
+        "brier_raw": 0.2384156599005672,
+        "brier_calibrated": 0.23157007329813326,
+        "auc_raw": 0.7085092941762666,
+        "auc_calibrated": 0.7047641869548688,
+        "avg_precision": 0.6793582071768316,
+        "log_loss_baseline_constant": 0.6906849931214165,
+        "model_beats_constant": false
+      },
+      "dense_close/lightgbm": {
+        "n_test_rows": 86318,
+        "n_features_expected": 74,
+        "n_nan_cells_in_test_X": 134908,
+        "deployment_warning": null,
+        "calibration": {
+          "has_calibrator": true,
+          "calibrator_type": "IsotonicRegression",
+          "n_thresholds": 116,
+          "leakage_suspected": true,
+          "reason": "BaseTrainer._calibrate uses split.val; _evaluate computes val ECE on same set."
+        },
+        "n_eval_rows": 86318,
+        "positive_rate": 0.5350795894251489,
+        "log_loss_raw": 0.8222293731585593,
+        "log_loss_calibrated": 0.34937519001989037,
+        "brier_raw": 0.1329486520582656,
+        "brier_calibrated": 0.10273846421627338,
+        "auc_raw": 0.9361272106438938,
+        "auc_calibrated": 0.9351306187329487,
+        "avg_precision": 0.9396239097653905,
+        "log_loss_baseline_constant": 0.6906840022905574,
+        "model_beats_constant": true
+      }
+    }
+  },
+  "model_05_closing_flip": {
+    "feature_set": {
+      "feature_set_id": "model_05_closing_flip_features_v1",
+      "n_features": 74,
+      "n_leakage_only": 8
+    },
+    "variants": {
+      "dense_close/lightgbm": {
+        "n_test_rows": 86318,
+        "n_features_expected": 74,
+        "n_nan_cells_in_test_X": 134908,
+        "deployment_warning": null,
+        "calibration": {
+          "has_calibrator": true,
+          "calibrator_type": "IsotonicRegression",
+          "n_thresholds": 78,
+          "leakage_suspected": true,
+          "reason": "BaseTrainer._calibrate uses split.val; _evaluate computes val ECE on same set."
+        },
+        "n_eval_rows": 86318,
+        "positive_rate": 0.12350842234528141,
+        "log_loss_raw": 0.26561026998113896,
+        "log_loss_calibrated": 0.2524661497887258,
+        "brier_raw": 0.08371984354503362,
+        "brier_calibrated": 0.08052684837049327,
+        "auc_raw": 0.8878267448966458,
+        "auc_calibrated": 0.8867229091976783,
+        "avg_precision": 0.4706772022595122,
+        "log_loss_baseline_constant": 0.3738574797399704,
+        "model_beats_constant": true
+      },
+      "dense_close/logistic_regression": {
+        "n_test_rows": 86318,
+        "n_features_expected": 74,
+        "n_nan_cells_in_test_X": 134908,
+        "deployment_warning": "Saved model has NO NaN imputer. Production load+predict will crash on NaN inputs.",
+        "calibration": {
+          "has_calibrator": true,
+          "calibrator_type": "IsotonicRegression",
+          "n_thresholds": 106,
+          "leakage_suspected": true,
+          "reason": "BaseTrainer._calibrate uses split.val; _evaluate computes val ECE on same set."
+        },
+        "n_eval_rows": 86318,
+        "positive_rate": 0.12350842234528141,
+        "log_loss_raw": 1.5733008569377318,
+        "log_loss_calibrated": 0.35808117660187727,
+        "brier_raw": 0.1848192163321911,
+        "brier_calibrated": 0.12275466967226341,
+        "auc_raw": 0.7987455075665179,
+        "auc_calibrated": 0.7906303492843147,
+        "avg_precision": 0.3047853325072792,
+        "log_loss_baseline_constant": 0.3738574797399704,
+        "model_beats_constant": true
+      }
+    }
+  },
+  "model_06_mispricing": {
+    "feature_set": {
+      "feature_set_id": "model_06_mispricing_features_v1",
+      "n_features": 74,
+      "n_leakage_only": 8
+    },
+    "variants": {
+      "dense_close/lightgbm": {
+        "n_test_rows": 78631,
+        "n_features_expected": 74,
+        "n_nan_cells_in_test_X": 40845,
+        "deployment_warning": null,
+        "calibration": {
+          "has_calibrator": false,
+          "leakage_suspected": false
+        },
+        "n_eval_rows": 78631,
+        "mae": 0.09311254905707719,
+        "mae_baseline_zero": 0.3437636364792512,
+        "target_mean": 0.3437636364792512,
+        "model_beats_zero": true
+      },
+      "dense_close/linear_regression": {
+        "n_test_rows": 78631,
+        "n_features_expected": 74,
+        "n_nan_cells_in_test_X": 40845,
+        "deployment_warning": "Saved model has NO NaN imputer. Production load+predict will crash on NaN inputs.",
+        "calibration": {
+          "has_calibrator": false,
+          "leakage_suspected": false
+        },
+        "n_eval_rows": 78631,
+        "mae": 0.2473780994688455,
+        "mae_baseline_zero": 0.3437636364792512,
+        "target_mean": 0.3437636364792512,
+        "model_beats_zero": true
+      }
+    }
+  },
+  "model_07_microstructure_direction": {
+    "feature_set": {
+      "feature_set_id": "model_07_microstructure_direction_features_v1",
+      "n_features": 43,
+      "n_leakage_only": 22
+    },
+    "variants": {
+      "tabular/lightgbm": {
+        "n_test_rows": 273903,
+        "n_features_expected": 43,
+        "n_nan_cells_in_test_X": 99860,
+        "deployment_warning": null,
+        "calibration": {
+          "has_calibrator": true,
+          "calibrator_type": "IsotonicRegression",
+          "n_thresholds": 212,
+          "leakage_suspected": true,
+          "reason": "BaseTrainer._calibrate uses split.val; _evaluate computes val ECE on same set."
+        },
+        "n_eval_rows": 115631,
+        "positive_rate": 0.5000821578988334,
+        "log_loss_raw": 0.583107290798047,
+        "log_loss_calibrated": 0.5843742919742029,
+        "brier_raw": 0.19909138173417743,
+        "brier_calibrated": 0.1992374021208406,
+        "auc_raw": 0.760545120290614,
+        "auc_calibrated": 0.7602667694240163,
+        "avg_precision": 0.7479830411004573,
+        "log_loss_baseline_constant": 0.6931471670601046,
+        "model_beats_constant": true
+      },
+      "tabular/logistic_regression": {
+        "n_test_rows": 273903,
+        "n_features_expected": 43,
+        "n_nan_cells_in_test_X": 99860,
+        "deployment_warning": "Saved model has NO NaN imputer. Production load+predict will crash on NaN inputs.",
+        "calibration": {
+          "has_calibrator": true,
+          "calibrator_type": "IsotonicRegression",
+          "n_thresholds": 126,
+          "leakage_suspected": true,
+          "reason": "BaseTrainer._calibrate uses split.val; _evaluate computes val ECE on same set."
+        },
+        "n_eval_rows": 115631,
+        "positive_rate": 0.5000821578988334,
+        "log_loss_raw": 0.6522693275588136,
+        "log_loss_calibrated": 0.6267973336495233,
+        "brier_raw": 0.2284869778327119,
+        "brier_calibrated": 0.21777932122563,
+        "auc_raw": 0.700529366387466,
+        "auc_calibrated": 0.7014049883655302,
+        "avg_precision": 0.6582965931555926,
+        "log_loss_baseline_constant": 0.6931471670601046,
+        "model_beats_constant": true
+      }
+    }
+  },
+  "model_08_move_size": {
+    "feature_set": {
+      "feature_set_id": "model_08_move_size_features_v1",
+      "n_features": 43,
+      "n_leakage_only": 22
+    },
+    "variants": {
+      "tabular/lightgbm": {
+        "n_test_rows": 222512,
+        "n_features_expected": 43,
+        "n_nan_cells_in_test_X": 17706,
+        "deployment_warning": null,
+        "calibration": {
+          "has_calibrator": false,
+          "leakage_suspected": false
+        },
+        "n_eval_rows": 222512,
+        "mae": 0.01389168642901073,
+        "mae_baseline_zero": 0.01362139570000719,
+        "target_mean": 3.0245559790034016e-06,
+        "model_beats_zero": false
+      },
+      "tabular/linear_regression": {
+        "n_test_rows": 222512,
+        "n_features_expected": 43,
+        "n_nan_cells_in_test_X": 17706,
+        "deployment_warning": "Saved model has NO NaN imputer. Production load+predict will crash on NaN inputs.",
+        "calibration": {
+          "has_calibrator": false,
+          "leakage_suspected": false
+        },
+        "n_eval_rows": 222512,
+        "mae": 0.01396523874537561,
+        "mae_baseline_zero": 0.01362139570000719,
+        "target_mean": 3.0245559790034016e-06,
+        "model_beats_zero": false
+      }
+    }
+  },
+  "model_08b_big_move_classifier": {
+    "feature_set": {
+      "error": "no feature_set.config (newer-style model, see derived features in trainer)"
+    },
+    "variants": {
+      "tabular_btc/lightgbm": {
+        "error": "could not load test data"
+      }
+    }
+  },
+  "model_08c_maker_defense": {
+    "feature_set": {
+      "error": "no feature_set.config (newer-style model, see derived features in trainer)"
+    },
+    "variants": {
+      "extreme_10c_5s/model.pkl": {
+        "error": "could not load test data"
+      },
+      "moderate_5c_5s/model.pkl": {
+        "error": "could not load test data"
+      },
+      "severe_7c_3s/model.pkl": {
+        "error": "could not load test data"
+      }
+    }
+  },
+  "model_08c_maker_defense_v2": {
+    "feature_set": {
+      "error": "no registry entry"
+    },
+    "variants": {
+      "extreme_10c_5s/model.pkl": {
+        "error": "could not load test data"
+      },
+      "moderate_5c_5s/model.pkl": {
+        "error": "could not load test data"
+      },
+      "severe_7c_3s/model.pkl": {
+        "error": "could not load test data"
+      }
+    }
+  },
+  "model_08c_maker_defense_v3_eventtime": {
+    "feature_set": {
+      "error": "no registry entry"
+    },
+    "variants": {
+      "extreme_10c_5s/agg_only": {
+        "error": "could not load test data"
+      },
+      "extreme_10c_5s/agg_plus_event": {
+        "error": "could not load test data"
+      },
+      "extreme_10c_5s/event_only": {
+        "error": "could not load test data"
+      },
+      "moderate_5c_5s/agg_only": {
+        "error": "could not load test data"
+      },
+      "moderate_5c_5s/agg_plus_event": {
+        "error": "could not load test data"
+      },
+      "moderate_5c_5s/event_only": {
+        "error": "could not load test data"
+      },
+      "severe_7c_3s/agg_only": {
+        "error": "could not load test data"
+      },
+      "severe_7c_3s/agg_plus_event": {
+        "error": "could not load test data"
+      },
+      "severe_7c_3s/event_only": {
+        "error": "could not load test data"
+      }
+    }
+  }
+}

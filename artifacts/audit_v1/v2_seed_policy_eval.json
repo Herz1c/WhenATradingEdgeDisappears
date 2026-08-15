@@ -1,0 +1,272 @@
+{
+ "generated_at": "2026-07-11T23:29:50Z",
+ "note": "locked v1 thresholds applied to v2 deltas \u2014 measures signal transfer, not a re-optimized v2 policy",
+ "models": {
+  "tcn_v2_c64_b7_ttc15_150_seed11": {
+   "v2_test_0628_0702": {
+    "combined_trades": 5,
+    "combined_pnl": -2.37,
+    "positive_days": "1/3",
+    "per_slot": {
+     "early_tcn_75_120_utc02_13": {
+      "trades": 3,
+      "pnl": -8.32
+     },
+     "late_tcn_50_75_all_day": {
+      "trades": 2,
+      "pnl": 5.94
+     }
+    }
+   },
+   "holdout_0703plus": {
+    "combined_trades": 7,
+    "combined_pnl": 3.71,
+    "positive_days": "2/3",
+    "per_slot": {
+     "early_tcn_75_120_utc02_13": {
+      "trades": 0,
+      "pnl": 0.0
+     },
+     "late_tcn_50_75_all_day": {
+      "trades": 7,
+      "pnl": 3.71
+     }
+    }
+   }
+  },
+  "tcn_v2_c64_b7_ttc15_150_seed7": {
+   "v2_test_0628_0702": {
+    "combined_trades": 2,
+    "combined_pnl": 0.64,
+    "positive_days": "1/1",
+    "per_slot": {
+     "early_tcn_75_120_utc02_13": {
+      "trades": 1,
+      "pnl": -2.13
+     },
+     "late_tcn_50_75_all_day": {
+      "trades": 1,
+      "pnl": 2.77
+     }
+    }
+   },
+   "holdout_0703plus": {
+    "combined_trades": 6,
+    "combined_pnl": 1.0,
+    "positive_days": "2/4",
+    "per_slot": {
+     "early_tcn_75_120_utc02_13": {
+      "trades": 1,
+      "pnl": -1.71
+     },
+     "late_tcn_50_75_all_day": {
+      "trades": 5,
+      "pnl": 2.71
+     }
+    }
+   }
+  },
+  "tcn_v2_c64_b7_ttc15_150_seed23": {
+   "v2_test_0628_0702": {
+    "combined_trades": 22,
+    "combined_pnl": 18.77,
+    "positive_days": "3/4",
+    "per_slot": {
+     "early_tcn_75_120_utc02_13": {
+      "trades": 11,
+      "pnl": 0.51
+     },
+     "late_tcn_50_75_all_day": {
+      "trades": 11,
+      "pnl": 18.26
+     }
+    }
+   },
+   "holdout_0703plus": {
+    "combined_trades": 19,
+    "combined_pnl": -2.4,
+    "positive_days": "2/4",
+    "per_slot": {
+     "early_tcn_75_120_utc02_13": {
+      "trades": 1,
+      "pnl": -1.71
+     },
+     "late_tcn_50_75_all_day": {
+      "trades": 18,
+      "pnl": -0.69
+     }
+    }
+   }
+  },
+  "tcn_v2_c64_b7_ttc15_150_seed42": {
+   "v2_test_0628_0702": {
+    "combined_trades": 6,
+    "combined_pnl": 1.54,
+    "positive_days": "1/3",
+    "per_slot": {
+     "early_tcn_75_120_utc02_13": {
+      "trades": 5,
+      "pnl": -0.62
+     },
+     "late_tcn_50_75_all_day": {
+      "trades": 1,
+      "pnl": 2.15
+     }
+    }
+   },
+   "holdout_0703plus": {
+    "combined_trades": 0,
+    "combined_pnl": 0.0,
+    "positive_days": "0/0",
+    "per_slot": {
+     "early_tcn_75_120_utc02_13": {
+      "trades": 0,
+      "pnl": 0.0
+     },
+     "late_tcn_50_75_all_day": {
+      "trades": 0,
+      "pnl": 0.0
+     }
+    }
+   }
+  },
+  "tcn_v2_c64_b7_ttc15_150_seed101": {
+   "v2_test_0628_0702": {
+    "combined_trades": 1,
+    "combined_pnl": 1.95,
+    "positive_days": "1/1",
+    "per_slot": {
+     "early_tcn_75_120_utc02_13": {
+      "trades": 1,
+      "pnl": 1.95
+     },
+     "late_tcn_50_75_all_day": {
+      "trades": 0,
+      "pnl": 0.0
+     }
+    }
+   },
+   "holdout_0703plus": {
+    "combined_trades": 0,
+    "combined_pnl": 0.0,
+    "positive_days": "0/0",
+    "per_slot": {
+     "early_tcn_75_120_utc02_13": {
+      "trades": 0,
+      "pnl": 0.0
+     },
+     "late_tcn_50_75_all_day": {
+      "trades": 0,
+      "pnl": 0.0
+     }
+    }
+   }
+  },
+  "tcn_v2_c96_b8_ttc15_150_seed11": {
+   "v2_test_0628_0702": {
+    "combined_trades": 12,
+    "combined_pnl": 2.31,
+    "positive_days": "3/4",
+    "per_slot": {
+     "early_tcn_75_120_utc02_13": {
+      "trades": 7,
+      "pnl": -1.79
+     },
+     "late_tcn_50_75_all_day": {
+      "trades": 5,
+      "pnl": 4.1
+     }
+    }
+   },
+   "holdout_0703plus": {
+    "combined_trades": 13,
+    "combined_pnl": 7.36,
+    "positive_days": "2/3",
+    "per_slot": {
+     "early_tcn_75_120_utc02_13": {
+      "trades": 0,
+      "pnl": 0.0
+     },
+     "late_tcn_50_75_all_day": {
+      "trades": 13,
+      "pnl": 7.36
+     }
+    }
+   }
+  }
+ },
+ "ensemble": {
+  "v2_test_0628_0702": {
+   "members": [
+    "tcn_v2_c64_b7_ttc15_150_seed11",
+    "tcn_v2_c64_b7_ttc15_150_seed7",
+    "tcn_v2_c64_b7_ttc15_150_seed23",
+    "tcn_v2_c64_b7_ttc15_150_seed42",
+    "tcn_v2_c64_b7_ttc15_150_seed101"
+   ],
+   "combined_trades": 1,
+   "combined_pnl": 2.77,
+   "positive_days": "1/1",
+   "per_slot": {
+    "early_tcn_75_120_utc02_13": {
+     "trades": 0,
+     "pnl": 0.0
+    },
+    "late_tcn_50_75_all_day": {
+     "trades": 1,
+     "pnl": 2.77
+    }
+   }
+  },
+  "holdout_0703plus": {
+   "members": [
+    "tcn_v2_c64_b7_ttc15_150_seed11",
+    "tcn_v2_c64_b7_ttc15_150_seed7",
+    "tcn_v2_c64_b7_ttc15_150_seed23",
+    "tcn_v2_c64_b7_ttc15_150_seed42",
+    "tcn_v2_c64_b7_ttc15_150_seed101"
+   ],
+   "combined_trades": 4,
+   "combined_pnl": 1.18,
+   "positive_days": "1/2",
+   "per_slot": {
+    "early_tcn_75_120_utc02_13": {
+     "trades": 0,
+     "pnl": 0.0
+    },
+    "late_tcn_50_75_all_day": {
+     "trades": 4,
+     "pnl": 1.18
+    }
+   }
+  }
+ },
+ "seed_variance": {
+  "v2_test_0628_0702": {
+   "pnls": [
+    -2.37,
+    0.64,
+    18.77,
+    1.54,
+    1.95
+   ],
+   "mean": 4.11,
+   "std": 7.49,
+   "min": -2.37,
+   "max": 18.77
+  },
+  "holdout_0703plus": {
+   "pnls": [
+    3.71,
+    1.0,
+    -2.4,
+    0.0,
+    0.0
+   ],
+   "mean": 0.46,
+   "std": 1.97,
+   "min": -2.4,
+   "max": 3.71
+  }
+ }
+}

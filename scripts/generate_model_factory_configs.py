@@ -1,0 +1,708 @@
+from __future__ import annotations
+
+from pathlib import Path
+
+import yaml
+
+TODAY = "2026-04-28"
+
+REGISTRY_PATH = Path("config/model_registry_v1.yaml")
+FEATURE_DIR = Path("config/feature_sets")
+SPLIT_DIR = Path("config/splits")
+
+UNIVERSAL_LEAKAGE = [
+    "resolved_side",
+    "resolved_side_label",
+    "flip_happened_after_t",
+    "terminal_delta_to_strike",
+    "terminal_margin_to_strike",
+    "hold_to_close_edge_vs_mid",
+    "resolved_ts_ns",
+    "winning_asset_id",
+]
+
+PHASE3_FEATURES = [
+    "price_to_beat",
+    "snapshot_hour_utc",
+    "snapshot_minute_utc",
+    "snapshot_day_of_week",
+    "snapshot_second_of_day_utc",
+    "market_interval_seconds",
+    "t_since_open_s",
+    "t_to_close_s",
+    "session_progress_fraction",
+    "phase_bucket",
+    "live_btc_usd",
+    "live_price_valid",
+    "live_price_degraded",
+    "live_source_count",
+    "live_bias_observation_count",
+    "live_applied_bias_age_seconds",
+    "binance_spot_mid",
+    "binance_usdm_mid",
+    "hyperliquid_mid",
+    "delta_to_strike",
+    "abs_delta_to_strike",
+    "delta_to_strike_over_recent_vol",
+    "delta_sign",
+    "time_spent_above_strike_recent_s",
+    "time_spent_below_strike_recent_s",
+    "btc_return_1s",
+    "btc_return_3s",
+    "btc_return_5s",
+    "btc_return_10s",
+    "btc_realized_vol_5s",
+    "btc_realized_vol_15s",
+    "btc_acceleration_proxy",
+    "btc_jerk_proxy",
+    "cross_source_spread_usd",
+    "spot_perp_divergence_usd",
+    "yes_no_coupling_residual",
+    "maker_base_fee_bps",
+    "taker_base_fee_bps",
+    "market_rewards_min_size",
+    "market_rewards_max_spread",
+    "up_token_best_bid",
+    "up_token_best_ask",
+    "up_token_mid",
+    "up_token_spread",
+    "up_token_microprice",
+    "up_token_bid_depth_total",
+    "up_token_ask_depth_total",
+    "up_token_imbalance",
+    "down_token_best_bid",
+    "down_token_best_ask",
+    "down_token_mid",
+    "down_token_spread",
+    "down_token_microprice",
+    "down_token_bid_depth_total",
+    "down_token_ask_depth_total",
+    "down_token_imbalance",
+    "up_token_l2_book_updates_1s",
+    "up_token_price_change_updates_1s",
+    "up_token_best_bid_ask_updates_1s",
+    "up_token_trade_updates_1s",
+    "up_token_price_change_updates_5s",
+    "up_token_trade_count_5s",
+    "up_token_signed_trade_size_5s",
+    "up_token_absolute_trade_size_5s",
+    "down_token_l2_book_updates_1s",
+    "down_token_price_change_updates_1s",
+    "down_token_best_bid_ask_updates_1s",
+    "down_token_trade_updates_1s",
+    "down_token_price_change_updates_5s",
+    "down_token_trade_count_5s",
+    "down_token_signed_trade_size_5s",
+    "down_token_absolute_trade_size_5s",
+    "one_sided_book",
+    "spot_perp_available",
+]
+
+BIAS_EXTRA_FEATURES = [
+    "prior_market_count",
+    "previous_market_resolved_side_label",
+    "resolved_up_streak_before_open",
+    "resolved_down_streak_before_open",
+    "resolved_up_ratio_last_12",
+    "resolved_up_ratio_last_24",
+    "btc_return_60s",
+    "btc_return_180s",
+    "btc_return_300s",
+    "btc_return_900s",
+    "btc_return_1800s",
+    "btc_realized_vol_60s",
+    "btc_realized_vol_300s",
+    "btc_realized_vol_900s",
+    "prev_interval_btc_open",
+    "prev_interval_btc_high",
+    "prev_interval_btc_low",
+    "prev_interval_btc_close",
+    "prev_interval_btc_range",
+]
+
+EXECUTION_FEATURES = [
+    "anchor_feature_eligible",
+    "anchor_sequence_complete_eligible",
+    "token_registry_match",
+    "market_registry_trainable",
+    "event_count_1s",
+    "event_count_5s",
+    "quote_update_count_5s",
+    "trade_count_5s",
+    "signed_trade_size_5s",
+    "absolute_trade_size_5s",
+    "spread_mean_5s",
+    "spread_max_5s",
+    "imbalance_last",
+    "imbalance_slope_5s",
+    "mid_return_1s",
+    "mid_return_5s",
+    "quote_churn_rate_5s",
+    "depth_change_rate_5s",
+    "sequence_completeness_rate",
+    "price_to_beat",
+    "delta_to_strike",
+    "abs_delta_to_strike",
+    "delta_sign",
+    "t_since_open_s",
+    "t_to_close_s",
+    "price_level",
+    "limit_price",
+    "order_size",
+    "post_only",
+    "cancel_after_ns",
+    "state_stale_s",
+    "state_best_bid",
+    "state_best_ask",
+    "state_mid",
+    "state_spread",
+    "state_bid_depth_total",
+    "state_ask_depth_total",
+    "state_tick_size",
+    "live_btc_usd",
+    "live_price_valid",
+    "live_reference_trusted",
+    "live_price_degraded",
+    "live_source_count",
+    "live_bias_mode",
+    "live_bias_active",
+    "live_bias_carried_forward",
+    "live_applied_bias_age_seconds",
+    "one_sided_book",
+    "crossed_book",
+    "stale_book",
+]
+
+MICROSTRUCTURE_FEATURES = [
+    "anchor_source",
+    "event_count_1s",
+    "event_count_3s",
+    "event_count_5s",
+    "event_count_15s",
+    "quote_update_count_1s",
+    "quote_update_count_3s",
+    "quote_update_count_5s",
+    "trade_count_1s",
+    "trade_count_3s",
+    "trade_count_5s",
+    "signed_trade_size_1s",
+    "signed_trade_size_3s",
+    "signed_trade_size_5s",
+    "absolute_trade_size_1s",
+    "absolute_trade_size_3s",
+    "absolute_trade_size_5s",
+    "spread_mean_5s",
+    "spread_min_5s",
+    "spread_max_5s",
+    "imbalance_mean_5s",
+    "imbalance_last",
+    "imbalance_slope_5s",
+    "mid_return_1s",
+    "mid_return_3s",
+    "mid_return_5s",
+    "quote_churn_rate_5s",
+    "depth_change_rate_5s",
+    "one_sided_book",
+    "crossed_book",
+    "stale_book",
+    "sequence_completeness_rate",
+    "price_to_beat",
+    "live_btc_usd",
+    "delta_to_strike",
+    "abs_delta_to_strike",
+    "delta_sign",
+    "t_since_open_s",
+    "t_to_close_s",
+    "phase_bucket",
+    "live_reference_trusted",
+    "live_bias_mode",
+    "live_applied_bias_age_seconds",
+]
+
+EXECUTION_LEAKAGE = [
+    "cancel_request_ts_ns",
+    "cancel_effective_ts_ns",
+    "replace_requested",
+    "replace_request_ts_ns",
+    "replace_effective_ts_ns",
+    "replaced",
+    "replace_post_only_rejected",
+    "submitted",
+    "post_only_rejected",
+    "post_only_crossed_book",
+    "filled",
+    "full_fill",
+    "partial_fill",
+    "fill_uncertain",
+    "fill_ts_ns",
+    "last_fill_ts_ns",
+    "time_to_fill_s",
+    "time_to_last_fill_s",
+    "fill_count",
+    "fill_price",
+    "fill_size",
+    "fill_notional",
+    "maker_fill",
+    "taker_fill",
+    "cancelled",
+    "cancel_effective",
+    "fees_paid",
+    "rebate_earned",
+    "gross_pnl_to_close",
+    "net_pnl_to_close",
+    "markout_1s",
+    "markout_3s",
+    "markout_5s",
+    "markout_15s",
+    "markout_to_close",
+    "markout_1s_available",
+    "markout_3s_available",
+    "markout_5s_available",
+    "markout_15s_available",
+    "markout_to_close_available",
+    "adverse_selection_5s",
+    "toxic_fill_5s",
+]
+
+MICROSTRUCTURE_LEAKAGE = [
+    "mid_move_1s",
+    "mid_move_3s",
+    "mid_move_5s",
+    "mid_move_15s",
+    "mid_move_30s",
+    "mid_move_sign_1s",
+    "mid_move_sign_3s",
+    "mid_move_sign_5s",
+    "mid_move_sign_15s",
+    "mid_move_sign_30s",
+    "max_favorable_excursion_5s",
+    "max_adverse_excursion_5s",
+    "max_favorable_excursion_15s",
+    "max_adverse_excursion_15s",
+]
+
+
+def uniq(values: list[str]) -> list[str]:
+    seen: set[str] = set()
+    out: list[str] = []
+    for value in values:
+        if value not in seen:
+            out.append(value)
+            seen.add(value)
+    return out
+
+
+MODEL_META = {
+    "model_01_bias": {
+        "display_name": "5-minute interval bias model",
+        "phase": 4,
+        "status": "not_started",
+        "purpose": "Prior probability for interval direction before market opens",
+        "roadmap_section": "XIV Model 1",
+        "dataset": {
+            "family": "market_interval_dataset",
+            "version": "v1",
+            "variants": ["preopen", "first15s", "first30s"],
+            "paths": {
+                "preopen": "data/datasets/market_interval_dataset_v1_preopen/",
+                "first15s": "data/datasets/market_interval_dataset_v1_first15s/",
+                "first30s": "data/datasets/market_interval_dataset_v1_first30s/",
+            },
+            "schema_contract": "config/schemas/market_interval_dataset_v1_schema.yaml",
+            "dataset_hash_required": True,
+        },
+        "target": {
+            "primary": "resolved_side_label",
+            "auxiliary": ["early_direction_sign", "first_30s_drift_sign"],
+            "leakage_only_cols": uniq(UNIVERSAL_LEAKAGE),
+        },
+        "split_unit": "market",
+        "ordering_col": "market_open_ts_ns",
+        "algorithms": {"baseline": "logistic_regression", "primary": "lightgbm"},
+        "metrics": ["log_loss", "brier_score", "ece", "fee_adjusted_edge", "calibration_curve"],
+        "gate": "must_beat_delta_to_strike_heuristic",
+        "features": uniq(PHASE3_FEATURES + BIAS_EXTRA_FEATURES),
+        "min_rows": (50, 10, 10),
+    },
+    "model_02_fair_resolution": {
+        "display_name": "Fair-resolution model",
+        "phase": 4,
+        "status": "not_started",
+        "purpose": "P(Up | all info available at time t)",
+        "roadmap_section": "XIV Model 2",
+        "dataset": {
+            "family": "resolution_snapshot_dataset",
+            "version": "v1",
+            "variants": ["coarse", "dense_close"],
+            "paths": {
+                "coarse": "data/datasets/resolution_snapshot_dataset_v1_coarse/",
+                "dense_close": "data/datasets/resolution_snapshot_dataset_v1_dense_close/",
+            },
+            "schema_contract": "config/schemas/resolution_snapshot_dataset_v1_coarse_schema.yaml",
+            "dataset_hash_required": True,
+        },
+        "target": {
+            "primary": "resolved_side_label",
+            "leakage_only_cols": uniq(UNIVERSAL_LEAKAGE),
+        },
+        "split_unit": "snapshot",
+        "ordering_col": "snapshot_ts_ns",
+        "algorithms": {"baseline": "logistic_regression", "primary": "lightgbm"},
+        "metrics": [
+            "log_loss",
+            "brier_score",
+            "ece",
+            "fee_adjusted_edge",
+            "edge_by_time_to_close",
+            "calibration_curve",
+        ],
+        "gate": "must_beat_delta_to_strike_heuristic",
+        "features": PHASE3_FEATURES,
+        "min_rows": (1000, 1000, 1000),
+    },
+    "model_03_fill_probability": {
+        "display_name": "Fill probability model",
+        "phase": 6,
+        "status": "not_started",
+        "purpose": "P(fill | quote specification and market state)",
+        "roadmap_section": "XIV Model 3",
+        "dataset": {
+            "family": "execution_intent_dataset",
+            "version": "v1",
+            "paths": {"default": "data/datasets/execution_intent_dataset_v1/"},
+            "schema_contract": "config/schemas/execution_intent_dataset_v1_schema.yaml",
+            "dataset_hash_required": True,
+        },
+        "target": {
+            "primary": "filled",
+            "auxiliary": ["time_to_fill_s", "full_fill"],
+            "leakage_only_cols": uniq(UNIVERSAL_LEAKAGE + EXECUTION_LEAKAGE),
+        },
+        "split_unit": "intent",
+        "ordering_col": "order_ts_ns",
+        "algorithms": {"baseline": "logistic_regression", "primary": "lightgbm"},
+        "metrics": ["log_loss", "brier_score", "ece", "fill_rate_by_offset", "fill_rate_by_phase"],
+        "gate": "must_beat_naive_fill_rate_heuristic",
+        "features": EXECUTION_FEATURES,
+        "min_rows": (1000, 1000, 1000),
+    },
+    "model_04_adverse_selection": {
+        "display_name": "Adverse selection model",
+        "phase": 6,
+        "status": "not_started",
+        "purpose": "Expected markout after fill; adverse fill detection",
+        "roadmap_section": "XIV Model 4",
+        "dataset": {
+            "family": "execution_intent_dataset",
+            "version": "v1",
+            "filter": "filled == True",
+            "paths": {"default": "data/datasets/execution_intent_dataset_v1/"},
+            "schema_contract": "config/schemas/execution_intent_dataset_v1_schema.yaml",
+            "dataset_hash_required": True,
+        },
+        "target": {
+            "primary": "markout_1s",
+            "auxiliary": ["markout_3s", "markout_5s", "markout_to_close", "adverse_selection_5s"],
+            "leakage_only_cols": uniq(UNIVERSAL_LEAKAGE + EXECUTION_LEAKAGE),
+        },
+        "split_unit": "intent",
+        "ordering_col": "order_ts_ns",
+        "algorithms": {"baseline": "linear_regression", "primary": "lightgbm"},
+        "metrics": ["mae", "rmse", "adverse_flag_precision", "adverse_flag_recall", "markout_by_phase"],
+        "gate": "must_predict_adverse_fills_above_chance",
+        "features": EXECUTION_FEATURES,
+        "min_rows": (1000, 1000, 1000),
+    },
+    "model_05_closing_flip": {
+        "display_name": "Closing-flip model",
+        "phase": 7,
+        "status": "not_started",
+        "purpose": "P(resolution flips relative to current state in last N seconds)",
+        "roadmap_section": "XIV Model 5",
+        "dataset": {
+            "family": "resolution_snapshot_dataset",
+            "version": "v1",
+            "variants": ["dense_close"],
+            "paths": {"dense_close": "data/datasets/resolution_snapshot_dataset_v1_dense_close/"},
+            "schema_contract": "config/schemas/resolution_snapshot_dataset_v1_dense_close_schema.yaml",
+            "dataset_hash_required": True,
+        },
+        "target": {
+            "primary": "flip_happened_after_t",
+            "leakage_only_cols": uniq(UNIVERSAL_LEAKAGE),
+        },
+        "split_unit": "snapshot",
+        "ordering_col": "snapshot_ts_ns",
+        "algorithms": {"baseline": "logistic_regression", "primary": "lightgbm"},
+        "metrics": ["brier_score", "ece", "flip_precision_recall", "flip_rate_by_delta_bucket"],
+        "gate": "must_beat_naive_flip_rate",
+        "features": PHASE3_FEATURES,
+        "min_rows": (1000, 1000, 1000),
+    },
+    "model_06_mispricing": {
+        "display_name": "Mispricing model",
+        "phase": 7,
+        "status": "not_started",
+        "purpose": "Residual between fair value and current market pricing",
+        "roadmap_section": "XIV Model 6",
+        "dataset": {
+            "family": "resolution_snapshot_dataset",
+            "version": "v1",
+            "variants": ["dense_close"],
+            "paths": {"dense_close": "data/datasets/resolution_snapshot_dataset_v1_dense_close/"},
+            "schema_contract": "config/schemas/resolution_snapshot_dataset_v1_dense_close_schema.yaml",
+            "dataset_hash_required": True,
+        },
+        "target": {
+            "primary": "hold_to_close_edge_vs_mid",
+            "leakage_only_cols": uniq(UNIVERSAL_LEAKAGE),
+        },
+        "split_unit": "snapshot",
+        "ordering_col": "snapshot_ts_ns",
+        "algorithms": {"baseline": "linear_regression", "primary": "lightgbm"},
+        "metrics": ["mae", "rmse", "edge_sign_accuracy", "mispricing_by_delta_bucket"],
+        "gate": "must_show_positive_edge_net_of_spread",
+        "features": PHASE3_FEATURES,
+        "min_rows": (1000, 1000, 1000),
+    },
+    "model_07_microstructure_direction": {
+        "display_name": "Token microstructure direction model",
+        "phase": 8,
+        "status": "dataset_done",
+        "purpose": "Short-horizon token mid movement direction",
+        "roadmap_section": "XIV Model 7",
+        "dataset": {
+            "family": "microstructure_sequence_dataset",
+            "version": "v1",
+            "variants": ["tabular", "event64", "event128"],
+            "paths": {
+                "tabular": "data/datasets/microstructure_sequence_dataset_v1_tabular/",
+                "event64": "data/datasets/microstructure_sequence_dataset_v1_event64/",
+                "event128": "data/datasets/microstructure_sequence_dataset_v1_event128/",
+            },
+            "schema_contract": "config/schemas/microstructure_sequence_dataset_v1_schema.yaml",
+            "dataset_hash_required": True,
+        },
+        "target": {
+            "primary": "mid_move_sign_5s",
+            "auxiliary": [
+                "mid_move_sign_1s",
+                "mid_move_sign_3s",
+                "mid_move_sign_15s",
+                "mid_move_sign_30s",
+            ],
+            "leakage_only_cols": uniq(UNIVERSAL_LEAKAGE + MICROSTRUCTURE_LEAKAGE),
+        },
+        "split_unit": "sequence",
+        "ordering_col": "anchor_ts_ns",
+        "algorithms": {"baseline": "logistic_regression", "primary": "lightgbm", "deep": "deeplob"},
+        "metrics": [
+            "log_loss",
+            "brier_score",
+            "direction_accuracy_by_horizon",
+            "edge_vs_fair_resolution_model",
+        ],
+        "gate": "must_add_value_above_fair_resolution_layer",
+        "features": MICROSTRUCTURE_FEATURES,
+        "min_rows": (1000, 1000, 1000),
+    },
+    "model_08_move_size": {
+        "display_name": "Token move-size model",
+        "phase": 8,
+        "status": "dataset_done",
+        "purpose": "Distribution of absolute token price movement",
+        "roadmap_section": "XIV Model 8",
+        "dataset": {
+            "family": "microstructure_sequence_dataset",
+            "version": "v1",
+            "variants": ["tabular"],
+            "paths": {"tabular": "data/datasets/microstructure_sequence_dataset_v1_tabular/"},
+            "schema_contract": "config/schemas/microstructure_sequence_dataset_v1_schema.yaml",
+            "dataset_hash_required": True,
+        },
+        "target": {
+            "primary": "mid_move_5s",
+            "auxiliary": [
+                "max_favorable_excursion_5s",
+                "max_adverse_excursion_5s",
+                "max_favorable_excursion_15s",
+                "max_adverse_excursion_15s",
+            ],
+            "leakage_only_cols": uniq(UNIVERSAL_LEAKAGE + MICROSTRUCTURE_LEAKAGE),
+        },
+        "split_unit": "sequence",
+        "ordering_col": "anchor_ts_ns",
+        "algorithms": {"baseline": "linear_regression", "primary": "lightgbm"},
+        "metrics": ["mae", "rmse", "quantile_loss_q10_q50_q90", "move_size_calibration"],
+        "gate": "must_beat_naive_vol_estimate",
+        "features": MICROSTRUCTURE_FEATURES,
+        "min_rows": (1000, 1000, 1000),
+    },
+    "model_09_regime_encoder": {
+        "display_name": "BTC regime encoder",
+        "phase": 9,
+        "status": "not_started",
+        "purpose": "Shared latent BTC market state (trend/chop/jump-risk)",
+        "roadmap_section": "XIV Model 9",
+        "dataset": {
+            "family": "market_interval_dataset",
+            "version": "v1",
+            "variants": ["preopen"],
+            "paths": {"preopen": "data/datasets/market_interval_dataset_v1_preopen/"},
+            "schema_contract": "config/schemas/market_interval_dataset_v1_schema.yaml",
+            "dataset_hash_required": True,
+        },
+        "target": {
+            "primary": "regime_label",
+            "note": "regime_label is derived/constructed and is not a raw column.",
+            "leakage_only_cols": uniq(UNIVERSAL_LEAKAGE),
+        },
+        "split_unit": "market",
+        "ordering_col": "market_open_ts_ns",
+        "algorithms": {"baseline": "hmm", "primary": "gru_encoder"},
+        "metrics": ["downstream_model_improvement", "regime_stability_across_days"],
+        "gate": "must_improve_downstream_models",
+        "features": [],
+        "placeholder": True,
+        "min_rows": (50, 10, 10),
+    },
+    "model_10_action_policy": {
+        "display_name": "Action / execution policy",
+        "phase": 10,
+        "status": "not_started",
+        "purpose": "Final trading decision over quote/cancel/taker-emergency actions",
+        "roadmap_section": "XIV Model 10",
+        "dataset": {
+            "family": "execution_intent_dataset",
+            "version": "v2_enriched",
+            "note": "v2 enriched dataset does not exist yet; built after upstream models are trained.",
+            "paths": {"default": "data/datasets/execution_intent_dataset_v2_enriched/"},
+            "dataset_hash_required": True,
+        },
+        "target": {
+            "primary": "action_label",
+            "note": "action_label is derived from outcomes and model outputs.",
+            "leakage_only_cols": uniq(UNIVERSAL_LEAKAGE + EXECUTION_LEAKAGE),
+        },
+        "split_unit": "intent",
+        "ordering_col": "order_ts_ns",
+        "algorithms": {"baseline": "rule_engine", "primary": "weighted_score_aggregation", "advanced": "bandit"},
+        "metrics": ["replay_paper_pnl", "fee_adjusted_edge", "adverse_fill_rate", "inventory_stress"],
+        "gate": "must_pass_replay_paper_mode",
+        "features": [],
+        "placeholder": True,
+        "min_rows": (50, 10, 10),
+    },
+}
+
+
+def artifact_config(model_id: str) -> dict:
+    artifact = {
+        "base_path": f"artifacts/{model_id}/",
+        "model_file": "model.pkl",
+        "eval_report": "eval_report.md",
+        "experiment_log": "experiment_log.jsonl",
+    }
+    if model_id != "model_09_regime_encoder":
+        artifact["calibration_file"] = "calibration.pkl"
+        artifact["feature_importance"] = "feature_importance.json"
+    else:
+        artifact["embedding_file"] = "embeddings.parquet"
+    return artifact
+
+
+def build_registry() -> dict:
+    models: dict[str, dict] = {}
+    for model_id, meta in MODEL_META.items():
+        models[model_id] = {
+            "display_name": meta["display_name"],
+            "model_id": model_id,
+            "phase": meta["phase"],
+            "status": meta["status"],
+            "purpose": meta["purpose"],
+            "roadmap_section": meta["roadmap_section"],
+            "dataset": meta["dataset"],
+            "feature_set": {
+                "version": "v1",
+                "config": f"config/feature_sets/{model_id}_features_v1.yaml",
+            },
+            "target": meta["target"],
+            "split": {
+                "method": "anchored_walkforward",
+                "config": f"config/splits/{model_id}_split_v1.yaml",
+                "unit": meta["split_unit"],
+                "ordering_col": meta["ordering_col"],
+                "purge_days": 1,
+                "embargo_days": 0,
+            },
+            "algorithms": meta["algorithms"],
+            "evaluation": {
+                "metrics": meta["metrics"],
+                "gate": meta["gate"],
+            },
+            "artifacts": artifact_config(model_id),
+        }
+    return {"version": 1, "last_updated": TODAY, "models": models}
+
+
+def build_feature_config(model_id: str, meta: dict) -> dict:
+    config = {
+        "feature_set_id": f"{model_id}_features_v1",
+        "model_id": model_id,
+        "version": "v1",
+        "created": TODAY,
+        "feature_columns": meta["features"],
+        "leakage_only_columns": meta["target"]["leakage_only_cols"],
+        "target_columns": {
+            "primary": meta["target"]["primary"],
+            "auxiliary": meta["target"].get("auxiliary", []),
+        },
+    }
+    if meta.get("placeholder"):
+        config["status"] = "placeholder"
+        config["placeholder_reason"] = (
+            "Feature definition intentionally blocked until upstream model outputs "
+            "or derived labels exist."
+        )
+    return config
+
+
+def build_split_config(model_id: str, meta: dict) -> dict:
+    min_train, min_val, min_test = meta["min_rows"]
+    return {
+        "split_id": f"{model_id}_split_v1",
+        "model_id": model_id,
+        "version": "v1",
+        "method": "anchored_walkforward",
+        "ordering_column": meta["ordering_col"],
+        "ordering_unit": meta["split_unit"],
+        "split_strategy": "day_based",
+        "train": {"start_day": "2026-04-19", "end_day": "2026-04-21"},
+        "validation": {"start_day": "2026-04-22", "end_day": "2026-04-22"},
+        "test": {"start_day": "2026-04-23", "end_day": "2026-04-23"},
+        "purge_days": 1,
+        "embargo_days": 0,
+        "min_train_rows": min_train,
+        "min_val_rows": min_val,
+        "min_test_rows": min_test,
+        "auto_extend": True,
+        "auto_extend_val_days": 1,
+        "auto_extend_test_days": 1,
+        "preserve_validation_rows_on_short_window": True,
+    }
+
+
+def write_yaml(path: Path, data: dict) -> None:
+    path.parent.mkdir(parents=True, exist_ok=True)
+    path.write_text(yaml.safe_dump(data, sort_keys=False, allow_unicode=False), encoding="utf-8")
+
+
+def main() -> None:
+    write_yaml(REGISTRY_PATH, build_registry())
+    for model_id, meta in MODEL_META.items():
+        write_yaml(FEATURE_DIR / f"{model_id}_features_v1.yaml", build_feature_config(model_id, meta))
+        write_yaml(SPLIT_DIR / f"{model_id}_split_v1.yaml", build_split_config(model_id, meta))
+
+
+if __name__ == "__main__":
+    main()

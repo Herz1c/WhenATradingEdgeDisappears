@@ -1,0 +1,138 @@
+{
+ "date": "2026-07-05",
+ "entry_source": "parity",
+ "shares_per_entry": 5.1,
+ "fee_model": "0.072 * p * (1-p) on entry fill",
+ "n_resolutions_loaded": 31,
+ "total": {
+  "trades": 9,
+  "wins": 4,
+  "pnl": 2.9237,
+  "unresolved": 0,
+  "win_rate": 0.4444
+ },
+ "per_strategy": {
+  "early_tcn_75_120_utc02_13": {
+   "trades": 1,
+   "wins": 0,
+   "pnl": -1.8164,
+   "win_rate": 0.0
+  },
+  "late_tcn_50_75_all_day": {
+   "trades": 8,
+   "wins": 4,
+   "pnl": 4.7401,
+   "win_rate": 0.5
+  }
+ },
+ "trades": [
+  {
+   "market_slug": "btc-updown-5m-1783259700",
+   "strategy_id": "early_tcn_75_120_utc02_13",
+   "side": "UP",
+   "fill_quote": 0.34,
+   "ev": 0.13803346106449343,
+   "ttc_s": 120.0,
+   "entry_source": "parity_expected",
+   "outcome": "DOWN",
+   "win": false,
+   "pnl": -1.8164
+  },
+  {
+   "market_slug": "btc-updown-5m-1783259700",
+   "strategy_id": "late_tcn_50_75_all_day",
+   "side": "UP",
+   "fill_quote": 0.31,
+   "ev": 0.24610339341854864,
+   "ttc_s": 75.0,
+   "entry_source": "parity_expected",
+   "outcome": "DOWN",
+   "win": false,
+   "pnl": -1.6595
+  },
+  {
+   "market_slug": "btc-updown-5m-1783260600",
+   "strategy_id": "late_tcn_50_75_all_day",
+   "side": "UP",
+   "fill_quote": 0.24,
+   "ev": 0.17979797802246267,
+   "ttc_s": 75.0,
+   "entry_source": "parity_expected",
+   "outcome": "UP",
+   "win": true,
+   "pnl": 3.809
+  },
+  {
+   "market_slug": "btc-updown-5m-1783261200",
+   "strategy_id": "late_tcn_50_75_all_day",
+   "side": "DOWN",
+   "fill_quote": 0.22,
+   "ev": 0.17156403393943073,
+   "ttc_s": 75.0,
+   "entry_source": "parity_expected",
+   "outcome": "DOWN",
+   "win": true,
+   "pnl": 3.915
+  },
+  {
+   "market_slug": "btc-updown-5m-1783261500",
+   "strategy_id": "late_tcn_50_75_all_day",
+   "side": "UP",
+   "fill_quote": 0.69,
+   "ev": 0.16196352591413987,
+   "ttc_s": 65.2,
+   "entry_source": "parity_expected",
+   "outcome": "UP",
+   "win": true,
+   "pnl": 1.5025
+  },
+  {
+   "market_slug": "btc-updown-5m-1783261800",
+   "strategy_id": "late_tcn_50_75_all_day",
+   "side": "UP",
+   "fill_quote": 0.23,
+   "ev": 0.1928253268896212,
+   "ttc_s": 71.8,
+   "entry_source": "parity_expected",
+   "outcome": "DOWN",
+   "win": false,
+   "pnl": -1.238
+  },
+  {
+   "market_slug": "btc-updown-5m-1783263000",
+   "strategy_id": "late_tcn_50_75_all_day",
+   "side": "DOWN",
+   "fill_quote": 0.46,
+   "ev": 0.20853854405560351,
+   "ttc_s": 75.0,
+   "entry_source": "parity_expected",
+   "outcome": "UP",
+   "win": false,
+   "pnl": -2.4372
+  },
+  {
+   "market_slug": "btc-updown-5m-1783264500",
+   "strategy_id": "late_tcn_50_75_all_day",
+   "side": "UP",
+   "fill_quote": 0.48,
+   "ev": 0.21057357109364339,
+   "ttc_s": 75.0,
+   "entry_source": "parity_expected",
+   "outcome": "DOWN",
+   "win": false,
+   "pnl": -2.5397
+  },
+  {
+   "market_slug": "btc-updown-5m-1783265700",
+   "strategy_id": "late_tcn_50_75_all_day",
+   "side": "DOWN",
+   "fill_quote": 0.32,
+   "ev": 0.22293779885724524,
+   "ttc_s": 75.0,
+   "entry_source": "parity_expected",
+   "outcome": "DOWN",
+   "win": true,
+   "pnl": 3.3881
+  }
+ ]
+}

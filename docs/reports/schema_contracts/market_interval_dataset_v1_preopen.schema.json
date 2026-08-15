@@ -1,0 +1,485 @@
+{
+  "dataset_name": "market_interval_dataset_v1_preopen",
+  "columns": [
+    {
+      "name": "snapshot_ts_ns",
+      "dtype": "int64"
+    },
+    {
+      "name": "snapshot_ts_iso",
+      "dtype": "object"
+    },
+    {
+      "name": "snapshot_ts_seconds",
+      "dtype": "int64"
+    },
+    {
+      "name": "sample_family",
+      "dtype": "object"
+    },
+    {
+      "name": "sample_bucket_ms",
+      "dtype": "int64"
+    },
+    {
+      "name": "market_slug",
+      "dtype": "object"
+    },
+    {
+      "name": "market_id",
+      "dtype": "object"
+    },
+    {
+      "name": "condition_id",
+      "dtype": "object"
+    },
+    {
+      "name": "market_open_ts_ns",
+      "dtype": "int64"
+    },
+    {
+      "name": "market_close_ts_ns",
+      "dtype": "int64"
+    },
+    {
+      "name": "market_open_iso",
+      "dtype": "object"
+    },
+    {
+      "name": "market_close_iso",
+      "dtype": "object"
+    },
+    {
+      "name": "price_to_beat",
+      "dtype": "float64"
+    },
+    {
+      "name": "resolved_side",
+      "dtype": "object"
+    },
+    {
+      "name": "resolved_side_label",
+      "dtype": "int64"
+    },
+    {
+      "name": "snapshot_hour_utc",
+      "dtype": "int64"
+    },
+    {
+      "name": "snapshot_minute_utc",
+      "dtype": "int64"
+    },
+    {
+      "name": "snapshot_day_of_week",
+      "dtype": "int64"
+    },
+    {
+      "name": "snapshot_second_of_day_utc",
+      "dtype": "int64"
+    },
+    {
+      "name": "market_interval_seconds",
+      "dtype": "int64"
+    },
+    {
+      "name": "t_since_open_s",
+      "dtype": "float64"
+    },
+    {
+      "name": "t_to_close_s",
+      "dtype": "float64"
+    },
+    {
+      "name": "session_progress_fraction",
+      "dtype": "float64"
+    },
+    {
+      "name": "phase_bucket",
+      "dtype": "object"
+    },
+    {
+      "name": "live_btc_usd",
+      "dtype": "float64"
+    },
+    {
+      "name": "live_price_valid",
+      "dtype": "bool"
+    },
+    {
+      "name": "live_price_degraded",
+      "dtype": "bool"
+    },
+    {
+      "name": "live_source_count",
+      "dtype": "int64"
+    },
+    {
+      "name": "binance_spot_mid",
+      "dtype": "float64"
+    },
+    {
+      "name": "binance_usdm_mid",
+      "dtype": "float64"
+    },
+    {
+      "name": "hyperliquid_mid",
+      "dtype": "float64"
+    },
+    {
+      "name": "delta_to_strike",
+      "dtype": "float64"
+    },
+    {
+      "name": "abs_delta_to_strike",
+      "dtype": "float64"
+    },
+    {
+      "name": "delta_to_strike_over_recent_vol",
+      "dtype": "float64"
+    },
+    {
+      "name": "delta_sign",
+      "dtype": "int64"
+    },
+    {
+      "name": "time_spent_above_strike_recent_s",
+      "dtype": "int64"
+    },
+    {
+      "name": "time_spent_below_strike_recent_s",
+      "dtype": "int64"
+    },
+    {
+      "name": "btc_return_1s",
+      "dtype": "float64"
+    },
+    {
+      "name": "btc_return_3s",
+      "dtype": "float64"
+    },
+    {
+      "name": "btc_return_5s",
+      "dtype": "float64"
+    },
+    {
+      "name": "btc_return_10s",
+      "dtype": "float64"
+    },
+    {
+      "name": "btc_realized_vol_1s",
+      "dtype": "float64"
+    },
+    {
+      "name": "btc_realized_vol_5s",
+      "dtype": "float64"
+    },
+    {
+      "name": "btc_realized_vol_15s",
+      "dtype": "float64"
+    },
+    {
+      "name": "btc_acceleration_proxy",
+      "dtype": "float64"
+    },
+    {
+      "name": "btc_jerk_proxy",
+      "dtype": "float64"
+    },
+    {
+      "name": "cross_source_spread_usd",
+      "dtype": "float64"
+    },
+    {
+      "name": "spot_perp_divergence_usd",
+      "dtype": "float64"
+    },
+    {
+      "name": "flip_happened_after_t",
+      "dtype": "bool"
+    },
+    {
+      "name": "terminal_delta_to_strike",
+      "dtype": "float64"
+    },
+    {
+      "name": "terminal_margin_to_strike",
+      "dtype": "float64"
+    },
+    {
+      "name": "hold_to_close_edge_vs_mid",
+      "dtype": "float64"
+    },
+    {
+      "name": "yes_no_coupling_residual",
+      "dtype": "float64"
+    },
+    {
+      "name": "maker_base_fee_bps",
+      "dtype": "float64"
+    },
+    {
+      "name": "taker_base_fee_bps",
+      "dtype": "float64"
+    },
+    {
+      "name": "market_rewards_min_size",
+      "dtype": "float64"
+    },
+    {
+      "name": "market_rewards_max_spread",
+      "dtype": "float64"
+    },
+    {
+      "name": "up_token_best_bid",
+      "dtype": "float64"
+    },
+    {
+      "name": "up_token_best_ask",
+      "dtype": "float64"
+    },
+    {
+      "name": "up_token_mid",
+      "dtype": "float64"
+    },
+    {
+      "name": "up_token_spread",
+      "dtype": "float64"
+    },
+    {
+      "name": "up_token_microprice",
+      "dtype": "float64"
+    },
+    {
+      "name": "up_token_bid_depth_total",
+      "dtype": "float64"
+    },
+    {
+      "name": "up_token_ask_depth_total",
+      "dtype": "float64"
+    },
+    {
+      "name": "up_token_imbalance",
+      "dtype": "float64"
+    },
+    {
+      "name": "up_token_last_trade_price",
+      "dtype": "float64"
+    },
+    {
+      "name": "up_token_tick_size",
+      "dtype": "float64"
+    },
+    {
+      "name": "up_token_min_order_size",
+      "dtype": "float64"
+    },
+    {
+      "name": "down_token_best_bid",
+      "dtype": "float64"
+    },
+    {
+      "name": "down_token_best_ask",
+      "dtype": "float64"
+    },
+    {
+      "name": "down_token_mid",
+      "dtype": "float64"
+    },
+    {
+      "name": "down_token_spread",
+      "dtype": "float64"
+    },
+    {
+      "name": "down_token_microprice",
+      "dtype": "float64"
+    },
+    {
+      "name": "down_token_bid_depth_total",
+      "dtype": "float64"
+    },
+    {
+      "name": "down_token_ask_depth_total",
+      "dtype": "float64"
+    },
+    {
+      "name": "down_token_imbalance",
+      "dtype": "float64"
+    },
+    {
+      "name": "down_token_last_trade_price",
+      "dtype": "float64"
+    },
+    {
+      "name": "down_token_tick_size",
+      "dtype": "float64"
+    },
+    {
+      "name": "down_token_min_order_size",
+      "dtype": "float64"
+    },
+    {
+      "name": "up_token_l2_book_updates_1s",
+      "dtype": "int64"
+    },
+    {
+      "name": "up_token_price_change_updates_1s",
+      "dtype": "int64"
+    },
+    {
+      "name": "up_token_best_bid_ask_updates_1s",
+      "dtype": "int64"
+    },
+    {
+      "name": "up_token_trade_updates_1s",
+      "dtype": "int64"
+    },
+    {
+      "name": "up_token_price_change_updates_5s",
+      "dtype": "int64"
+    },
+    {
+      "name": "up_token_trade_count_5s",
+      "dtype": "int64"
+    },
+    {
+      "name": "up_token_signed_trade_size_5s",
+      "dtype": "float64"
+    },
+    {
+      "name": "up_token_absolute_trade_size_5s",
+      "dtype": "float64"
+    },
+    {
+      "name": "down_token_l2_book_updates_1s",
+      "dtype": "int64"
+    },
+    {
+      "name": "down_token_price_change_updates_1s",
+      "dtype": "int64"
+    },
+    {
+      "name": "down_token_best_bid_ask_updates_1s",
+      "dtype": "int64"
+    },
+    {
+      "name": "down_token_trade_updates_1s",
+      "dtype": "int64"
+    },
+    {
+      "name": "down_token_price_change_updates_5s",
+      "dtype": "int64"
+    },
+    {
+      "name": "down_token_trade_count_5s",
+      "dtype": "int64"
+    },
+    {
+      "name": "down_token_signed_trade_size_5s",
+      "dtype": "float64"
+    },
+    {
+      "name": "down_token_absolute_trade_size_5s",
+      "dtype": "float64"
+    },
+    {
+      "name": "prior_market_count",
+      "dtype": "int64"
+    },
+    {
+      "name": "previous_market_resolved_side_label",
+      "dtype": "int64"
+    },
+    {
+      "name": "resolved_up_streak_before_open",
+      "dtype": "int64"
+    },
+    {
+      "name": "resolved_down_streak_before_open",
+      "dtype": "int64"
+    },
+    {
+      "name": "resolved_up_ratio_last_12",
+      "dtype": "float64"
+    },
+    {
+      "name": "resolved_up_ratio_last_24",
+      "dtype": "float64"
+    },
+    {
+      "name": "btc_return_60s",
+      "dtype": "float64"
+    },
+    {
+      "name": "btc_return_180s",
+      "dtype": "float64"
+    },
+    {
+      "name": "btc_return_300s",
+      "dtype": "float64"
+    },
+    {
+      "name": "btc_return_900s",
+      "dtype": "float64"
+    },
+    {
+      "name": "btc_return_1800s",
+      "dtype": "float64"
+    },
+    {
+      "name": "btc_realized_vol_60s",
+      "dtype": "float64"
+    },
+    {
+      "name": "btc_realized_vol_300s",
+      "dtype": "float64"
+    },
+    {
+      "name": "btc_realized_vol_900s",
+      "dtype": "float64"
+    },
+    {
+      "name": "prev_interval_btc_open",
+      "dtype": "float64"
+    },
+    {
+      "name": "prev_interval_btc_high",
+      "dtype": "float64"
+    },
+    {
+      "name": "prev_interval_btc_low",
+      "dtype": "float64"
+    },
+    {
+      "name": "prev_interval_btc_close",
+      "dtype": "float64"
+    },
+    {
+      "name": "prev_interval_btc_range",
+      "dtype": "float64"
+    },
+    {
+      "name": "fng_value",
+      "dtype": "float64"
+    },
+    {
+      "name": "fng_classification",
+      "dtype": "object"
+    },
+    {
+      "name": "market_view",
+      "dtype": "object"
+    },
+    {
+      "name": "early_direction_sign",
+      "dtype": "int64"
+    },
+    {
+      "name": "close_to_open_btc_sign",
+      "dtype": "int64"
+    },
+    {
+      "name": "first_30s_drift_sign",
+      "dtype": "int64"
+    }
+  ]
+}

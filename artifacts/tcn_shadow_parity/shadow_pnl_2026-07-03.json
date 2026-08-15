@@ -1,0 +1,48 @@
+{
+ "date": "2026-07-03",
+ "entry_source": "parity",
+ "shares_per_entry": 5.1,
+ "fee_model": "0.072 * p * (1-p) on entry fill",
+ "n_resolutions_loaded": 42,
+ "total": {
+  "trades": 2,
+  "wins": 2,
+  "pnl": 5.8987,
+  "unresolved": 0,
+  "win_rate": 1.0
+ },
+ "per_strategy": {
+  "late_tcn_50_75_all_day": {
+   "trades": 2,
+   "wins": 2,
+   "pnl": 5.8987,
+   "win_rate": 1.0
+  }
+ },
+ "trades": [
+  {
+   "market_slug": "btc-updown-5m-1783116600",
+   "strategy_id": "late_tcn_50_75_all_day",
+   "side": "UP",
+   "fill_quote": 0.31,
+   "ev": 0.1373296148251893,
+   "ttc_s": 75.0,
+   "entry_source": "parity_expected",
+   "outcome": "UP",
+   "win": true,
+   "pnl": 3.4405
+  },
+  {
+   "market_slug": "btc-updown-5m-1783117200",
+   "strategy_id": "late_tcn_50_75_all_day",
+   "side": "UP",
+   "fill_quote": 0.5,
+   "ev": 0.19361076618386752,
+   "ttc_s": 75.0,
+   "entry_source": "parity_expected",
+   "outcome": "UP",
+   "win": true,
+   "pnl": 2.4582
+  }
+ ]
+}

@@ -1,0 +1,99 @@
+version: execution_simulator_v1
+description: >
+  Phase 5 execution simulator result contract. One row is one simulated
+  post-only order intent replayed against finalized-clean Polymarket L2 events.
+  Feature-side state is measured strictly before order_ts_ns; fill and markout
+  fields are outcomes and must never be used as decision-time features.
+columns:
+  simulator_id: {dtype: string, nullable: false, leakage_only: false, training_eligible: false, source: simulator, description: "Deterministic result id."}
+  intent_id: {dtype: string, nullable: false, leakage_only: false, training_eligible: false, source: simulator, description: "Deterministic order intent id."}
+  source_sequence_id: {dtype: string, nullable: true, leakage_only: false, training_eligible: false, source: phase8_anchor, description: "Optional Phase 8 anchor sequence id."}
+  scenario_name: {dtype: string, nullable: false, leakage_only: false, training_eligible: false, source: scenario_grid, description: "Scenario grid or synthetic test name."}
+  market_slug: {dtype: string, nullable: false, leakage_only: false, training_eligible: true, source: market_registry_v1, description: "Market slug."}
+  token_asset_id: {dtype: string, nullable: false, leakage_only: false, training_eligible: true, source: token_registry_v1, description: "Token asset id."}
+  token_side_normalized: {dtype: string, nullable: false, leakage_only: false, training_eligible: true, source: token_registry_v1, description: "UP or DOWN."}
+  resolved_side: {dtype: string, nullable: true, leakage_only: true, training_eligible: false, source: market_registry_v1, description: "Canonical outcome side, used only for settlement/PnL outcomes."}
+  order_ts_ns: {dtype: int64, nullable: false, leakage_only: false, training_eligible: false, source: scenario_grid, description: "Causal decision/order timestamp in recv_ts_ns clock."}
+  market_close_ts_ns: {dtype: int64, nullable: false, leakage_only: false, training_eligible: false, source: market_registry_v1, description: "Market close timestamp."}
+  order_side: {dtype: string, nullable: false, leakage_only: false, training_eligible: true, source: scenario_grid, description: "buy or sell."}
+  price_level: {dtype: string, nullable: false, leakage_only: false, training_eligible: true, source: scenario_grid, description: "Named passive quote level."}
+  limit_price: {dtype: float64, nullable: false, leakage_only: false, training_eligible: true, source: scenario_grid, description: "Limit price."}
+  order_size: {dtype: float64, nullable: false, leakage_only: false, training_eligible: true, source: scenario_grid, description: "Simulated order size."}
+  post_only: {dtype: bool, nullable: false, leakage_only: false, training_eligible: true, source: scenario_grid, description: "Whether order is post-only."}
+  holding_policy: {dtype: string, nullable: false, leakage_only: false, training_eligible: true, source: scenario_grid, description: "Cancel/hold policy."}
+  cancel_after_ns: {dtype: int64, nullable: true, leakage_only: false, training_eligible: true, source: scenario_grid, description: "Requested cancel delay; null means hold to close."}
+  replace_after_ns: {dtype: int64, nullable: true, leakage_only: false, training_eligible: true, source: scenario_grid, description: "Requested replace delay; null means no replace."}
+  replace_limit_price: {dtype: float64, nullable: true, leakage_only: false, training_eligible: true, source: scenario_grid, description: "Replacement passive limit price."}
+  replace_order_size: {dtype: float64, nullable: true, leakage_only: false, training_eligible: true, source: scenario_grid, description: "Replacement size, capped by remaining old-order size."}
+  replace_price_level: {dtype: string, nullable: true, leakage_only: false, training_eligible: true, source: scenario_grid, description: "Named replacement passive quote level."}
+  replace_post_only: {dtype: bool, nullable: false, leakage_only: false, training_eligible: true, source: scenario_grid, description: "Whether replacement order is post-only."}
+  cancel_request_ts_ns: {dtype: int64, nullable: false, leakage_only: true, training_eligible: false, source: simulator, description: "Outcome-side cancel request timestamp."}
+  cancel_effective_ts_ns: {dtype: int64, nullable: false, leakage_only: true, training_eligible: false, source: simulator, description: "Outcome-side cancel effective timestamp after configured latency."}
+  replace_requested: {dtype: bool, nullable: false, leakage_only: true, training_eligible: false, source: simulator, description: "Whether a replace lifecycle was requested."}
+  replace_request_ts_ns: {dtype: int64, nullable: true, leakage_only: true, training_eligible: false, source: simulator, description: "Replacement request timestamp."}
+  replace_effective_ts_ns: {dtype: int64, nullable: true, leakage_only: true, training_eligible: false, source: simulator, description: "Replacement effective timestamp after cancel/replace latency."}
+  replaced: {dtype: bool, nullable: false, leakage_only: true, training_eligible: false, source: simulator, description: "Old order was cancelled and replacement path evaluated."}
+  replace_post_only_rejected: {dtype: bool, nullable: false, leakage_only: true, training_eligible: false, source: simulator, description: "Replacement post-only order crossed and was rejected."}
+  state_recv_ts_ns: {dtype: int64, nullable: false, leakage_only: false, training_eligible: true, source: polymarket_l2, description: "Latest book recv_ts_ns strictly before order_ts_ns."}
+  state_stale_s: {dtype: float64, nullable: false, leakage_only: false, training_eligible: true, source: polymarket_l2, description: "Age of latest book state."}
+  state_best_bid: {dtype: float64, nullable: true, leakage_only: false, training_eligible: true, source: polymarket_l2, description: "Best bid before order."}
+  state_best_ask: {dtype: float64, nullable: true, leakage_only: false, training_eligible: true, source: polymarket_l2, description: "Best ask before order."}
+  state_mid: {dtype: float64, nullable: true, leakage_only: false, training_eligible: true, source: polymarket_l2, description: "Mid before order."}
+  state_spread: {dtype: float64, nullable: true, leakage_only: false, training_eligible: true, source: polymarket_l2, description: "Spread before order."}
+  state_bid_depth_total: {dtype: float64, nullable: true, leakage_only: false, training_eligible: true, source: polymarket_l2, description: "Bid depth total before order."}
+  state_ask_depth_total: {dtype: float64, nullable: true, leakage_only: false, training_eligible: true, source: polymarket_l2, description: "Ask depth total before order."}
+  state_tick_size: {dtype: float64, nullable: false, leakage_only: false, training_eligible: true, source: polymarket_l2, description: "Tick size before order."}
+  live_reference_recv_ts_ns: {dtype: int64, nullable: true, leakage_only: false, training_eligible: true, source: live_reference_events_v1, description: "Causal official live-reference recv_ts_ns at or before order_ts_ns."}
+  live_btc_usd: {dtype: float64, nullable: true, leakage_only: false, training_eligible: true, source: live_reference_events_v1, description: "Official synthetic BTC/USD reference at decision time."}
+  live_price_valid: {dtype: bool, nullable: false, leakage_only: false, training_eligible: true, source: live_reference_events_v1, description: "Official live-reference price_valid flag."}
+  live_reference_trusted: {dtype: bool, nullable: false, leakage_only: false, training_eligible: true, source: live_reference_events_v1, description: "True when decision-time live reference is price-valid and active/carried trusted."}
+  live_price_degraded: {dtype: bool, nullable: false, leakage_only: false, training_eligible: true, source: live_reference_events_v1, description: "Official live-reference degraded diagnostic flag."}
+  live_source_count: {dtype: int64, nullable: false, leakage_only: false, training_eligible: true, source: live_reference_events_v1, description: "Official live-reference source count."}
+  live_bias_mode: {dtype: string, nullable: false, leakage_only: false, training_eligible: true, source: live_reference_events_v1, description: "Official live-reference bias mode."}
+  live_bias_active: {dtype: bool, nullable: false, leakage_only: false, training_eligible: true, source: live_reference_events_v1, description: "Fresh active-window bias flag."}
+  live_bias_carried_forward: {dtype: bool, nullable: false, leakage_only: false, training_eligible: true, source: live_reference_events_v1, description: "Carried residual bias flag."}
+  live_applied_bias_age_seconds: {dtype: float64, nullable: true, leakage_only: false, training_eligible: true, source: live_reference_events_v1, description: "Age of the applied live-reference bias."}
+  one_sided_book: {dtype: bool, nullable: false, leakage_only: false, training_eligible: true, source: simulator, description: "Book missing one side before order."}
+  crossed_book: {dtype: bool, nullable: false, leakage_only: false, training_eligible: true, source: simulator, description: "Best bid >= best ask before order."}
+  stale_book: {dtype: bool, nullable: false, leakage_only: false, training_eligible: true, source: simulator, description: "Book older than configured threshold."}
+  submitted: {dtype: bool, nullable: false, leakage_only: true, training_eligible: false, source: simulator, description: "Order accepted into simulator."}
+  post_only_rejected: {dtype: bool, nullable: false, leakage_only: true, training_eligible: false, source: simulator, description: "Post-only rejection outcome."}
+  post_only_crossed_book: {dtype: bool, nullable: false, leakage_only: true, training_eligible: false, source: simulator, description: "Intent would cross current book."}
+  filled: {dtype: bool, nullable: false, leakage_only: true, training_eligible: false, source: simulator, description: "Any fill outcome."}
+  full_fill: {dtype: bool, nullable: false, leakage_only: true, training_eligible: false, source: simulator, description: "Fill size reached order size."}
+  partial_fill: {dtype: bool, nullable: false, leakage_only: true, training_eligible: false, source: simulator, description: "Partial fill outcome."}
+  fill_uncertain: {dtype: bool, nullable: false, leakage_only: true, training_eligible: false, source: simulator, description: "Fill used unknown trade-side evidence."}
+  fill_ts_ns: {dtype: int64, nullable: true, leakage_only: true, training_eligible: false, source: simulator, description: "Fill timestamp, zero if unfilled."}
+  last_fill_ts_ns: {dtype: int64, nullable: true, leakage_only: true, training_eligible: false, source: simulator, description: "Last fill-slice timestamp for cumulative partial/full fills."}
+  time_to_fill_s: {dtype: float64, nullable: true, leakage_only: true, training_eligible: false, source: simulator, description: "Seconds from order to fill."}
+  time_to_last_fill_s: {dtype: float64, nullable: true, leakage_only: true, training_eligible: false, source: simulator, description: "Seconds from order to last fill slice."}
+  fill_count: {dtype: int64, nullable: false, leakage_only: true, training_eligible: false, source: simulator, description: "Number of cumulative fill slices."}
+  fill_price: {dtype: float64, nullable: true, leakage_only: true, training_eligible: false, source: simulator, description: "Average passive fill price across fill slices."}
+  fill_size: {dtype: float64, nullable: false, leakage_only: true, training_eligible: false, source: simulator, description: "Cumulative filled size."}
+  fill_notional: {dtype: float64, nullable: false, leakage_only: true, training_eligible: false, source: simulator, description: "Cumulative filled notional."}
+  maker_fill: {dtype: bool, nullable: false, leakage_only: true, training_eligible: false, source: simulator, description: "Fill classified as maker."}
+  taker_fill: {dtype: bool, nullable: false, leakage_only: true, training_eligible: false, source: simulator, description: "Fill classified as taker."}
+  cancelled: {dtype: bool, nullable: false, leakage_only: true, training_eligible: false, source: simulator, description: "Order ended by cancel without fill."}
+  cancel_effective: {dtype: bool, nullable: false, leakage_only: true, training_eligible: false, source: simulator, description: "Cancel became effective before close."}
+  fee_schedule_id: {dtype: string, nullable: false, leakage_only: false, training_eligible: false, source: simulator_config, description: "Versioned fee schedule used for lookup."}
+  maker_fee_bps: {dtype: float64, nullable: false, leakage_only: false, training_eligible: false, source: simulator_config, description: "Maker fee basis points from schedule."}
+  taker_fee_bps: {dtype: float64, nullable: false, leakage_only: false, training_eligible: false, source: simulator_config, description: "Taker fee basis points from schedule."}
+  maker_rebate_bps: {dtype: float64, nullable: false, leakage_only: false, training_eligible: false, source: simulator_config, description: "Maker rebate basis points from schedule."}
+  taker_rebate_bps: {dtype: float64, nullable: false, leakage_only: false, training_eligible: false, source: simulator_config, description: "Taker rebate basis points from schedule."}
+  fees_paid: {dtype: float64, nullable: false, leakage_only: true, training_eligible: false, source: simulator_config, description: "Fees paid."}
+  rebate_earned: {dtype: float64, nullable: false, leakage_only: true, training_eligible: false, source: simulator_config, description: "Rebate earned."}
+  gross_pnl_to_close: {dtype: float64, nullable: true, leakage_only: true, training_eligible: false, source: simulator, description: "Gross PnL to close/settlement."}
+  net_pnl_to_close: {dtype: float64, nullable: true, leakage_only: true, training_eligible: false, source: simulator, description: "Gross PnL minus fees plus rebates."}
+  markout_1s: {dtype: float64, nullable: true, leakage_only: true, training_eligible: false, source: simulator, description: "Side-signed markout 1s after fill."}
+  markout_3s: {dtype: float64, nullable: true, leakage_only: true, training_eligible: false, source: simulator, description: "Side-signed markout 3s after fill."}
+  markout_5s: {dtype: float64, nullable: true, leakage_only: true, training_eligible: false, source: simulator, description: "Side-signed markout 5s after fill."}
+  markout_15s: {dtype: float64, nullable: true, leakage_only: true, training_eligible: false, source: simulator, description: "Side-signed markout 15s after fill."}
+  markout_to_close: {dtype: float64, nullable: true, leakage_only: true, training_eligible: false, source: simulator, description: "Side-signed markout to close."}
+  markout_1s_available: {dtype: bool, nullable: false, leakage_only: true, training_eligible: false, source: simulator, description: "1s markout availability."}
+  markout_3s_available: {dtype: bool, nullable: false, leakage_only: true, training_eligible: false, source: simulator, description: "3s markout availability."}
+  markout_5s_available: {dtype: bool, nullable: false, leakage_only: true, training_eligible: false, source: simulator, description: "5s markout availability."}
+  markout_15s_available: {dtype: bool, nullable: false, leakage_only: true, training_eligible: false, source: simulator, description: "15s markout availability."}
+  markout_to_close_available: {dtype: bool, nullable: false, leakage_only: true, training_eligible: false, source: simulator, description: "To-close markout availability."}
+  adverse_selection_5s: {dtype: bool, nullable: false, leakage_only: true, training_eligible: false, source: simulator, description: "True if 5s markout is negative."}
+  toxic_fill_5s: {dtype: bool, nullable: false, leakage_only: true, training_eligible: false, source: simulator, description: "True if 5s markout is worse than configured diagnostic threshold."}
+  execution_exclusion_reason: {dtype: string, nullable: false, leakage_only: false, training_eligible: false, source: simulator, description: "Empty if simulated normally; otherwise exclusion/rejection reason."}

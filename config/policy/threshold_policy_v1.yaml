@@ -1,0 +1,23 @@
+policy_id: "threshold_policy_v1"
+version: "1"
+
+thresholds:
+  quote_both: 0.0
+  quote_yes_only: 0.0
+  quote_no_only: 0.0
+  cancel_yes: 0.0
+  cancel_no: 0.0
+  cancel_all: 0.0
+  taker_emergency_only: 0.0
+
+no_trade_conditions:
+  - "live_reference_trusted == False"
+  - "t_to_close_s < 3"
+  - "crossed_book == True"
+  - "all_weights_placeholder == True"
+
+emergency_exit_conditions:
+  - "p_flip_before_close > 0.70"
+  - "position > max_position * 0.90"
+  - "daily_pnl < -daily_loss_cap"
+

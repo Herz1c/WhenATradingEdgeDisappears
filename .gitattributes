@@ -1,0 +1,18 @@
+# Line ending conversion is disabled for the whole repository on purpose.
+#
+# tools/build_public_paper.py embeds a SHA-256 over the raw bytes of the
+# manuscript, the claim register, and the quantitative source artifacts, and
+# tools/reproduce_public_evidence.py hashes released arrays the same way. If Git
+# rewrote CRLF to LF on commit or back again on checkout, those bytes would
+# differ between a Windows and a Linux clone and the --check runs would fail on
+# a clone that is in fact correct.
+#
+# Every file is therefore stored and checked out byte for byte identical.
+* -text
+
+# Marked explicitly so no future attribute change can touch them.
+*.npz binary
+*.pt binary
+*.pdf binary
+*.csv binary
+*.jsonl binary

@@ -1,0 +1,156 @@
+dataset_name: microstructure_sequence_dataset_v1_tensor
+lineage: Derived from audited microstructure_sequence_dataset_v1_event64/event128
+  parquet shards.
+sample_unit: 'One Phase 8 sequence sample: market_slug, token_asset_id, anchor_ts_ns,
+  anchor_source.'
+shard_naming: data/datasets/microstructure_sequence_dataset_v1_tensor/{variant}/YYYY-MM-DD.partNNN.npz
+variants:
+  event64:
+    source_dataset: microstructure_sequence_dataset_v1_event64
+    sequence_length: 64
+  event128:
+    source_dataset: microstructure_sequence_dataset_v1_event128
+    sequence_length: 128
+arrays:
+  x_events:
+    dtype: float32
+    shape:
+    - n
+    - sequence_length
+    - 15
+    channels:
+    - events_dt_from_anchor_s
+    - events_dt_from_prev_s
+    - events_best_bid
+    - events_best_ask
+    - events_mid
+    - events_spread
+    - events_microprice
+    - events_bid_depth_total
+    - events_ask_depth_total
+    - events_imbalance
+    - events_last_trade_price
+    - events_trade_size
+    - events_tick_size
+    - events_event_type_code
+    - events_trade_side_code
+  event_mask:
+    dtype: bool
+    shape:
+    - n
+    - sequence_length
+  events_recv_ts_ns:
+    dtype: int64
+    shape:
+    - n
+    - sequence_length
+    causal_rule: masked event recv_ts_ns < anchor_ts_ns
+  x_context:
+    dtype: float32
+    shape:
+    - n
+    - 40
+    features:
+    - event_count_1s
+    - event_count_3s
+    - event_count_5s
+    - event_count_15s
+    - quote_update_count_1s
+    - quote_update_count_3s
+    - quote_update_count_5s
+    - trade_count_1s
+    - trade_count_3s
+    - trade_count_5s
+    - signed_trade_size_1s
+    - signed_trade_size_3s
+    - signed_trade_size_5s
+    - absolute_trade_size_1s
+    - absolute_trade_size_3s
+    - absolute_trade_size_5s
+    - spread_mean_5s
+    - spread_min_5s
+    - spread_max_5s
+    - imbalance_mean_5s
+    - imbalance_last
+    - imbalance_slope_5s
+    - mid_return_1s
+    - mid_return_3s
+    - mid_return_5s
+    - quote_churn_rate_5s
+    - depth_change_rate_5s
+    - one_sided_book
+    - crossed_book
+    - stale_book
+    - sequence_completeness_rate
+    - price_to_beat
+    - live_btc_usd
+    - delta_to_strike
+    - abs_delta_to_strike
+    - delta_sign
+    - t_since_open_s
+    - t_to_close_s
+    - live_reference_trusted
+    - live_applied_bias_age_seconds
+  y_mid_move:
+    dtype: float32
+    shape:
+    - n
+    - 5
+    horizons_s:
+    - 1
+    - 3
+    - 5
+    - 15
+    - 30
+    leakage_only: true
+  y_mid_move_sign:
+    dtype: int8
+    shape:
+    - n
+    - 5
+    horizons_s:
+    - 1
+    - 3
+    - 5
+    - 15
+    - 30
+    leakage_only: true
+  y_target_available:
+    dtype: bool
+    shape:
+    - n
+    - 5
+    horizons_s:
+    - 1
+    - 3
+    - 5
+    - 15
+    - 30
+  y_max_favorable_excursion:
+    dtype: float32
+    shape:
+    - n
+    - 2
+    horizons_s:
+    - 5
+    - 15
+    leakage_only: true
+  y_max_adverse_excursion:
+    dtype: float32
+    shape:
+    - n
+    - 2
+    horizons_s:
+    - 5
+    - 15
+    leakage_only: true
+  sequence_id:
+    dtype: unicode
+    shape:
+    - n
+  anchor_ts_ns:
+    dtype: int64
+    shape:
+    - n
+padding: Pre-anchor padding positions use event_mask=False and event_type_code=0.
+missing_numeric: NaN is preserved for unavailable numeric event/context/target values.

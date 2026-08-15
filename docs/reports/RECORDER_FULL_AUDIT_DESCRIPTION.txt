@@ -1,0 +1,535 @@
+﻿RECORDER_FULL_AUDIT_DESCRIPTION.txt
+Schema and data-correctness audit for the current recorder stack
+
+===============================================================================
+1. PURPOSE
+===============================================================================
+This document describes the current recorder truth for new recordings after the
+focused remediation pass.
+
+Priority:
+- correctness for dense 2-10 second modeling
+- causal joins on a shared local receive clock
+- clear separation between authoritative, proxy, delayed, verification, and
+  debug layers
+- observability when a source is active, degraded, delayed, or recovered
+
+Old files are not the compatibility target. The current schema is intentionally
+cleaner, stricter, and easier to audit.
+
+===============================================================================
+2. PRIMARY TRAINING RULES
+===============================================================================
+- `recv_ts_ns` is the shared causal alignment clock across sources.
+- strike/live as-of joins are strictly causal on `recv_ts_ns`.
+- no future live row may be selected when building `delta_to_strike`.
+- direct Chainlink Data Streams is absent unless credentials and the BTC/USD
+  feed ID are configured.
+- Chainlink onchain is verification-only, not a live-equivalent source.
+- the public delayed Chainlink page is a delayed comparison layer, not a live
+  or settlement-equivalent source.
+- Polymarket REST timestamps are endpoint-specific; generic REST
+  `source_timestamps` are not exposed as training-facing event time.
+
+===============================================================================
+3. PRIMARY / PROXY / DELAYED / VERIFICATION / DEBUG TIERS
+===============================================================================
+Primary training-grade sources:
+- Polymarket market `.ws.jsonl.zst`, filtered by `token_modeling_safe`
+- Polymarket `.l2.jsonl.zst`, now restricted to the selected Up/Down token ids
+- Polymarket `.strike.jsonl.zst`, filtered by `label_safe`
+- Chainlink direct `.live.jsonl.zst` when Data Streams credentials and feed ID
+  exist
+- Polymarket RTDS `crypto_prices_chainlink` BTC/USD fallback
+- Binance spot `.ws.jsonl.zst`
+- Binance USD-M `.ws.jsonl.zst`
+- Bybit `.ws.jsonl.zst`
+- Coinbase Advanced `.ws.jsonl.zst`
+- Hyperliquid `.ws.jsonl.zst`
+
+Secondary context sources:
+- Polymarket `.rest.jsonl.zst`
+- Binance spot `.snapshot.jsonl.zst`
+- Binance USD-M `.rest.jsonl.zst`
+- Bybit `.rest.jsonl.zst`
+- Hyperliquid `.rest.jsonl.zst`
+- Deribit `.ws.jsonl.zst`
+- Deribit `.rest.jsonl.zst`
+- FNG `.fng.jsonl.zst`
+
+Delayed comparison layer:
+- Chainlink public delayed `.page.jsonl.zst` under
+  `chainlink_public_delayed/public_stream_page/BTCUSD`
+
+Verification-only sources:
+- Chainlink `.onchain.jsonl.zst`
+
+Debug-only sources:
+- `.lifecycle.jsonl.zst`
+- manifests and recovery metadata
+- QC reports such as `qc-day` and `compare-chainlink-rtds`
+
+Manifest metadata:
+- manifests now carry `source_tier`
+- manifests now carry `quality_class`
+- dataset builders can filter files by tier and quarantine files by quality class
+
+===============================================================================
+4. POLYMARKET BTC 5M STACK
+===============================================================================
+Default files:
+- `.ws.jsonl.zst`
+- `.l2.jsonl.zst`
+- `.rest.jsonl.zst`
+- `.strike.jsonl.zst`
+- `.discovery.jsonl.zst`
+- `.lifecycle.jsonl.zst`
+
+Token sidecars:
+- token_ws sidecars are disabled by default
+- token_rest sidecars are disabled by default
+- token-level L2 is carried inside the market-level `.l2` stream via
+  `token_asset_id` and `token_outcome`
+- token-level L2 is carried inside the market-level .l2 stream via token_asset_id and token_outcome
+
+Strike:
+- `.strike.jsonl.zst` remains the label-facing Polymarket page layer
+- `.strike` replaced dense `.page`
+- `ENABLE_POLYMARKET_STRIKE` controls the recorder in shared launchers
+- each strike row now includes:
+  - `parse_status`
+  - `parse_error`
+  - `price_to_beat`
+  - `label_safe`
+- `label_safe=true` only when the strike is safe to use as a label
+- initial page-population misses are retried before a failure row is emitted
+- transient parse failures after a valid strike has already been captured are
+  surfaced through lifecycle telemetry instead of repeatedly polluting strike
+  rows
+
+Polymarket raw WS safety:
+- raw WS rows now include `event_type`
+- raw WS rows now include `market_scope`
+- raw WS rows now include `token_modeling_safe`
+- `new_market` rows are preserved for audit/debug, but are marked
+  `token_modeling_safe=false` when they include off-market assets
+- selected-market `.l2` no longer propagates off-market rows from raw WS
+- selected-market `.l2` now emits only the selected token universe, with
+  coherent `token_asset_id` and `token_outcome`
+
+===============================================================================
+5. LIVE CHAINLINK REFERENCE
+===============================================================================
+Authoritative preferred path:
+- direct Chainlink Data Streams WebSocket is the preferred live-reference path
+  when credentials and the BTC/USD feed ID are configured
+
+Public fallback path:
+- Polymarket RTDS `crypto_prices_chainlink` BTC/USD is the public proxy fallback
+  layer
+- Polymarket RTDS `crypto_prices_chainlink` BTC/USD is the public proxy fallback layer
+
+Important boundary:
+- `CHAINLINK_BACKEND=auto` prefers direct Data Streams WebSocket when direct
+  credentials and the BTC/USD feed ID exist
+- `auto` no longer falls back to `public_page`
+- direct startup fails clearly instead of silently degrading to onchain/page
+- when direct live is unavailable, the unified live reader falls back to RTDS
+- when neither direct live nor RTDS exists, the unified live reader returns no
+  live reference instead of pretending onchain is equivalent
+- the delayed public Chainlink page is no longer exposed through
+  `CHAINLINK_BACKEND`; it is a separate recorder and comparison layer
+- `ENABLE_CHAINLINK_LIVE` controls the direct Chainlink live recorder
+
+Live row schema:
+- direct Data Streams and RTDS now share a minimal consistent live schema:
+  - `record_type`
+  - `recv_ts_ns`
+  - `recv_ts_iso`
+  - `recv_ts_source`
+  - source-side Chainlink timestamp:
+    - direct: `chainlink_ts`
+    - RTDS: `chainlink_ts_ms`
+  - source-side Chainlink ISO timestamp
+  - `btc_usd_price`
+  - `source`
+
+===============================================================================
+6. CHAINLINK PROXY VALIDATION LAYER
+===============================================================================
+New delayed comparison recorder:
+- public Chainlink BTC/USD page is now recorded separately as:
+  - `source=chainlink_public_delayed`
+  - `backend=public_stream_page`
+  - `symbol=BTCUSD`
+- the recorder polls the public delayed Chainlink page metadata and its public
+  delayed backing endpoint
+- full HTML is not stored by default
+- debug HTML is only included behind the explicit debug flag
+
+What it is useful for:
+- checking whether RTDS and the public delayed page align after a stable time
+  shift
+- measuring observed lag stability
+- spotting clear mismatches in price family
+
+What it cannot prove:
+- it does not prove RTDS is the authoritative settlement feed
+- it does not turn the public delayed page into a live-equivalent source
+
+Comparison tooling:
+- `py -m market_recorders compare-chainlink-rtds --date-from YYYY-MM-DD --date-to YYYY-MM-DD --out ./data`
+- optional `--by-hour` produces a simple per-hour QC view
+- `qc-day` now embeds a daily/hourly machine-readable Chainlink proxy
+  validation summary, including unstable hourly regimes
+- output is intentionally conservative:
+  - "RTDS matches public delayed Chainlink closely after ~X second offset"
+  - or
+  - "RTDS does not reliably align with the public delayed page"
+- neither interpretation should be read as proof of settlement equivalence
+
+===============================================================================
+7. CAUSAL STRIKE/LIVE DELTA
+===============================================================================
+`PolymarketStrikeDeltaReader` computes:
+- `delta_to_strike = live_chainlink_btcusd - price_to_beat`
+
+Important correction:
+- historical as-of strike delta is now enforced on `recv_ts_ns`
+- a live row must satisfy `live.recv_ts_ns <= strike.recv_ts_ns`
+- same-receive-time ties are broken deterministically by the newer source-side
+  Chainlink timestamp
+- future RTDS rows cannot leak into strike joins
+- future direct Data Streams rows cannot leak into strike joins
+- strike/live as-of joins are strictly causal on `recv_ts_ns`
+
+===============================================================================
+8. POLYMARKET REST TIMESTAMP SEMANTICS
+===============================================================================
+Polymarket REST no longer exposes a generic training-facing `source_timestamps`
+field on REST rows.
+
+Instead, each REST row carries:
+- `event_ts_ns`
+- `event_ts_iso`
+- `event_ts_kind`
+- `event_ts_field`
+- `timestamp_semantics`
+- `has_source_timestamp`
+
+Optional endpoint-specific detail fields may also appear:
+- `source_event_timestamps`
+- `source_metadata_timestamps`
+
+Endpoint behavior:
+- Gamma discovery / selected market / selected event / event detail:
+  - `event_ts_kind=recv_fallback`
+  - `timestamp_semantics=source_metadata`
+  - stale metadata timestamps stay in `source_metadata_timestamps`
+- CLOB server time:
+  - `event_ts_kind=source_event`
+  - `timestamp_semantics=source_event`
+- CLOB order book / midpoint / spread / last trade price:
+  - use source event time when the payload exposes a trustworthy event timestamp
+  - otherwise fall back to receive time
+- batch/collection endpoints such as price history and multi-book snapshots:
+  - `event_ts_kind=recv_fallback`
+  - `timestamp_semantics=collection_snapshot`
+- metrics / config-style endpoints such as holders, open interest, rewards,
+  fee rate, and tick size:
+  - treated as metadata or recv-fallback context, not as generic live event time
+
+===============================================================================
+9. COINBASE ADVANCED
+===============================================================================
+Coinbase remains websocket-only in this stack.
+
+Important fix:
+- Coinbase `l2_data` is now normalized correctly
+- valid `l2_data` rows are no longer silently dropped
+
+Normalized Coinbase L2 output includes:
+- `product_id`
+- `channel`
+- `type`
+- `event_ts_ns`
+- `event_ts_iso`
+- `update_count`
+- `updates` with `side`, `price_level`, `quantity`, and `event_time`
+- `first_side`
+- `first_price_level`
+- `first_quantity`
+
+Transport continuity hardening:
+- Coinbase now tracks websocket `sequence_num` continuity explicitly
+- structured lifecycle events now include:
+  - `sequence_gap_detected`
+  - `out_of_order_detected`
+  - `snapshot_reset_required`
+  - `channel_resubscribe_triggered`
+- the heartbeats channel is now used for liveness checks and explicit
+  `heartbeat_gap_detected` / `heartbeat_stale_detected` warnings
+- after a detected continuity break, the recorder marks the hour
+  `continuity_compromised` and forces a controlled resubscribe instead of
+  continuing as though the stream remained clean
+
+===============================================================================
+9A. BINANCE LOCAL ORDER BOOK INTEGRITY
+===============================================================================
+Binance spot and USD-M now enforce explicit diff-depth continuity policy.
+
+Current behavior:
+- local order-book bootstrap is anchored on a REST depth snapshot plus buffered
+  diff-depth events
+- the first post-snapshot bridge event is accepted when
+  `U <= lastUpdateId + 1 <= u`, even if USD-M `pu` still points to the
+  pre-snapshot final id
+- after the bridge event, USD-M continuity is validated on `pu == previous_u`
+  rather than a spot-style strict `U == previous_u + 1` assumption
+- if the diff chain breaks, or if USD-M `pu` disagrees with the current local
+  update id, the local book is invalidated immediately
+- zero-quantity depth updates now delete levels correctly even when Binance
+  sends quantities such as `0.00000000`
+- parity mismatch now triggers an explicit resnapshot instead of leaving an
+  invalid local top of book looking healthy
+- structured lifecycle events now include:
+  - `order_book_continuity_broken`
+  - `snapshot_reset_required`
+  - `order_book_resync_started`
+  - `order_book_resynced`
+  - `order_book_parity_mismatch`
+- depth rows now expose `order_book_status` and `order_book_local_update_id`
+  so suspect local-book segments are machine-readable
+- raw depth rows being present is no longer treated as proof that the local
+  reconstructed book was healthy; `order_book_status` is the trust signal
+- affected hours are marked `continuity_compromised` instead of looking like
+  clean depth streams
+- periodic REST depth snapshots now emit parity telemetry rather than silently
+  implying that local-book state stayed valid forever
+- mixed Binance websocket files now carry an explicit normalized book-ticker
+  event label, so downstream code does not need stream-name heuristics to
+  identify `bookTicker` rows
+- USD-M mark-price rows now keep the actual event time under `event_time_*`
+  and expose the future funding boundary only as `next_funding_time_*`
+
+===============================================================================
+9B. BYBIT SNAPSHOT / DELTA CONTINUITY
+===============================================================================
+Bybit public websocket rows now expose explicit continuity state.
+
+Current behavior:
+- websocket rows now include `continuity_state`
+- snapshot resets, control rows, and continuity-uncertain intervals are
+  machine-readable
+- structured lifecycle events now include:
+  - `bybit_snapshot_reset_received`
+  - `bybit_sequence_continuity_break`
+  - `bybit_control_row_observed`
+- if delta arrives before snapshot, or if `u` / `seq` / `cs` regress, the
+  hour is marked `continuity_compromised`
+- the goal is visibility and quarantineability, not a heavy redesign of the
+  useful existing Bybit output
+- normal `publicTrade` snapshot-style flow is no longer classified as a reset
+  event, which cuts misleading lifecycle noise without hiding real breaks
+
+===============================================================================
+10. HYPERLIQUID REST
+===============================================================================
+Observed stale and noisy REST output was traced to an incorrect order-book body
+and poor observability around loop failures.
+
+Current behavior:
+- Hyperliquid REST still remains secondary context, not primary training data
+- the broken `orderbook` body was replaced with the documented `l2Book`
+  request type
+- repeated `422` spam from the wrong order-book payload is eliminated
+- the REST loop emits `rest_loop_started`
+- transient REST exceptions emit `rest_error`
+- websocket collection and REST collection no longer share a false "healthy"
+  appearance if REST starts failing
+
+REST health behavior:
+- REST health is now explicit:
+  - `healthy`
+  - `degraded`
+  - `suspended`
+  - `recovered`
+- repeated 4xx/5xx or rate-limit failures now drive a simple circuit breaker
+- suspended periods back off instead of continuing to produce misleading sparse
+  context
+- degraded or suspended REST hours are marked `stale_context`
+- REST QC is now split by endpoint semantics, so historical `fundingHistory`
+  rows no longer distort generalized freshness metrics for `l2Book` and
+  `metaAndAssetCtxs`
+
+Rate-limit posture:
+- Hyperliquid docs currently state a shared REST weight budget of 1200 per
+  minute
+- `l2Book` carries weight 2
+- the current cadence remains comfortably inside that budget
+
+===============================================================================
+11. ACTIVE-HOUR FILE SAFETY AND FINALIZATION
+===============================================================================
+Active hourly files can still expose a partial final JSON line if another
+process reads them mid-write. Fully atomic append across compressed active files
+is not practical here, so the stack now makes the status explicit and gives
+readers two safe modes.
+
+Manifest state:
+- `file_state=active`
+  - `finalized=false`
+  - `tail_status=tail_may_be_partial`
+- `file_state=finalized`
+  - `finalized=true`
+  - `tail_status=tail_clean`
+- `file_state=recovered`
+  - `finalized=false`
+  - `tail_status=recovered_requires_review`
+
+Reader behavior:
+- strict training mode should read only `manifest.finalized=true`
+- tail-tolerant mode may read active files and drop only a broken final tail
+- active files are explicit, not silently assumed clean
+- finalized files are the easy safe path for model ingestion
+- training-facing reader wrappers now default to finalized-only mode unless
+  explicitly overridden
+- if a caller chooses to read a non-finalized manifest-backed file, they must
+  now set `tail_tolerant=true`; otherwise the reader fails loudly
+- standard file quality classes now include:
+  - `finalized_clean`
+  - `active_tail_tolerant`
+  - `recovered`
+  - `continuity_compromised`
+  - `stale_context`
+
+Lifecycle / manifest hardening:
+- Polymarket lifecycle writers still flush on every write
+- Polymarket lifecycle writers still use frame flushes on every write
+- finalized Polymarket lifecycle manifests now verify readable row count from
+  the closed file before writing the final manifest
+- generic hourly writers now resume same-hour raw state after restart instead
+  of resetting manifest counters from zero
+- finalized manifests now write readable row counts for all recorder families,
+  which keeps restart-heavy services such as Chainlink onchain auditable
+- hourly services now finalize stale prior-hour lifecycle files when wall-clock
+  time advances, even if no new lifecycle row arrives in the next hour
+- recovery manifests stay marked as repaired / non-finalized, not finalized
+- Polymarket manifests now persist `source_tier` on disk consistently with the
+  reader metadata layer
+- low-frequency FNG rollover now finalizes the prior hour on a later poll even
+  when `change_only` skips emitting a duplicate row
+
+===============================================================================
+12. RTDS FRESHNESS AND BACKLOG TELEMETRY
+===============================================================================
+RTDS remains the current public live proxy fallback, but it now exposes better
+freshness and backlog observability.
+
+Per-row telemetry:
+- RTDS rows now include `recv_minus_chainlink_ms`
+
+Structured runtime warnings:
+- `freshness_spike_detected`
+- `silent_gap_detected`
+- `backlog_burst_detected`
+
+QC summary:
+- `qc-day` now reports RTDS freshness statistics and warning counts so future
+  audits can see delayed bursts immediately
+- the goal is observability, not to bloat the main RTDS rows
+- RTDS hours that emit backlog/freshness warnings are marked `stale_context`
+
+===============================================================================
+12A. CROSS-SOURCE TRANSPORT TELEMETRY
+===============================================================================
+`qc-day` now reports per-source transport quality for the main websocket
+families, using the local receive clock versus source timestamps.
+
+Reported metrics include:
+- rolling `recv_minus_source` lag
+- p50 / p95 / max lag
+- negative-lag incidence
+- silent-gap incidence
+
+Primary sources covered in the daily QC summary:
+- Polymarket market WS / derived L2
+- Polymarket RTDS
+- Binance spot
+- Binance USD-M
+- Bybit
+- Coinbase
+- Hyperliquid WS
+- Deribit WS
+
+Warnings are emitted when lag distributions or silent gaps deteriorate
+materially, so future audits can spot transport degradation quickly.
+
+Important interpretation note:
+- small negative `recv_minus_source` values can still occur from benign clock
+  skew or transport jitter
+- treat small negative lag as QC telemetry, not as permission to join on venue
+  source timestamps instead of `recv_ts_ns`
+- Deribit timestamps are now classified as sparse metadata, so generic lag/QC
+  logic does not treat them as safe event-time join candidates
+
+===============================================================================
+13. FILE LAYOUT
+===============================================================================
+Polymarket session layout:
+- `data/raw/polymarket/btc_updown_5m/YYYY-MM-DD/<session>.ws.jsonl.zst`
+- `data/raw/polymarket/btc_updown_5m/YYYY-MM-DD/<session>.l2.jsonl.zst`
+- `data/raw/polymarket/btc_updown_5m/YYYY-MM-DD/<session>.rest.jsonl.zst`
+- `data/raw/polymarket/btc_updown_5m/YYYY-MM-DD/<session>.strike.jsonl.zst`
+- `data/raw/polymarket/btc_updown_5m/YYYY-MM-DD/<session>.discovery.jsonl.zst`
+- `data/raw/polymarket/btc_updown_5m/YYYY-MM-DD/<session>.lifecycle.jsonl.zst`
+
+Direct Chainlink live layout:
+- `data/raw/chainlink/datastreams_ws/BTCUSD/YYYY-MM-DD/HH.live.jsonl.zst`
+- `data/raw/chainlink/datastreams_api/BTCUSD/YYYY-MM-DD/HH.live.jsonl.zst`
+
+Polymarket RTDS layout:
+- `data/raw/polymarket/rtds/crypto_prices_chainlink/btc_usd/YYYY-MM-DD/HH.ws.jsonl.zst`
+- `data/raw/polymarket/rtds/crypto_prices_chainlink/btc_usd/YYYY-MM-DD/HH.lifecycle.jsonl.zst`
+
+Delayed public Chainlink layout:
+- `data/raw/chainlink_public_delayed/public_stream_page/BTCUSD/YYYY-MM-DD/HH.page.jsonl.zst`
+- `data/raw/chainlink_public_delayed/public_stream_page/BTCUSD/YYYY-MM-DD/HH.lifecycle.jsonl.zst`
+
+Verification layout:
+- `data/raw/chainlink/onchain/BTCUSD/YYYY-MM-DD/HH.onchain.jsonl.zst`
+
+===============================================================================
+14. PRACTICAL CHECKLIST
+===============================================================================
+- confirm `.strike.jsonl.zst` exists for the active Polymarket session
+- confirm strike rows use `label_safe`
+- confirm Polymarket `.rest` rows carry explicit `event_ts_*` semantics
+- confirm Coinbase `l2_data` rows have non-null normalized output
+- confirm RTDS rows contain `record_type`, `recv_ts_source`, and
+  `recv_minus_chainlink_ms`
+- confirm direct Data Streams rows, if configured, use the minimal live schema
+- confirm `token_modeling_safe=false` on off-market `new_market` rows
+- confirm active manifests use explicit `file_state`
+- confirm finalized-only ingestion is available
+- confirm manifests carry `source_tier` and `quality_class`
+- confirm Coinbase lifecycle contains sequence-gap / resubscribe telemetry when
+  continuity breaks
+- confirm Binance depth rows expose `order_book_status`
+- confirm Bybit rows expose `continuity_state`
+- confirm Hyperliquid REST rows expose `rest_health_state`
+- confirm `qc-day` reports per-source transport lag telemetry
+- confirm `repair-manifests` is available for manifest recovery
+- confirm `compare-chainlink-rtds` is available for delayed-page alignment checks
+
+===============================================================================
+15. TRUTHFULNESS BOUNDARY
+===============================================================================
+This document describes implemented recorder behavior, not a guarantee that
+every source produced perfect output in every historical run.
+
+For run-specific health and recovery, use:
+- `py -m market_recorders qc-day --date YYYY-MM-DD --out ./data`
+- `py -m market_recorders repair-manifests --out ./data`
+- `py -m market_recorders compare-chainlink-rtds --date-from YYYY-MM-DD --date-to YYYY-MM-DD --out ./data`
+

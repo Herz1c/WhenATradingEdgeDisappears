@@ -1,0 +1,63 @@
+{
+  "lock_id": "tcn_v2_candidate",
+  "created_at": "2026-07-12",
+  "status": "research_candidate_forward_test_only",
+  "purpose": "Candidate single-slot policy for the v2 5-seed ensemble, selected by the pre-registered R1 rule (top score = pnl/|maxDD|) on the selection window and evaluated ONCE on the 07-03..07-11 holdout. Runs in shadow alongside tcn_double_strategy_v1 for forward comparison. NOT live approved.",
+  "selection_protocol": {
+    "search_tool": "tools/grid_search_v2_policies.py",
+    "selection_window": "2026-06-23..2026-07-02 (v2 val+test, 1433 markets)",
+    "holdout_single_shot": "2026-07-03..2026-07-11 (405 markets, 5 days)",
+    "rule": "R1 top-1 by pnl/max(1,|maxDD|), trades >= 15",
+    "grid_size": 560,
+    "models_tried": 2,
+    "caveat": "holdout is 5 days; this candidate's real test is the forward shadow window starting 2026-07-12"
+  },
+  "dataset": "data/datasets/btc_5m_episodes_v2_200ms",
+  "model_artifacts": [
+    "artifacts/tcn_v2_c64_b7_ttc15_150_seed11",
+    "artifacts/tcn_v2_c64_b7_ttc15_150_seed7",
+    "artifacts/tcn_v2_c64_b7_ttc15_150_seed23",
+    "artifacts/tcn_v2_c64_b7_ttc15_150_seed42",
+    "artifacts/tcn_v2_c64_b7_ttc15_150_seed101"
+  ],
+  "model_type": "causal_residual_tcn_mean_delta_ensemble",
+  "cadence_s": 0.2,
+  "execution_assumptions": {
+    "buy_delay_s": 2.0,
+    "buy_slippage_cap": 0.03,
+    "sell_logic": "none",
+    "exit": "hold_to_resolution",
+    "shares_per_entry": 5.1,
+    "fee_model": "0.072 * price * (1 - price)",
+    "max_entries_per_market": 1,
+    "entry_scope": "one entry per market per strategy_id"
+  },
+  "strategies": [
+    {
+      "strategy_id": "v2ens_ttc50_75_b1.5_ev0.04",
+      "enabled": true,
+      "ttc_min_s_exclusive": 50.0,
+      "ttc_max_s_inclusive": 75.0,
+      "utc_hours_allowed": "all",
+      "p_strategy": "sigmoid(logit(implied_p_up) + 1.5 * mean_ensemble_delta)",
+      "beta": 1.5,
+      "ev_min": 0.04,
+      "price_min_exclusive": 0.20,
+      "price_max_exclusive": 0.80,
+      "side_selection": "buy side with higher EV, UP if ev_up >= ev_dn else DOWN",
+      "exit": "hold_to_resolution"
+    }
+  ],
+  "reference_metrics": {
+    "selection_window": {"trades": 96, "pnl": 64.53, "max_drawdown": -0.91},
+    "holdout_single_shot": {"trades": 162, "pnl": 36.93, "max_drawdown": -5.57,
+                            "positive_days": "4/5",
+                            "note": "includes 2026-07-11, the day the v1 lock lost -18.47"}
+  },
+  "validation_requirements_before_live": [
+    "Forward shadow >= 14 days with realized-PnL CI90 excluding 0",
+    "Parity strict pass on the ensemble path",
+    "No re-search against the 07-03..07-11 holdout (it is spent)",
+    "Live only through the --live triple gate with RiskGate + per-market notional cap"
+  ]
+}

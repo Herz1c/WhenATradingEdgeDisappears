@@ -1,0 +1,20 @@
+# Session-proof launcher for the v2 candidate ensemble shadow bot
+# (tcn_v2_candidate lock). Registered as scheduled task BTCResearch_ShadowV2cand.
+# Direct capture OFF — the v1 instance archives the feeds.
+$ErrorActionPreference = 'Continue'
+Set-Location ''
+
+$env:TCN_ARTIFACTS_DIRS = 'artifacts\tcn_v2_c64_b7_ttc15_150_seed11;artifacts\tcn_v2_c64_b7_ttc15_150_seed7;artifacts\tcn_v2_c64_b7_ttc15_150_seed23;artifacts\tcn_v2_c64_b7_ttc15_150_seed42;artifacts\tcn_v2_c64_b7_ttc15_150_seed101'
+$env:TCN_DATASET_DIR = 'data\datasets\btc_5m_episodes_v2_200ms'
+$env:TCN_STRATEGY_LOCK = 'artifacts\strategy_locks\tcn_v2_candidate_lock.json'
+$env:TCN_DIRECT_CAPTURE = '0'
+$env:TCN_MAX_PM_SOURCE_AGE_S = '1.0'
+$env:TCN_EV_MARGIN = '0.001'
+$env:FV_PM_BOOK_SOURCE = 'direct'
+$env:FV_FEATURE_SOURCE = 'direct'
+$env:OMP_NUM_THREADS = '2'
+$env:MKL_NUM_THREADS = '2'
+
+& python -m live_bot.tcn_shadow_bot `
+    --decisions-dir logs\tcn_v2_candidate_shadow --log-level INFO `
+    *>> logs\tcn_v2_candidate_shadow\runner.log

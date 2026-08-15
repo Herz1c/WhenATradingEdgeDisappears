@@ -1,0 +1,62 @@
+feature_set_id: model_10_action_policy_features_v1
+model_id: model_10_action_policy
+version: v1
+created: '2026-04-28'
+feature_columns: []
+leakage_only_columns:
+- resolved_side
+- resolved_side_label
+- flip_happened_after_t
+- terminal_delta_to_strike
+- terminal_margin_to_strike
+- hold_to_close_edge_vs_mid
+- resolved_ts_ns
+- winning_asset_id
+- cancel_request_ts_ns
+- cancel_effective_ts_ns
+- replace_requested
+- replace_request_ts_ns
+- replace_effective_ts_ns
+- replaced
+- replace_post_only_rejected
+- submitted
+- post_only_rejected
+- post_only_crossed_book
+- filled
+- full_fill
+- partial_fill
+- fill_uncertain
+- fill_ts_ns
+- last_fill_ts_ns
+- time_to_fill_s
+- time_to_last_fill_s
+- fill_count
+- fill_price
+- fill_size
+- fill_notional
+- maker_fill
+- taker_fill
+- cancelled
+- cancel_effective
+- fees_paid
+- rebate_earned
+- gross_pnl_to_close
+- net_pnl_to_close
+- markout_1s
+- markout_3s
+- markout_5s
+- markout_15s
+- markout_to_close
+- markout_1s_available
+- markout_3s_available
+- markout_5s_available
+- markout_15s_available
+- markout_to_close_available
+- adverse_selection_5s
+- toxic_fill_5s
+target_columns:
+  primary: action_label
+  auxiliary: []
+status: placeholder
+placeholder_reason: Feature definition intentionally blocked until upstream model
+  outputs or derived labels exist.

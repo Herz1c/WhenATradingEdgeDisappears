@@ -1,0 +1,458 @@
+{
+  "architecture": "c64_b7",
+  "calibrator_count": 7,
+  "caveats": [
+    "The test split (2026-06-28 through 2026-07-02) was inspected during selection and is not a pristine holdout.",
+    "The five seeds share the same events; seed spread is not a confidence interval.",
+    "Validation-fitted maps are evaluated in-sample in the validation column.",
+    "Seven reported maps were examined. The lowest test score is explicitly labeled post hoc.",
+    "Only five test days are available. The 388-market cluster interval is primary; the day-cluster interval is shown as a weak sensitivity check.",
+    "Episodes use source timestamps rather than receive timestamps, so the score is a zero-latency upper bound."
+  ],
+  "generated_by": "tools/reproduce_public_evidence.py",
+  "headline": {
+    "calibrator": "val_platt_l2",
+    "delta_vs_market": -0.0005438673670247336,
+    "inference": "no demonstrated improvement; the cluster interval includes zero",
+    "market_brier": 0.12827597888629014,
+    "market_cluster_ci95": [
+      -0.0027297000636389286,
+      0.0017214883467295229
+    ],
+    "model_brier": 0.12773211151926542
+  },
+  "input_sha256": {
+    "predictions": {
+      "seed101_test": "3537af0dd90e022024057cea104771f6857343acea93d3b42b4371159d031328",
+      "seed101_val": "b6614574c44191bc2e0b590b57089be3d710cc6b0bd71b638fa17eb06ff684ca",
+      "seed11_test": "ab25037b3c27ed9755a5d4bcb027f8f02fa779c8ba83f3b4ca656742293233c0",
+      "seed11_val": "3c87fa6692506dfe7742df1db4c0ff7cb8dcf45871120d34d17d2dfb596c3df7",
+      "seed23_test": "52f6a3230f42843d1cbb7d7b5b190160810122e06b5fb9e99e971ab588884631",
+      "seed23_val": "91883bf1539d9c4f7ce36ff4e13499ec1e154864116aa0c38593309749815aac",
+      "seed42_test": "976b2af95d08c154b6be8fec261b8e8fee4418374e2a0ac0c4bb723a8259bd50",
+      "seed42_val": "61cac826faf5ded3030b70e0e760a4afbe864e6cd1b8bba874db3271e4026f32",
+      "seed7_test": "0543967eebb5cb21c38bd08f0ea50fbe265b45ee6ff524621b3c76b19c7f5c7e",
+      "seed7_val": "8fe4515807164edc7775ecd42b1e3268b564ed2180d6f0c6892898852f59f433"
+    },
+    "reports": {
+      "seed101": "ddba4674718881169f7e6085ad3380b371f30ec421848a619ecd6bccd71473e1",
+      "seed11": "f27edfbc262d67579d38865bbef374893a2d058beca84a33b327a297490f4e2b",
+      "seed23": "354a122e34d1fce2afcab23bc6ec81cb874010350321eb8ed240fbd1ac520c98",
+      "seed42": "3b00491a2034ca25350e802b2e723002fa12adeb9174be1eaf1a6ecf20224e15",
+      "seed7": "2ca81eda2f9ca73da2a85963be3cef3be9b21a387b8987a1669b7a2a7866d6df"
+    }
+  },
+  "lowest_observed_test_brier_post_hoc": "val_platt_l2",
+  "lowest_validation_brier": "val_isotonic",
+  "market_baseline": {
+    "test": {
+      "brier": 0.12827597888629014,
+      "days": 5,
+      "markets": 388,
+      "n_loss_band_rows": 96494
+    },
+    "val": {
+      "brier": 0.12353181757333408,
+      "days": 5,
+      "markets": 574,
+      "n_loss_band_rows": 66050
+    }
+  },
+  "n_seeds": 5,
+  "primary_uncertainty_unit": "test market (388 clusters)",
+  "rows": [
+    {
+      "calibrator": "identity",
+      "label": "identity (uncalibrated)",
+      "test": {
+        "day_cluster_bootstrap": {
+          "bootstrap_probability_delta_leq_zero": 0.60955,
+          "ci95": [
+            -0.0013597449673920857,
+            0.0016762035431774863
+          ],
+          "clusters": 5,
+          "reps": 20000,
+          "resampling": "cluster pairs; cluster sizes retained",
+          "seed": 20260810
+        },
+        "delta_vs_market": -0.00021084652471902379,
+        "market_cluster_bootstrap": {
+          "bootstrap_probability_delta_leq_zero": 0.5828,
+          "ci95": [
+            -0.001991516230747399,
+            0.0015733088435520562
+          ],
+          "clusters": 388,
+          "reps": 20000,
+          "resampling": "cluster pairs; cluster sizes retained",
+          "seed": 20260809
+        },
+        "market_cluster_ci_includes_zero": true,
+        "max_seed_brier": 0.12867185460786015,
+        "mean_brier_across_seeds": 0.1280651323615711,
+        "min_seed_brier": 0.12719432919553236,
+        "per_seed_brier": {
+          "101": 0.12809776980757911,
+          "11": 0.12867185460786015,
+          "23": 0.12719432919553236,
+          "42": 0.1284296981643374,
+          "7": 0.12793201003254662
+        },
+        "seeds_beating_market": 3
+      },
+      "val": {
+        "delta_vs_market": -0.0017765814332277485,
+        "max_seed_brier": 0.12231413128772521,
+        "mean_brier_across_seeds": 0.12175523614010633,
+        "min_seed_brier": 0.12090135957508327,
+        "per_seed_brier": {
+          "101": 0.1220542291315578,
+          "11": 0.1214862689574689,
+          "23": 0.12090135957508327,
+          "42": 0.12231413128772521,
+          "7": 0.1220201917486965
+        },
+        "seeds_beating_market": 5
+      }
+    },
+    {
+      "calibrator": "val_temperature",
+      "label": "temperature; fit on validation",
+      "test": {
+        "day_cluster_bootstrap": {
+          "bootstrap_probability_delta_leq_zero": 0.64575,
+          "ci95": [
+            -0.002052161021772442,
+            0.0018207883977297383
+          ],
+          "clusters": 5,
+          "reps": 20000,
+          "resampling": "cluster pairs; cluster sizes retained",
+          "seed": 20260810
+        },
+        "delta_vs_market": -0.0002784808311945732,
+        "market_cluster_bootstrap": {
+          "bootstrap_probability_delta_leq_zero": 0.6162,
+          "ci95": [
+            -0.00207462275402765,
+            0.0015793600546494709
+          ],
+          "clusters": 388,
+          "reps": 20000,
+          "resampling": "cluster pairs; cluster sizes retained",
+          "seed": 20260809
+        },
+        "market_cluster_ci_includes_zero": true,
+        "max_seed_brier": 0.12868364652738232,
+        "mean_brier_across_seeds": 0.12799749805509555,
+        "min_seed_brier": 0.12716772100388776,
+        "per_seed_brier": {
+          "101": 0.1280101893795848,
+          "11": 0.12868364652738232,
+          "23": 0.12716772100388776,
+          "42": 0.1284066825671108,
+          "7": 0.12771925079751215
+        },
+        "seeds_beating_market": 3
+      },
+      "val": {
+        "delta_vs_market": -0.0017478307881795387,
+        "max_seed_brier": 0.12239090066795014,
+        "mean_brier_across_seeds": 0.12178398678515455,
+        "min_seed_brier": 0.12088202799089055,
+        "per_seed_brier": {
+          "101": 0.12216506560440987,
+          "11": 0.12151126590320478,
+          "23": 0.12088202799089055,
+          "42": 0.12239090066795014,
+          "7": 0.1219706737593174
+        },
+        "seeds_beating_market": 5
+      }
+    },
+    {
+      "calibrator": "val_platt_l2",
+      "label": "Platt L2; fit on validation",
+      "test": {
+        "day_cluster_bootstrap": {
+          "bootstrap_probability_delta_leq_zero": 0.77515,
+          "ci95": [
+            -0.0017516778745740452,
+            0.001507470344610074
+          ],
+          "clusters": 5,
+          "reps": 20000,
+          "resampling": "cluster pairs; cluster sizes retained",
+          "seed": 20260810
+        },
+        "delta_vs_market": -0.0005438673670247336,
+        "market_cluster_bootstrap": {
+          "bootstrap_probability_delta_leq_zero": 0.67955,
+          "ci95": [
+            -0.0027297000636389286,
+            0.0017214883467295229
+          ],
+          "clusters": 388,
+          "reps": 20000,
+          "resampling": "cluster pairs; cluster sizes retained",
+          "seed": 20260809
+        },
+        "market_cluster_ci_includes_zero": true,
+        "max_seed_brier": 0.12839884076480654,
+        "mean_brier_across_seeds": 0.12773211151926542,
+        "min_seed_brier": 0.12711230409419716,
+        "per_seed_brier": {
+          "101": 0.1278172749941144,
+          "11": 0.12839884076480654,
+          "23": 0.12711230409419716,
+          "42": 0.12800418498059835,
+          "7": 0.1273279527626106
+        },
+        "seeds_beating_market": 4
+      },
+      "val": {
+        "delta_vs_market": -0.0017566170642022481,
+        "max_seed_brier": 0.12234198893939016,
+        "mean_brier_across_seeds": 0.12177520050913182,
+        "min_seed_brier": 0.12090317478213987,
+        "per_seed_brier": {
+          "101": 0.12214400205602473,
+          "11": 0.12150418173335363,
+          "23": 0.12090317478213987,
+          "42": 0.12234198893939016,
+          "7": 0.12198265503475081
+        },
+        "seeds_beating_market": 5
+      }
+    },
+    {
+      "calibrator": "val_isotonic",
+      "label": "isotonic; fit on validation",
+      "test": {
+        "day_cluster_bootstrap": {
+          "bootstrap_probability_delta_leq_zero": 0.2005,
+          "ci95": [
+            -0.0015546051253240978,
+            0.004113323589659727
+          ],
+          "clusters": 5,
+          "reps": 20000,
+          "resampling": "cluster pairs; cluster sizes retained",
+          "seed": 20260810
+        },
+        "delta_vs_market": 0.0009586507201330691,
+        "market_cluster_bootstrap": {
+          "bootstrap_probability_delta_leq_zero": 0.24825,
+          "ci95": [
+            -0.001866169974390827,
+            0.003787080157779098
+          ],
+          "clusters": 388,
+          "reps": 20000,
+          "resampling": "cluster pairs; cluster sizes retained",
+          "seed": 20260809
+        },
+        "market_cluster_ci_includes_zero": true,
+        "max_seed_brier": 0.12992174570186232,
+        "mean_brier_across_seeds": 0.1292346296064232,
+        "min_seed_brier": 0.12861116943611386,
+        "per_seed_brier": {
+          "101": 0.12916451214513547,
+          "11": 0.12952402637639776,
+          "23": 0.12861116943611386,
+          "42": 0.12992174570186232,
+          "7": 0.12895169437260662
+        },
+        "seeds_beating_market": 0
+      },
+      "val": {
+        "delta_vs_market": -0.0038777055666099343,
+        "max_seed_brier": 0.11998165478939705,
+        "mean_brier_across_seeds": 0.11965411200672414,
+        "min_seed_brier": 0.11939637264201292,
+        "per_seed_brier": {
+          "101": 0.1198110530783399,
+          "11": 0.1194237630156481,
+          "23": 0.11939637264201292,
+          "42": 0.11998165478939705,
+          "7": 0.1196577165082228
+        },
+        "seeds_beating_market": 5
+      }
+    },
+    {
+      "calibrator": "val_residual_shrink",
+      "label": "residual shrink; fit on validation",
+      "test": {
+        "day_cluster_bootstrap": {
+          "bootstrap_probability_delta_leq_zero": 0.30415,
+          "ci95": [
+            -0.0014117653300526013,
+            0.002974812880971518
+          ],
+          "clusters": 5,
+          "reps": 20000,
+          "resampling": "cluster pairs; cluster sizes retained",
+          "seed": 20260810
+        },
+        "delta_vs_market": 0.00032524283415342385,
+        "market_cluster_bootstrap": {
+          "bootstrap_probability_delta_leq_zero": 0.39575,
+          "ci95": [
+            -0.0022210056727307694,
+            0.002885703627717344
+          ],
+          "clusters": 388,
+          "reps": 20000,
+          "resampling": "cluster pairs; cluster sizes retained",
+          "seed": 20260809
+        },
+        "market_cluster_ci_includes_zero": true,
+        "max_seed_brier": 0.12965330107655393,
+        "mean_brier_across_seeds": 0.12860122172044355,
+        "min_seed_brier": 0.12775960459119004,
+        "per_seed_brier": {
+          "101": 0.12841945095205468,
+          "11": 0.12965330107655393,
+          "23": 0.12775960459119004,
+          "42": 0.12906799637750827,
+          "7": 0.1281057556049109
+        },
+        "seeds_beating_market": 2
+      },
+      "val": {
+        "delta_vs_market": -0.0021377429270083514,
+        "max_seed_brier": 0.12204506381467749,
+        "mean_brier_across_seeds": 0.12139407464632573,
+        "min_seed_brier": 0.12060301844070422,
+        "per_seed_brier": {
+          "101": 0.12165572545942988,
+          "11": 0.12109504886410832,
+          "23": 0.12060301844070422,
+          "42": 0.12204506381467749,
+          "7": 0.12157151665270877
+        },
+        "seeds_beating_market": 5
+      }
+    },
+    {
+      "calibrator": "train_dayblock_temperature",
+      "label": "temperature; train day-block fit",
+      "test": {
+        "day_cluster_bootstrap": {
+          "bootstrap_probability_delta_leq_zero": 0.63775,
+          "ci95": [
+            -0.0013230480683563586,
+            0.001653252313083786
+          ],
+          "clusters": 5,
+          "reps": 20000,
+          "resampling": "cluster pairs; cluster sizes retained",
+          "seed": 20260810
+        },
+        "delta_vs_market": -0.00020784062071283992,
+        "market_cluster_bootstrap": {
+          "bootstrap_probability_delta_leq_zero": 0.5808,
+          "ci95": [
+            -0.00200598019707454,
+            0.0015893155653436217
+          ],
+          "clusters": 388,
+          "reps": 20000,
+          "resampling": "cluster pairs; cluster sizes retained",
+          "seed": 20260809
+        },
+        "market_cluster_ci_includes_zero": true,
+        "max_seed_brier": 0.12872607831017854,
+        "mean_brier_across_seeds": 0.1280681382655773,
+        "min_seed_brier": 0.12719432919553236,
+        "per_seed_brier": {
+          "101": 0.12809776980757911,
+          "11": 0.12872607831017854,
+          "23": 0.12719432919553236,
+          "42": 0.12850058176989185,
+          "7": 0.12782193224470467
+        },
+        "seeds_beating_market": 3
+      },
+      "val": {
+        "delta_vs_market": -0.0017734614238500313,
+        "max_seed_brier": 0.12233814777184264,
+        "mean_brier_across_seeds": 0.12175835614948406,
+        "min_seed_brier": 0.12090135957508327,
+        "per_seed_brier": {
+          "101": 0.1220542291315578,
+          "11": 0.12153568115560891,
+          "23": 0.12090135957508327,
+          "42": 0.12233814777184264,
+          "7": 0.12196236311332764
+        },
+        "seeds_beating_market": 5
+      }
+    },
+    {
+      "calibrator": "train_dayblock_residual_shrink",
+      "label": "residual shrink; train day-block fit",
+      "test": {
+        "day_cluster_bootstrap": {
+          "bootstrap_probability_delta_leq_zero": 0.3411,
+          "ci95": [
+            -0.0014044425972690377,
+            0.0029056443726709737
+          ],
+          "clusters": 5,
+          "reps": 20000,
+          "resampling": "cluster pairs; cluster sizes retained",
+          "seed": 20260810
+        },
+        "delta_vs_market": 0.0002875632200565842,
+        "market_cluster_bootstrap": {
+          "bootstrap_probability_delta_leq_zero": 0.4049,
+          "ci95": [
+            -0.002233407284042719,
+            0.00282107315160177
+          ],
+          "clusters": 388,
+          "reps": 20000,
+          "resampling": "cluster pairs; cluster sizes retained",
+          "seed": 20260809
+        },
+        "market_cluster_ci_includes_zero": true,
+        "max_seed_brier": 0.12944275662734567,
+        "mean_brier_across_seeds": 0.1285635421063467,
+        "min_seed_brier": 0.1277817509699141,
+        "per_seed_brier": {
+          "101": 0.12841945095205468,
+          "11": 0.12944275662734567,
+          "23": 0.1277817509699141,
+          "42": 0.12906799637750827,
+          "7": 0.1281057556049109
+        },
+        "seeds_beating_market": 2
+      },
+      "val": {
+        "delta_vs_market": -0.0021303953504195083,
+        "max_seed_brier": 0.12204506381467749,
+        "mean_brier_across_seeds": 0.12140142222291457,
+        "min_seed_brier": 0.12059887506569585,
+        "per_seed_brier": {
+          "101": 0.12165572545942988,
+          "11": 0.12113593012206089,
+          "23": 0.12059887506569585,
+          "42": 0.12204506381467749,
+          "7": 0.12157151665270877
+        },
+        "seeds_beating_market": 5
+      }
+    }
+  ],
+  "score": "Brier loss on every eligible 200 ms row with 15-150 s to close",
+  "seeds": [
+    7,
+    11,
+    23,
+    42,
+    101
+  ]
+}

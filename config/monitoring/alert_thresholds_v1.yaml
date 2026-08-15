@@ -1,0 +1,8 @@
+alert_thresholds_v1:
+  latency_ms: 200
+  freshness_s: 30
+  min_fill_rate_100: 0.05
+  daily_loss_cap_usdc: 50.0
+  adverse_markout_threshold: -0.02
+  max_consecutive_adverse_fills: 5
+

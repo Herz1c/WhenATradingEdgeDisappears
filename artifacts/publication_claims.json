@@ -1,0 +1,218 @@
+{
+  "schema_version": 2,
+  "title": "Canonical public claim register",
+  "evidence_boundary": "Public predictions, checkpoints, candidate-day returns, split hashes, sanitized shadow rows, source code, and generated audits are directly inspectable. Raw-data reconstruction, retraining, and receive-time correction remain private-data dependent.",
+  "claims": [
+    {
+      "id": "C1_DATASET_CLOCK",
+      "claim": "Historical episode-model and strategy evaluations use source-time replay.",
+      "verdict": "SOURCE-TIME COUNTERFACTUAL",
+      "public_statement": "The historical episode dataset replays Polymarket and centralized-exchange observations at venue source time rather than recorded receive time. Model scores, backtests, and offline post-lock results derived from it are zero-latency counterfactual diagnostics, not live-achievable performance evidence.",
+      "evidence": [
+        "tools/build_btc_5m_episode_dataset.py",
+        "docs/METHODOLOGY.md"
+      ],
+      "limitations": [
+        "The raw corpus required for a receive-time rebuild is not public.",
+        "No receive-time retraining result exists."
+      ]
+    },
+    {
+      "id": "C2_BRIER",
+      "claim": "The lowest observed calibration row has a slightly lower test Brier score than the market baseline.",
+      "verdict": "EXPLORATORY; IMPROVEMENT NOT DEMONSTRATED",
+      "public_statement": "After inspecting seven calibration maps, Platt-L2 has the lowest observed five-seed mean test Brier: 0.127732 versus 0.128276 for the market. The paired 388-market bootstrap interval for model minus market is [-0.002730, 0.001721], which includes zero.",
+      "evidence": [
+        "artifacts/tcn_v2_eval/brier_summary.json",
+        "artifacts/evaluation_repro_v2/predictions/",
+        "tools/reproduce_public_evidence.py"
+      ],
+      "metrics": {
+        "post_hoc_calibrator": "val_platt_l2",
+        "calibrators_inspected": 7,
+        "model_test_brier": 0.12773211151926542,
+        "market_test_brier": 0.12827597888629014,
+        "delta_model_minus_market": -0.0005438673670247336,
+        "market_clusters": 388,
+        "market_cluster_ci95": [
+          -0.0027297000636389286,
+          0.0017214883467295229
+        ],
+        "seeds_below_market": 4,
+        "seeds": 5
+      },
+      "limitations": [
+        "All seven test rows were inspected and the minimum is post hoc.",
+        "The five seeds share events and are not independent replications.",
+        "Only five test days are available.",
+        "The underlying episodes are source-time replay."
+      ]
+    },
+    {
+      "id": "C3_LOCKED_BACKTEST",
+      "claim": "The stored combined strategy reports +214.15 over 706 source-time trades.",
+      "verdict": "INVALID AS EDGE EVIDENCE",
+      "public_statement": "The stored total is internally consistent, but the result is selected and source-time counterfactual. A corrected public White's Reality Check appends the combined winner to the 846-candidate matrix and obtains p=0.5667 across 847 candidates, so it does not reject the no-edge null.",
+      "evidence": [
+        "artifacts/backtest_repro_v1/summary_test_cap_drop.json",
+        "artifacts/audit_v1/wrc_universe_daily_pnl.npz",
+        "artifacts/audit_v2/selection_audit.json",
+        "tools/reproduce_public_evidence.py"
+      ],
+      "metrics": {
+        "trades": 706,
+        "pnl": 214.1461,
+        "corrected_wrc_candidates": 847,
+        "wrc_days": 32,
+        "corrected_wrc_p_value": 0.5666716664166792,
+        "locked_early_rank_in_original_matrix": 5,
+        "locked_late_rank_in_original_matrix": 16,
+        "separate_all_day_early_candidate_rank": 2
+      },
+      "limitations": [
+        "The 847 candidates remain a lower bound on the true number of trials.",
+        "The original stored p=0.8355 is retained only as historical provenance.",
+        "The historical PnL series use source-time books."
+      ]
+    },
+    {
+      "id": "C4_OUTPUT_CONSISTENCY",
+      "claim": "The released score and selection artifacts can be recomputed from public inputs.",
+      "verdict": "PUBLIC PARTIAL REPRODUCTION: PASS",
+      "public_statement": "A fresh clone can recompute seven Brier rows, paired clustered intervals, the corrected 847-candidate selection audit, and mini inference for five checkpoints. Raw-data reconstruction, training, the complete historical backtest, and receive-time correction are unavailable.",
+      "evidence": [
+        "artifacts/evaluation_repro_v2/manifest.json",
+        "tools/reproduce_public_evidence.py",
+        "tools/reproduce_tcn_mini.py",
+        "tests/test_published_claims.py"
+      ],
+      "limitations": [
+        "The raw corpus and full episode tensors are private.",
+        "Checkpoint parity is a ten-market fixture, not full retraining."
+      ]
+    },
+    {
+      "id": "C5_EXECUTION",
+      "claim": "The historical execution audit establishes fillability or capacity.",
+      "verdict": "UNRESOLVED / INVALID AUDIT",
+      "public_statement": "The stored audit uses source-time books, drops missing observations, admits books up to 62.497 seconds old, and changes the decision set under adverse-fill stress. It supports no fillability or capacity verdict.",
+      "evidence": [
+        "artifacts/audit_v1/execution_realism_shadow.json",
+        "artifacts/backtest_repro_v1/summary_test_fill_worse.json",
+        "tools/audit_execution_realism.py"
+      ],
+      "limitations": [
+        "Twenty missing books are dropped.",
+        "Seventy-two of 162 inspected books are more than ten seconds old.",
+        "Queue position, self-impact, and counterfactual quote response are absent."
+      ]
+    },
+    {
+      "id": "C6_POST_LOCK_REPLAY",
+      "claim": "The five-day post-lock score is causal live evidence.",
+      "verdict": "INCONCLUSIVE SOURCE-TIME OFFLINE POST-LOCK REPLAY",
+      "public_statement": "The stored five-day score is an offline replay over source-time episodes: 262 trades, +23.90, with a 90% day-bootstrap interval of [-15.95, 60.36]. The interval includes zero and the score is not derived from complete prospective logs.",
+      "evidence": [
+        "artifacts/tcn_shadow_parity/shadow_pnl_summary.json",
+        "artifacts/tcn_shadow_parity/shadow_pnl_2026-07-04.json"
+      ],
+      "metrics": {
+        "days": 5,
+        "trades": 262,
+        "pnl": 23.9012,
+        "ci90": [-15.95, 60.36],
+        "p_total_leq_zero": 0.1509
+      },
+      "limitations": [
+        "The replay uses the non-causal episode clock.",
+        "The stated duration and interval conditions were not met."
+      ]
+    },
+    {
+      "id": "C7_CHRONOLOGY",
+      "claim": "Local history documents iterative development but externally authenticates the full headline chronology.",
+      "verdict": "LOCAL PROVENANCE; NOT INDEPENDENTLY TIMESTAMPED",
+      "public_statement": "Thirty-four local commits document development from May 20 through June 29 and hashed July logs document shadow operation. Earlier April/May decision and audit records corroborate a student-led causal and adversarial research program. The final TCN and audit phase is uncommitted in that history, and no local metadata is treated as a signed or external timestamp.",
+      "evidence": [
+        "artifacts/provenance/source_git_history.json",
+        "artifacts/live_log_sample_v1/summary.json",
+        "docs/PROVENANCE.md"
+      ],
+      "metrics": {
+        "local_commits": 34,
+        "commit_history_last_date": "2026-06-29",
+        "sanitized_shadow_enter_rows": 164
+      },
+      "limitations": [
+        "Commit metadata was exported from a local private workspace.",
+        "July/August headline work lacks commit-level provenance."
+      ]
+    },
+    {
+      "id": "C8_CORPUS",
+      "claim": "The private inventory contains 229.8 GB across 76 recorded days.",
+      "verdict": "COMMITTED INVENTORY CLAIM; PUBLIC RECOUNT UNAVAILABLE",
+      "public_statement": "A local inventory reports 246,718,377,000 bytes, 119,665 files, and 76 recorded days out of 113 calendar days. The private roots are absent, so the counts cannot be independently recounted here.",
+      "evidence": [
+        "artifacts/data_inventory.json"
+      ],
+      "metrics": {
+        "gb": 229.8,
+        "files": 119665,
+        "recorded_days": 76,
+        "calendar_days": 113
+      },
+      "limitations": [
+        "Thirty-seven calendar days are missing.",
+        "The raw corpus is not public."
+      ]
+    },
+    {
+      "id": "C9_SHADOW_OPERATION",
+      "claim": "The guarded shadow system operated prospectively on July 12–13.",
+      "verdict": "LOCAL OPERATION EVIDENCE; NOT PERFORMANCE",
+      "public_statement": "Hashed local logs record 45,436 decisions, including 164 entries, while source-health and no-edge guards rejected most snapshots. This demonstrates local shadow operation, not fills, PnL, or a trading edge.",
+      "evidence": [
+        "artifacts/live_log_sample_v1/summary.json",
+        "artifacts/live_log_sample_v1/enter_decisions_2026-07-12.jsonl",
+        "artifacts/live_log_sample_v1/enter_decisions_2026-07-13.jsonl"
+      ],
+      "metrics": {
+        "decisions": 45436,
+        "enter": 164,
+        "skip_no_edge": 26691,
+        "skip_source": 18581
+      },
+      "limitations": [
+        "Only sanitized entry rows are public; complete counts remain in the summary.",
+        "The logs are locally dated and not independently timestamped."
+      ]
+    },
+    {
+      "id": "C11_INTELLECTUAL_OWNERSHIP",
+      "claim": "Jan Herza conceived and directed the research program.",
+      "verdict": "AUTHOR-CONCEIVED AND DIRECTED",
+      "public_statement": "I conceived and directed the research question, hypotheses, source and dataset choices, causal rules, experiment sequence, audit design, failure criteria, safety gates, and interpretation. AI tools supported much of the implementation.",
+      "evidence": [
+        "INTELLECTUAL_OWNERSHIP.md",
+        "docs/IDEA_PROVENANCE.md",
+        "docs/decision_log.md",
+        "docs/reports/quant_audit_findings.md",
+        "artifacts/provenance/source_git_history.json"
+      ],
+      "limitations": []
+    },
+    {
+      "id": "C10_OVERALL",
+      "claim": "This repository demonstrates a tradeable forecasting or execution edge.",
+      "verdict": "NO DEMONSTRATED TRADING EDGE",
+      "public_statement": "The public evidence does not demonstrate a forecasting, trading, or execution edge. The forecast interval includes zero, the selected strategy fails the corrected multiple-testing audit, the clock is non-causal, and execution remains unresolved.",
+      "evidence": [
+        "artifacts/tcn_v2_eval/brier_summary.json",
+        "artifacts/audit_v2/selection_audit.json",
+        "docs/RESULTS.md"
+      ],
+      "limitations": []
+    }
+  ]
+}

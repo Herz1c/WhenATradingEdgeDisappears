@@ -1,0 +1,130 @@
+{
+  "lock_id": "tcn_double_strategy_v1",
+  "created_at": "2026-07-03",
+  "status": "research_locked_not_live_approved",
+  "purpose": "Candidate two-slot TCN residual strategy for BTC 5m binary markets. Locked to prevent parameter drift before shadow/live parity validation.",
+  "dataset": "data/datasets/btc_5m_episodes_v1_200ms",
+  "model_artifact": "artifacts/btc_5m_episode_tcn_c64_b7_cal_ttc15_90",
+  "model_type": "causal_residual_tcn",
+  "cadence_s": 0.2,
+  "execution_assumptions": {
+    "buy_delay_s": 2.0,
+    "buy_slippage_cap": 0.03,
+    "sell_logic": "none",
+    "exit": "hold_to_resolution",
+    "shares_per_entry": 5.1,
+    "fee_model": "0.072 * price * (1 - price)",
+    "max_entries_per_market": 2,
+    "entry_scope": "one entry per market per strategy_id"
+  },
+  "strategies": [
+    {
+      "strategy_id": "early_tcn_75_120_utc02_13",
+      "enabled": true,
+      "ttc_min_s_exclusive": 75.0,
+      "ttc_max_s_inclusive": 120.0,
+      "utc_hours_allowed": [2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13],
+      "p_strategy": "sigmoid(logit(implied_p_up) + 1.0 * tcn_delta)",
+      "beta": 1.0,
+      "ev_min": 0.075,
+      "price_min_exclusive": 0.20,
+      "price_max_exclusive": 0.80,
+      "side_selection": "buy side with higher EV, UP if ev_up >= ev_down else DOWN",
+      "exit": "hold_to_resolution"
+    },
+    {
+      "strategy_id": "late_tcn_50_75_all_day",
+      "enabled": true,
+      "ttc_min_s_exclusive": 50.0,
+      "ttc_max_s_inclusive": 75.0,
+      "utc_hours_allowed": "all",
+      "p_strategy": "sigmoid(logit(implied_p_up) + 1.25 * tcn_delta)",
+      "beta": 1.25,
+      "ev_min": 0.125,
+      "price_min_exclusive": 0.20,
+      "price_max_exclusive": 0.80,
+      "side_selection": "buy side with higher EV, UP if ev_up >= ev_down else DOWN",
+      "exit": "hold_to_resolution"
+    }
+  ],
+  "canonical_clean_rerun_metrics": {
+    "source_report": "artifacts/tcn_fullmarket_exit_policy_search_v1/market_vs_tcn_same_strategy_report.json",
+    "split": "test",
+    "period": {
+      "date_min": "2026-05-14",
+      "date_max": "2026-07-02",
+      "calendar_days_inclusive": 50,
+      "available_days": 32,
+      "markets": 4667
+    },
+    "early": {
+      "trades": 417,
+      "unique_markets": 417,
+      "pnl": 119.77797786369992,
+      "avg_pnl": 0.28723735698728997,
+      "median_pnl": 1.0100814151358415,
+      "active_days": 30,
+      "positive_days": 20,
+      "worst_day": -11.779567595304567,
+      "max_drawdown": -24.348183026762385
+    },
+    "late": {
+      "trades": 289,
+      "unique_markets": 289,
+      "pnl": 94.3681412046066,
+      "avg_pnl": 0.326533360569573,
+      "median_pnl": -0.9188119295528697,
+      "active_days": 30,
+      "positive_days": 20,
+      "worst_day": -11.556966900872753,
+      "max_drawdown": -29.674491886426875
+    },
+    "combined_two_strategy": {
+      "trades": 706,
+      "unique_markets": 646,
+      "overlap_markets": 60,
+      "pnl": 214.14611906830655,
+      "avg_pnl": 0.3033231148276297,
+      "median_pnl": 0.9856646784827614,
+      "active_days": 32,
+      "positive_days": 24,
+      "worst_day": -18.055591509970945,
+      "max_drawdown": -18.055591509970952
+    },
+    "market_only_same_rules": {
+      "trades": 0,
+      "pnl": 0.0,
+      "note": "With beta=0, the same EV thresholds produce no trades. The trade set is created by the TCN residual, not by raw market-implied probability alone."
+    }
+  },
+  "discovery_metrics_reference": {
+    "source_report": "artifacts/tcn_fullmarket_exit_policy_search_v1/two_strategy_early_hour_filtered_report.json",
+    "split": "test",
+    "combined_two_strategy": {
+      "trades": 702,
+      "unique_markets": 641,
+      "overlap_markets": 61,
+      "pnl": 220.35888597570907,
+      "avg_pnl": 0.31390154706653714,
+      "positive_days": 24,
+      "active_days": 32,
+      "worst_day": -18.26910552096802,
+      "max_drawdown": -18.269105520968026
+    },
+    "note": "Discovery report used the earlier saved late-trade artifact. Canonical clean re-run should be preferred for implementation."
+  },
+  "validation_requirements_before_live": [
+    "Run live shadow with per-strategy_id logging.",
+    "Verify backtest/live agreement per strategy_id.",
+    "Allow one entry per market per strategy_id, not global one-entry-per-market.",
+    "Enforce shared max exposure cap per market because both strategies can enter the same market.",
+    "Log raw features, p_market, tcn_delta, p_strategy, EV, side, quote, delayed fill quote, source ages, and strategy_id for every candidate decision.",
+    "Do not consider this lock live-approved until source-time replay and shadow parity pass."
+  ],
+  "known_caveats": [
+    "The UTC 02-13 filter was discovered after inspecting test-period hourly PnL, so anti-snooping validation is still required.",
+    "The TCN was trained primarily with TTC 15-90 loss, while the early strategy uses TTC 75-120; retrain/evaluate a TTC 15-120 or 15-150 model before treating the early slot as final.",
+    "The global TCN probability metrics are not better than market baseline; the edge hypothesis is local trade selection from residual deltas.",
+    "Dataset coverage is incomplete: 32 available test days over 50 calendar days."
+  ]
+}

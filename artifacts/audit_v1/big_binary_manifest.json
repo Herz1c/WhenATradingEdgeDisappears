@@ -1,0 +1,383 @@
+{
+ "generated_at": "2026-07-10T18:55:03Z",
+ "files": [
+  {
+   "path": "artifacts/btc_5m_episode_tcn_c64_b7_cal_ttc15_90/predictions_test.npz",
+   "bytes": 1089315,
+   "mtime_iso": "2026-07-03T00:36:01Z",
+   "sha256": "621b41e220f24bfdebf2f89b77ce2a0c81396584cdeb4699c8dcad33b25d7c2d"
+  },
+  {
+   "path": "artifacts/colab_bundles/btc_patch_transformer_colab_bundle.zip",
+   "bytes": 4583361444,
+   "mtime_iso": "2026-07-03T09:53:28Z",
+   "sha256": "78a2b9c9e46860d430062b876b8d408b7c352edc4abcdb113ad8951f5a542974"
+  },
+  {
+   "path": "data/datasets/btc_5m_episodes_v1_200ms/daily/2026-04-19.npz",
+   "bytes": 11338718,
+   "mtime_iso": "2026-07-02T17:43:31Z",
+   "sha256": "0e906aa3a5ec08bb2fad657cab9d792ad68a508bcb87dec125bfc1183de6e0a3"
+  },
+  {
+   "path": "data/datasets/btc_5m_episodes_v1_200ms/daily/2026-04-20.npz",
+   "bytes": 126107675,
+   "mtime_iso": "2026-07-02T17:49:24Z",
+   "sha256": "cc9d627824ae0e9ccde784b4c0f756a73f68ab64fcf10e2d061ee4114a086414"
+  },
+  {
+   "path": "data/datasets/btc_5m_episodes_v1_200ms/daily/2026-04-21.npz",
+   "bytes": 133827560,
+   "mtime_iso": "2026-07-02T17:56:32Z",
+   "sha256": "6f350e7d2ac7a909740314962332b253323500244504c93db421b9f4b381277d"
+  },
+  {
+   "path": "data/datasets/btc_5m_episodes_v1_200ms/daily/2026-04-22.npz",
+   "bytes": 115299836,
+   "mtime_iso": "2026-07-02T18:02:28Z",
+   "sha256": "c434b5ff20a571081a5d17ecccfeede564be804c3d67234b7f6f9781280dc931"
+  },
+  {
+   "path": "data/datasets/btc_5m_episodes_v1_200ms/daily/2026-04-23.npz",
+   "bytes": 124049039,
+   "mtime_iso": "2026-07-02T18:05:43Z",
+   "sha256": "77f3042ebb47198df9b4e1bd4ce2892b3c14c88c2b9c3a6a94bd4f9aeae9f740"
+  },
+  {
+   "path": "data/datasets/btc_5m_episodes_v1_200ms/daily/2026-04-24.npz",
+   "bytes": 101918702,
+   "mtime_iso": "2026-07-02T18:08:24Z",
+   "sha256": "3f7744baa992f2ff2e1c9b155b6a620d076ef2cc96d5b16a553cd0159380a21d"
+  },
+  {
+   "path": "data/datasets/btc_5m_episodes_v1_200ms/daily/2026-04-25.npz",
+   "bytes": 117358472,
+   "mtime_iso": "2026-07-02T18:12:09Z",
+   "sha256": "3b49beeee9a0c6589ffd0288f45eafd9c2eb905d7878702022f3f848a17a2ad2"
+  },
+  {
+   "path": "data/datasets/btc_5m_episodes_v1_200ms/daily/2026-04-26.npz",
+   "bytes": 89566886,
+   "mtime_iso": "2026-07-02T18:15:23Z",
+   "sha256": "dfe94eb24202255949162cbc9459e4b9f44106d1ccd47e3e4ef622d5f89aeffd"
+  },
+  {
+   "path": "data/datasets/btc_5m_episodes_v1_200ms/daily/2026-04-27.npz",
+   "bytes": 108609269,
+   "mtime_iso": "2026-07-02T18:19:16Z",
+   "sha256": "6a051cc8aae78078e138889e4a6fd48133341dc49bcc245626644bbe58aba279"
+  },
+  {
+   "path": "data/datasets/btc_5m_episodes_v1_200ms/daily/2026-04-28.npz",
+   "bytes": 96772112,
+   "mtime_iso": "2026-07-02T18:21:50Z",
+   "sha256": "4e22b3097cd9fc5ed7cd39affd59d91f427713227f9dba279d28a4886420f0e7"
+  },
+  {
+   "path": "data/datasets/btc_5m_episodes_v1_200ms/daily/2026-04-29.npz",
+   "bytes": 94713476,
+   "mtime_iso": "2026-07-02T18:24:53Z",
+   "sha256": "af5b4c846ffe38347394040945f2a6e055fc040e9914e54a0bed0fe7342fb2cb"
+  },
+  {
+   "path": "data/datasets/btc_5m_episodes_v1_200ms/daily/2026-04-30.npz",
+   "bytes": 110667905,
+   "mtime_iso": "2026-07-02T18:29:29Z",
+   "sha256": "a75eccbd7635c66edf19bf467bca25482065f0fd6a60d3d90155488f6a74a909"
+  },
+  {
+   "path": "data/datasets/btc_5m_episodes_v1_200ms/daily/2026-05-01.npz",
+   "bytes": 12368036,
+   "mtime_iso": "2026-07-02T18:30:07Z",
+   "sha256": "c98397a8e416ffc520d21d591f8c605b919e591f2f5193faf903e1d72321c1f0"
+  },
+  {
+   "path": "data/datasets/btc_5m_episodes_v1_200ms/daily/2026-05-04.npz",
+   "bytes": 31410419,
+   "mtime_iso": "2026-07-02T18:31:44Z",
+   "sha256": "f3d0b0a11dae867309fa125f12890dc9557acf0a7dfb533328ed5a8fa6a48c60"
+  },
+  {
+   "path": "data/datasets/btc_5m_episodes_v1_200ms/daily/2026-05-05.npz",
+   "bytes": 117358472,
+   "mtime_iso": "2026-07-02T18:36:25Z",
+   "sha256": "37ba8f1e0f175f434105e23016343fc285cf836a4f6109128d1d22abcfaa97d6"
+  },
+  {
+   "path": "data/datasets/btc_5m_episodes_v1_200ms/daily/2026-05-06.npz",
+   "bytes": 120961085,
+   "mtime_iso": "2026-07-02T18:40:41Z",
+   "sha256": "bcbc8a7ca64bda06217d7e590e99be6535f3acba1a0e7881011412b949dae306"
+  },
+  {
+   "path": "data/datasets/btc_5m_episodes_v1_200ms/daily/2026-05-07.npz",
+   "bytes": 106035974,
+   "mtime_iso": "2026-07-02T18:43:53Z",
+   "sha256": "decf1f423180b78918c0ba4e8c6f9b2f16ad5d14334ca2cf5fa2f8132ccded13"
+  },
+  {
+   "path": "data/datasets/btc_5m_episodes_v1_200ms/daily/2026-05-08.npz",
+   "bytes": 49423484,
+   "mtime_iso": "2026-07-02T18:45:12Z",
+   "sha256": "9982164bd1af3bc497ace7f886f9639280aa14758a078e9c07848a2dbb47000d"
+  },
+  {
+   "path": "data/datasets/btc_5m_episodes_v1_200ms/daily/2026-05-09.npz",
+   "bytes": 106550633,
+   "mtime_iso": "2026-07-02T18:47:37Z",
+   "sha256": "d9245a10894a58edad678587424f606d9b71a39e3f569260fb572875fd0733f0"
+  },
+  {
+   "path": "data/datasets/btc_5m_episodes_v1_200ms/daily/2026-05-10.npz",
+   "bytes": 91625522,
+   "mtime_iso": "2026-07-02T18:49:51Z",
+   "sha256": "dcbbdd75a84f2b9a08ea44a2b9d0f21620e07085d477c69e2c8f4d6d4fc71ec1"
+  },
+  {
+   "path": "data/datasets/btc_5m_episodes_v1_200ms/daily/2026-05-11.npz",
+   "bytes": 111182564,
+   "mtime_iso": "2026-07-02T18:52:44Z",
+   "sha256": "a6aa0203759a212d552092e477df2517763222c4219ecb1a1d240d5df561ff50"
+  },
+  {
+   "path": "data/datasets/btc_5m_episodes_v1_200ms/daily/2026-05-12.npz",
+   "bytes": 94713476,
+   "mtime_iso": "2026-07-02T18:54:59Z",
+   "sha256": "deec6226ce2e8747f0fe525e85f87f4d7773cb23dd2dc812ab7e28339f878abc"
+  },
+  {
+   "path": "data/datasets/btc_5m_episodes_v1_200ms/daily/2026-05-13.npz",
+   "bytes": 108609269,
+   "mtime_iso": "2026-07-02T18:58:32Z",
+   "sha256": "f880c63940934596baa6e6fefd474074939b869bf009c15da3b38b70a0e0adcb"
+  },
+  {
+   "path": "data/datasets/btc_5m_episodes_v1_200ms/daily/2026-05-14.npz",
+   "bytes": 128680970,
+   "mtime_iso": "2026-07-02T19:04:23Z",
+   "sha256": "ebec4e30b7300bc173947f27c470c21908c349d34bf3e10f0da30d76344328f1"
+  },
+  {
+   "path": "data/datasets/btc_5m_episodes_v1_200ms/daily/2026-05-15.npz",
+   "bytes": 123019721,
+   "mtime_iso": "2026-07-02T19:07:45Z",
+   "sha256": "1959dfefed1f072b3049a3926ad882b691092216a5689937ef5c70493fbe6628"
+  },
+  {
+   "path": "data/datasets/btc_5m_episodes_v1_200ms/daily/2026-05-16.npz",
+   "bytes": 102433361,
+   "mtime_iso": "2026-07-02T19:10:12Z",
+   "sha256": "07a618224759b07f055d795112347448863a38f174d174c688d2adf06e539425"
+  },
+  {
+   "path": "data/datasets/btc_5m_episodes_v1_200ms/daily/2026-05-17.npz",
+   "bytes": 100374725,
+   "mtime_iso": "2026-07-02T19:12:35Z",
+   "sha256": "5db964131a125e0c9518c06f427c569f2b87c33e7721484cd3579f9b707779c2"
+  },
+  {
+   "path": "data/datasets/btc_5m_episodes_v1_200ms/daily/2026-05-18.npz",
+   "bytes": 86993591,
+   "mtime_iso": "2026-07-02T19:15:39Z",
+   "sha256": "45bd0539ad1f4592848b0e858c2397b3973a972f33d82af51982bf6f11821200"
+  },
+  {
+   "path": "data/datasets/btc_5m_episodes_v1_200ms/daily/2026-05-19.npz",
+   "bytes": 121475744,
+   "mtime_iso": "2026-07-02T19:19:08Z",
+   "sha256": "10052fdbb09faeeb69bf7730f0d7013a6ac908eb9547a87418607109dea0dcbe"
+  },
+  {
+   "path": "data/datasets/btc_5m_episodes_v1_200ms/daily/2026-05-20.npz",
+   "bytes": 93684158,
+   "mtime_iso": "2026-07-02T19:21:59Z",
+   "sha256": "4ad2e228abff31ba226352c5db5651c10af2ed38fc6ea970bf545e5ba85b513f"
+  },
+  {
+   "path": "data/datasets/btc_5m_episodes_v1_200ms/daily/2026-05-21.npz",
+   "bytes": 126622334,
+   "mtime_iso": "2026-07-02T19:25:47Z",
+   "sha256": "886661a880bd856ce5eb74892efb23cb6a80288be31a75f85440d865b3e8120f"
+  },
+  {
+   "path": "data/datasets/btc_5m_episodes_v1_200ms/daily/2026-05-22.npz",
+   "bytes": 30895760,
+   "mtime_iso": "2026-07-02T19:26:35Z",
+   "sha256": "3aa0b523444242f69a03cd84ec0e39e8ac340548512617c4588d89c2c38577d5"
+  },
+  {
+   "path": "data/datasets/btc_5m_episodes_v1_200ms/daily/2026-05-25.npz",
+   "bytes": 38615645,
+   "mtime_iso": "2026-07-02T19:28:22Z",
+   "sha256": "056ed84b33998cab307397aedd1d64276c133f28e846d617fceedb394eff51ae"
+  },
+  {
+   "path": "data/datasets/btc_5m_episodes_v1_200ms/daily/2026-05-26.npz",
+   "bytes": 89052227,
+   "mtime_iso": "2026-07-02T19:31:20Z",
+   "sha256": "991418403006d08fc8acae1036c9ff5fd1a7f2eeee54ab361a93ef934844bdcb"
+  },
+  {
+   "path": "data/datasets/btc_5m_episodes_v1_200ms/daily/2026-05-27.npz",
+   "bytes": 70009844,
+   "mtime_iso": "2026-07-02T19:33:39Z",
+   "sha256": "90f028f241b540eb53980109c4420a8faf558b2f7c2abfe738113f7bd379330a"
+  },
+  {
+   "path": "data/datasets/btc_5m_episodes_v1_200ms/daily/2026-05-28.npz",
+   "bytes": 97286771,
+   "mtime_iso": "2026-07-02T19:38:22Z",
+   "sha256": "0a839a6d094ff81e827bf921a59e333b6d63afe7a8125d71098d82aeae9de15b"
+  },
+  {
+   "path": "data/datasets/btc_5m_episodes_v1_200ms/daily/2026-05-29.npz",
+   "bytes": 77215070,
+   "mtime_iso": "2026-07-02T19:41:17Z",
+   "sha256": "209c7b07b12c49b0c758bc3793ae8a327f4ac81f233705c72ca6f1b8871fa9f3"
+  },
+  {
+   "path": "data/datasets/btc_5m_episodes_v1_200ms/daily/2026-05-30.npz",
+   "bytes": 78244388,
+   "mtime_iso": "2026-07-02T19:43:59Z",
+   "sha256": "b310fe8b0f25b3d8fcae62d07a932cf800e635c67f7e61b1caa2027eba7e71e4"
+  },
+  {
+   "path": "data/datasets/btc_5m_episodes_v1_200ms/daily/2026-05-31.npz",
+   "bytes": 61775300,
+   "mtime_iso": "2026-07-02T19:46:32Z",
+   "sha256": "8635f6171fba352ad88c670c89fbb4d88125f3ef774577ead3a498c0bd5de81b"
+  },
+  {
+   "path": "data/datasets/btc_5m_episodes_v1_200ms/daily/2026-06-01.npz",
+   "bytes": 70009844,
+   "mtime_iso": "2026-07-02T19:49:22Z",
+   "sha256": "49fcf99c47e9df148204da8f852007221f6fa349d254fb6f60646848fea42d06"
+  },
+  {
+   "path": "data/datasets/btc_5m_episodes_v1_200ms/daily/2026-06-02.npz",
+   "bytes": 44276894,
+   "mtime_iso": "2026-07-02T19:51:20Z",
+   "sha256": "0cdd5823aa5775749f0aa137277f4b21baa39beaf473b75c588a0ecdd144cdbc"
+  },
+  {
+   "path": "data/datasets/btc_5m_episodes_v1_200ms/daily/2026-06-10.npz",
+   "bytes": 61775300,
+   "mtime_iso": "2026-07-02T19:54:38Z",
+   "sha256": "9e6931c476a55b063c8f6e38f36393c547b850f3134cb7bf137e48bb5e09c2d5"
+  },
+  {
+   "path": "data/datasets/btc_5m_episodes_v1_200ms/daily/2026-06-11.npz",
+   "bytes": 6192128,
+   "mtime_iso": "2026-07-02T19:55:30Z",
+   "sha256": "4c9511b107db2ee06c1076adc2bbc1beb7b5514ed6c40fddd696012fa3f6d2c1"
+  },
+  {
+   "path": "data/datasets/btc_5m_episodes_v1_200ms/daily/2026-06-15.npz",
+   "bytes": 18029285,
+   "mtime_iso": "2026-07-02T19:56:29Z",
+   "sha256": "9862436b871c3f69a6a17db68840ef7504e7706044bb38c0bff39ddb0a1e661b"
+  },
+  {
+   "path": "data/datasets/btc_5m_episodes_v1_200ms/daily/2026-06-16.npz",
+   "bytes": 38100986,
+   "mtime_iso": "2026-07-02T19:58:20Z",
+   "sha256": "abb72def9d75830e4477976e60c3eeffc41a1e0fdd93782ae4e4cc01b34b1e7a"
+  },
+  {
+   "path": "data/datasets/btc_5m_episodes_v1_200ms/daily/2026-06-23.npz",
+   "bytes": 63319277,
+   "mtime_iso": "2026-07-02T20:00:44Z",
+   "sha256": "df0544d642abd041a1c6598adb1d70f007d4ed8fd9a9855aa47afab2d224a9aa"
+  },
+  {
+   "path": "data/datasets/btc_5m_episodes_v1_200ms/daily/2026-06-24.npz",
+   "bytes": 55599392,
+   "mtime_iso": "2026-07-02T20:02:45Z",
+   "sha256": "823f22ab4ba24d3554a72848b108c9b1f2103d6c65dc31b2710a2baf87b24345"
+  },
+  {
+   "path": "data/datasets/btc_5m_episodes_v1_200ms/daily/2026-06-25.npz",
+   "bytes": 114785177,
+   "mtime_iso": "2026-07-02T20:06:37Z",
+   "sha256": "173d1329fd38c9bbbf8ae8414df06dc3a5da47d411d903e25642ab36ad7ad886"
+  },
+  {
+   "path": "data/datasets/btc_5m_episodes_v1_200ms/daily/2026-06-26.npz",
+   "bytes": 138974150,
+   "mtime_iso": "2026-07-02T20:11:56Z",
+   "sha256": "3c9b15c4f065b7fcc72a1c8bbdf5c8b21bdfb7edcbb4483c7a963c2e6ce31d4e"
+  },
+  {
+   "path": "data/datasets/btc_5m_episodes_v1_200ms/daily/2026-06-27.npz",
+   "bytes": 99345407,
+   "mtime_iso": "2026-07-02T20:14:26Z",
+   "sha256": "5433ed4717be3e67aebe8c5a61fcc510a672a1c80c38ccd76fcdcac97cb1b27f"
+  },
+  {
+   "path": "data/datasets/btc_5m_episodes_v1_200ms/daily/2026-06-28.npz",
+   "bytes": 95228135,
+   "mtime_iso": "2026-07-02T20:17:23Z",
+   "sha256": "471b9fcbcb0f5d5480526db300bc6c62363527d1c4715bbd89bced73db0df9d2"
+  },
+  {
+   "path": "data/datasets/btc_5m_episodes_v1_200ms/daily/2026-06-29.npz",
+   "bytes": 72583139,
+   "mtime_iso": "2026-07-02T20:19:54Z",
+   "sha256": "f46bfcf6bd7e842fdf8f13fe7ff9fbcb5b31aab08d09ac0fc9b18314434d843b"
+  },
+  {
+   "path": "data/datasets/btc_5m_episodes_v1_200ms/daily/2026-06-30.npz",
+   "bytes": 16999967,
+   "mtime_iso": "2026-07-02T20:22:00Z",
+   "sha256": "fa0b94a80653a1f2220d7c507520d2f1037a90baf2dc93d526024a6af8e6962b"
+  },
+  {
+   "path": "data/datasets/btc_5m_episodes_v1_200ms/daily/2026-07-01.npz",
+   "bytes": 54570074,
+   "mtime_iso": "2026-07-02T20:27:08Z",
+   "sha256": "fe1551166f1d4369f874e50b96de0df9e09d0126ae717798cee3329fca4da314"
+  },
+  {
+   "path": "data/datasets/btc_5m_episodes_v1_200ms/daily/2026-07-02.npz",
+   "bytes": 26263829,
+   "mtime_iso": "2026-07-02T20:29:02Z",
+   "sha256": "c097c76dbf1294726fa81649650eb2b65cfea725597743f820c1eb816e01f3a2"
+  },
+  {
+   "path": "data/datasets/btc_5m_episodes_v1_200ms/daily/2026-07-03.npz",
+   "bytes": 4133492,
+   "mtime_iso": "2026-07-03T22:26:50Z",
+   "sha256": "532391a0d013040fa33dff25d848f8d6ec555f993c29899c5b33e23af486c32c"
+  },
+  {
+   "path": "data/datasets/btc_5m_episodes_v1_200ms/daily/2026-07-04.npz",
+   "bytes": 30381101,
+   "mtime_iso": "2026-07-04T22:38:36Z",
+   "sha256": "0792b8d61f5ea02dc785d42827f60c3d89a149558d96e7738ecc479d5d203cc3"
+  },
+  {
+   "path": "data/datasets/btc_5m_episodes_v1_200ms/daily/2026-07-05.npz",
+   "bytes": 12882695,
+   "mtime_iso": "2026-07-05T16:09:59Z",
+   "sha256": "3077ba4e55e8cde9bf2e6e0006de4f37110e63778d3149998f32e46d87c12b6a"
+  },
+  {
+   "path": "data/datasets/btc_5m_episodes_v1_200ms/test.npz",
+   "bytes": 2401917445,
+   "mtime_iso": "2026-07-02T20:34:27Z",
+   "sha256": "40683c311cb88c6b4621187c40c37331db719e0eb0dfdb3a0c6538e1c751dcbf"
+  },
+  {
+   "path": "data/datasets/btc_5m_episodes_v1_200ms/train.npz",
+   "bytes": 1976808951,
+   "mtime_iso": "2026-07-02T20:33:55Z",
+   "sha256": "aaa237e9e777f2a4125d63bd4c5a11e6b19f1e31ea23a07c3f00ea05b4bce08b"
+  },
+  {
+   "path": "data/datasets/btc_5m_episodes_v1_200ms/val.npz",
+   "bytes": 203294037,
+   "mtime_iso": "2026-07-02T20:33:55Z",
+   "sha256": "22df24639c6f46d7381d36c46ebc851c4fd8822d1e5e29ca0f64d5a69d4a77b8"
+  }
+ ]
+}

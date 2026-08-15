@@ -1,0 +1,216 @@
+dataset_name: live_reference_events_v1
+description: Synthetic Chainlink BTC/USD price reference built on a 1-second recv_ts_ns
+  grid.
+columns:
+  recv_ts_ns:
+    dtype: int64
+    nullable: false
+    leakage_only: false
+    training_eligible: true
+    source: canonical_grid
+    description: Canonical 1-second local receive-clock timestamp in nanoseconds.
+  ts_seconds:
+    dtype: int64
+    nullable: false
+    leakage_only: false
+    training_eligible: true
+    source: canonical_grid
+    description: UTC second bucket corresponding to recv_ts_ns.
+  synthetic_raw:
+    dtype: float64
+    nullable: true
+    leakage_only: false
+    training_eligible: true
+    source: binance_spot
+    description: 'Leak-free spot-only base proxy: Binance spot mid * (1 + 2.9bps).
+      Binance USD-M and Hyperliquid remain diagnostics only and do not enter the official
+      price.'
+  synthetic_corrected:
+    dtype: float64
+    nullable: true
+    leakage_only: false
+    training_eligible: true
+    source: synthetic_raw+chainlink_public_delayed_bias
+    description: 'Official fake live Chainlink BTC/USD value: synthetic_raw plus the
+      applied delayed Chainlink residual bias. The applied bias is fresh when bias_mode=active_window
+      and carried when bias_mode=carried_forward.'
+  rolling_bias:
+    dtype: float64
+    nullable: false
+    leakage_only: false
+    training_eligible: true
+    source: chainlink_public_delayed
+    description: Applied residual bias. It equals active_window_bias when the [t-60m,
+      t-30m] window is non-empty, carries the last valid active-window bias when bias_mode=carried_forward,
+      and is 0 only when no bias is available.
+  active_window_bias:
+    dtype: float64
+    nullable: true
+    leakage_only: false
+    training_eligible: true
+    source: chainlink_public_delayed
+    description: Fresh mean residual from delayed Chainlink calibration observations
+      whose event timestamps are at least 30 minutes old and no more than 60 minutes
+      old; NaN when that strict window is empty.
+  bias_state_age_seconds:
+    dtype: float64
+    nullable: true
+    leakage_only: false
+    training_eligible: true
+    source: chainlink_public_delayed
+    description: Age in seconds of the newest Chainlink event currently inside the
+      [t-60m, t-30m] residual window; NaN when the window is empty.
+  applied_bias_age_seconds:
+    dtype: float64
+    nullable: true
+    leakage_only: false
+    training_eligible: true
+    source: chainlink_public_delayed
+    description: Age in seconds of the Chainlink event timestamp backing the applied
+      bias. It continues increasing while the last valid bias is carried forward.
+  last_bias_observation_age_seconds:
+    dtype: float64
+    nullable: true
+    leakage_only: false
+    training_eligible: true
+    source: chainlink_public_delayed
+    description: Age in seconds of the newest delayed Chainlink event that has become
+      causally usable for calibration.
+  bias_mode:
+    dtype: string
+    nullable: false
+    leakage_only: false
+    training_eligible: true
+    source: chainlink_public_delayed
+    description: 'Applied bias state: active_window for a fresh [t-60m,t-30m] residual
+      mean, carried_forward for the last valid active-window bias after the delayed
+      source goes stale, unavailable before any usable bias exists.'
+  bias_bootstrapped:
+    dtype: bool
+    nullable: false
+    leakage_only: false
+    training_eligible: true
+    source: chainlink_public_delayed
+    description: True once at least one delayed Chainlink residual has become causally
+      usable under the 1800s floor.
+  bias_active:
+    dtype: bool
+    nullable: false
+    leakage_only: false
+    training_eligible: true
+    source: chainlink_public_delayed
+    description: Strict freshness flag. True only when the [t-60m, t-30m] delayed
+      residual window is non-empty.
+  bias_carried_forward:
+    dtype: bool
+    nullable: false
+    leakage_only: false
+    training_eligible: true
+    source: chainlink_public_delayed
+    description: True when the strict residual window is empty but the last valid
+      active-window bias is still applied.
+  bias_state_stale:
+    dtype: bool
+    nullable: false
+    leakage_only: false
+    training_eligible: true
+    source: chainlink_public_delayed
+    description: True after calibration has bootstrapped but no delayed Chainlink
+      residual is currently inside [t-60m, t-30m].
+  bias_neutralized:
+    dtype: bool
+    nullable: false
+    leakage_only: false
+    training_eligible: true
+    source: chainlink_public_delayed
+    description: True when calibration has bootstrapped but no active or carried bias
+      is applied. Under the carried-bias policy this should normally stay false after
+      bootstrap.
+  bias_observation_count:
+    dtype: int16
+    nullable: false
+    leakage_only: false
+    training_eligible: true
+    source: chainlink_public_delayed
+    description: Number of delayed Chainlink residual observations currently inside
+      [t-60m, t-30m].
+  source_count:
+    dtype: int8
+    nullable: false
+    leakage_only: false
+    training_eligible: true
+    source: binance_spot|binance_usdm|hyperliquid
+    description: Number of healthy non-stale primary mids available at the second.
+  price_valid:
+    dtype: bool
+    nullable: false
+    leakage_only: false
+    training_eligible: true
+    source: binance_spot
+    description: True when a healthy non-stale Binance spot mid is available for the
+      official spot-only synthetic price.
+  degraded:
+    dtype: bool
+    nullable: false
+    leakage_only: false
+    training_eligible: true
+    source: binance_spot|binance_usdm|hyperliquid
+    description: Diagnostic flag for official price-valid rows where fewer than all
+      three recorded primary/context mids are available. Non-spot mids do not affect
+      price validity.
+  binance_spot_mid:
+    dtype: float64
+    nullable: true
+    leakage_only: false
+    training_eligible: true
+    source: binance_spot
+    description: Healthy Binance spot mid used by the official spot-only synthetic
+      calculation when not stale.
+  binance_spot_staleness_s:
+    dtype: float64
+    nullable: true
+    leakage_only: false
+    training_eligible: true
+    source: binance_spot
+    description: Seconds since the latest Binance spot update used for the current
+      second.
+  binance_usdm_mid:
+    dtype: float64
+    nullable: true
+    leakage_only: false
+    training_eligible: true
+    source: binance_usdm
+    description: Healthy Binance USD-M mid retained as diagnostic context when not
+      stale and not quarantined; it does not enter the official spot-only synthetic
+      price.
+  binance_usdm_staleness_s:
+    dtype: float64
+    nullable: true
+    leakage_only: false
+    training_eligible: true
+    source: binance_usdm
+    description: Seconds since the latest Binance USD-M update used for the current
+      second.
+  hyperliquid_mid:
+    dtype: float64
+    nullable: true
+    leakage_only: false
+    training_eligible: true
+    source: hyperliquid
+    description: Healthy Hyperliquid mid retained as diagnostic context when not stale;
+      it does not enter the official spot-only synthetic price.
+  hyperliquid_staleness_s:
+    dtype: float64
+    nullable: true
+    leakage_only: false
+    training_eligible: true
+    source: hyperliquid
+    description: Seconds since the latest Hyperliquid update used for the current
+      second.
+  max_cross_source_spread:
+    dtype: float64
+    nullable: true
+    leakage_only: false
+    training_eligible: true
+    source: binance_spot|binance_usdm|hyperliquid
+    description: Max minus min across available healthy primary mids for the second.

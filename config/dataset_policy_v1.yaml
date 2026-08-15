@@ -1,0 +1,121 @@
+source_roles:
+  live_reference_primary_inputs:
+    - binance_spot
+    - binance_usdm
+    - hyperliquid
+
+  live_reference_calibration_inputs:
+    chainlink_public_delayed:
+      causal_availability_offset_seconds: 1800
+
+  verification_only_inputs:
+    - chainlink_onchain
+    - chainlink_public_page
+
+  forbidden_for_live_reference:
+    - any_polymarket_side_price_source
+    - any_source_not_explicitly_listed_above
+
+sources:
+  polymarket_l2:
+    status: approved
+    role: P1 primary
+    quality_gate: finalized_clean
+  polymarket_ws:
+    status: approved
+    role: P1 primary
+    quality_gate: finalized_clean
+  polymarket_resolution:
+    status: approved
+    role: P0 label
+    quality_gate: finalized_clean
+  polymarket_strike:
+    status: approved
+    role: P0 label
+    quality_gate: finalized_clean
+  binance_spot:
+    status: approved
+    role: P1 primary
+    quality_gate: finalized_clean
+  binance_usdm:
+    status: approved_with_quarantine
+    role: P1 conditional
+    quality_gate: finalized_clean
+    quarantine: "2026-04-20 07:00 UTC"
+  hyperliquid:
+    status: approved
+    role: P1 diagnostic
+    quality_gate: finalized_clean
+  chainlink_public_delayed:
+    status: approved_calibration_only
+    role: P2 calibration
+    quality_gate: finalized_clean
+    causal_floor_seconds: 1800
+  fng:
+    status: excluded
+    reason: "FNG excluded - correlation -0.0079 with resolved_side"
+  rtds:
+    status: excluded
+    reason: "RTDS excluded - silent freeze upstream bug"
+  polymarket_rtds:
+    status: excluded
+    reason: "RTDS excluded - silent freeze upstream bug"
+  bybit:
+    status: excluded
+    reason: "Bybit excluded - continuity issues"
+  coinbase_advanced:
+    status: excluded
+    reason: "Coinbase Advanced excluded - continuity_compromised"
+  deribit:
+    status: excluded
+    reason: "Deribit excluded - complexity not justified"
+  chainlink_live:
+    status: excluded
+    reason: "Chainlink live excluded - not public, enterprise only"
+  chainlink_onchain:
+    status: excluded
+    reason: "Chainlink onchain excluded - cadence too sparse"
+
+health_policy:
+  allowed_manifest_quality_classes:
+    - finalized_clean
+
+  quarantined_manifest_quality_classes:
+    - continuity_compromised
+    - stale_context
+    - recovered
+    - active_tail_tolerant
+    - unknown
+
+  allowed_file_states:
+    - finalized
+
+  forbidden_file_states:
+    - active
+    - current
+    - partial
+    - quarantined
+
+  quarantine_conditions:
+    - any manifest or QC signal indicating continuity_compromised
+    - any manifest or QC signal indicating stale_context
+    - any recovered or repaired file
+    - any active tail or partial file
+    - any source-hour failing source-specific integrity checks defined in the scriptures
+    - any source-hour missing required normalized fields needed for the target pipeline
+
+training_data_policy:
+  allowed_manifest_quality_classes:
+    - finalized_clean
+
+  allowed_file_states:
+    - finalized
+
+  label_requirement: must_have_matched_canonical_resolution_row
+  reproducibility: dataset build must be deterministic and produce identical output given identical input files
+
+quarantine_policy:
+  preserve_quarantined_inputs_on_disk: true
+  exclude_quarantined_inputs_from_dataset_builds: true
+  exclude_quarantined_inputs_from_live_reference: true
+  require_explicit_review_to_reinstate: true

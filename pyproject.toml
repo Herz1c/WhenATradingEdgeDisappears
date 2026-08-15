@@ -1,0 +1,130 @@
+[build-system]
+requires = ["hatchling>=1.26"]
+build-backend = "hatchling.build"
+
+[project]
+name = "market-recorders"
+version = "1.0.0"
+description = "Multi-source BTC/USD and Polymarket BTC 5m recorder stack, modelling pipeline, and strategy audit."
+readme = "README.md"
+requires-python = ">=3.11"
+license = { text = "MIT" }
+authors = [
+  { name = "Jan Herza" }
+]
+keywords = [
+  "market-microstructure",
+  "prediction-markets",
+  "polymarket",
+  "chainlink",
+  "data-snooping",
+  "time-series",
+]
+classifiers = [
+  "Development Status :: 4 - Beta",
+  "Intended Audience :: Science/Research",
+  "License :: OSI Approved :: MIT License",
+  "Programming Language :: Python :: 3.11",
+  "Programming Language :: Python :: 3.12",
+  "Programming Language :: Python :: 3.13",
+  "Topic :: Scientific/Engineering :: Information Analysis",
+]
+# Core: the recording stack and the canonical/dataset pipeline that the test
+# suite exercises. Training and inference dependencies are extras below.
+dependencies = [
+  "eth-abi>=5.0.0",
+  "httpx>=0.27.0",
+  "joblib>=1.3.0",
+  "numpy>=1.26.0",
+  "orjson>=3.10.0",
+  # data.chain.link is fronted by a Vercel JS "Security Checkpoint" challenge
+  # (enabled ~2026-05-18) that plain HTTP clients cannot solve. The
+  # chainlink_public_delayed recorder drives headless Chromium to clear it.
+  # Requires a one-time `python -m playwright install chromium`.
+  "playwright>=1.40.0",
+  "polars>=1.0.0",
+  "psutil>=5.9.0",
+  "py-clob-client-v2>=1.0.1",
+  "pyarrow>=15.0.0",
+  "PyYAML>=6.0.0",
+  "typer>=0.12.0",
+  "websockets>=12.0",
+  "zstandard>=0.23.0",
+]
+
+[project.urls]
+Homepage = "https://github.com/Herz1c/BitcoinMicrostructureResearch-public"
+Results = "https://github.com/Herz1c/BitcoinMicrostructureResearch-public/blob/main/docs/RESULTS.md"
+Methodology = "https://github.com/Herz1c/BitcoinMicrostructureResearch-public/blob/main/docs/METHODOLOGY.md"
+
+[project.optional-dependencies]
+pandas = [
+  "pandas>=2.2.0",
+]
+# Tabular model factory (Models 01-08c).
+models = [
+  "lightgbm>=4.3.0",
+  "scikit-learn>=1.4.0",
+]
+# Sequence models over episode tensors (TCN/GRU) and the shadow bot.
+sequence = [
+  "torch>=2.2.0",
+]
+# Figure and table generation for paper/.
+paper = [
+  "pypdf>=5.0.0",
+  "reportlab>=4.2.0",
+]
+# Everything the test suite needs. Deliberately excludes torch/lightgbm: no
+# test imports them, and CI should not pull a 2 GB wheel to run unit tests.
+dev = [
+  "pandas>=2.2.0",
+  "pytest>=8.3.0",
+  "pytest-asyncio>=0.24.0",
+  "ruff>=0.6.0",
+]
+
+[project.scripts]
+binance-recorder = "binance_recorder.cli:main"
+polymarket-recorder = "polymarket_recorder.cli:main"
+chainlink-recorder = "chainlink_recorder.cli:main"
+bybit-recorder = "bybit_recorder.cli:main"
+hyperliquid-recorder = "hyperliquid_recorder.cli:main"
+deribit-recorder = "deribit_recorder.cli:main"
+coinbase-recorder = "coinbase_recorder.cli:main"
+market-recorders = "market_recorders.cli:main"
+
+[tool.hatch.build.targets.wheel]
+packages = [
+  "src/backtest",
+  "src/binance_recorder",
+  "src/bybit_recorder",
+  "src/canonical",
+  "src/chainlink_recorder",
+  "src/coinbase_recorder",
+  "src/deribit_recorder",
+  "src/execution_simulator",
+  "src/fair_value",
+  "src/hyperliquid_recorder",
+  "src/live",
+  "src/live_bot",
+  "src/market_recorders",
+  "src/model_factory",
+  "src/monitoring",
+  "src/orchestration",
+  "src/paper_trading",
+  "src/policy",
+  "src/poly_l2_only",
+  "src/poly_l2_only_bot",
+  "src/polymarket_recorder",
+  "src/trading",
+]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+asyncio_mode = "auto"
+
+[tool.ruff]
+line-length = 100
+target-version = "py311"
+exclude = ["research"]

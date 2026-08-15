@@ -1,0 +1,271 @@
+{
+  "builder_method": "spot_premium_calibrated_v1",
+  "winning_candidate": {
+    "candidate_name": "spot_premium_calibrated_v1",
+    "matched_event_count": 16846,
+    "event_coverage": 0.9837080291970803,
+    "mean_error_usd": 1.393720649419403,
+    "median_abs_error_usd": 5.258210126339691,
+    "p90_abs_error_usd": 14.180322399988654,
+    "p99_abs_error_usd": 29.771434822686565,
+    "fraction_within_1_usd": 0.1035260595987178,
+    "fraction_within_3_usd": 0.3033954647987653,
+    "fraction_within_10_usd": 0.7822034904428351
+  },
+  "candidate_stats": [
+    {
+      "candidate_name": "spot_premium_calibrated_v1",
+      "matched_event_count": 16846,
+      "event_coverage": 0.9837080291970803,
+      "mean_error_usd": 1.393720649419403,
+      "median_abs_error_usd": 5.258210126339691,
+      "p90_abs_error_usd": 14.180322399988654,
+      "p99_abs_error_usd": 29.771434822686565,
+      "fraction_within_1_usd": 0.1035260595987178,
+      "fraction_within_3_usd": 0.3033954647987653,
+      "fraction_within_10_usd": 0.7822034904428351
+    },
+    {
+      "candidate_name": "binance_spot_raw",
+      "matched_event_count": 16846,
+      "event_coverage": 0.9837080291970803,
+      "mean_error_usd": -21.907022026006448,
+      "median_abs_error_usd": 22.75499999999738,
+      "p90_abs_error_usd": 31.71770999999717,
+      "p99_abs_error_usd": 42.57201836610984,
+      "fraction_within_1_usd": 0.007479520360916538,
+      "fraction_within_3_usd": 0.023150896355217856,
+      "fraction_within_10_usd": 0.07663540306304167
+    },
+    {
+      "candidate_name": "median_spot_only",
+      "matched_event_count": 16846,
+      "event_coverage": 0.9837080291970803,
+      "mean_error_usd": -21.907022026006448,
+      "median_abs_error_usd": 22.75499999999738,
+      "p90_abs_error_usd": 31.71770999999717,
+      "p99_abs_error_usd": 42.57201836610984,
+      "fraction_within_1_usd": 0.007479520360916538,
+      "fraction_within_3_usd": 0.023150896355217856,
+      "fraction_within_10_usd": 0.07663540306304167
+    },
+    {
+      "candidate_name": "volume_weighted_mid",
+      "matched_event_count": 17119,
+      "event_coverage": 0.9996496350364964,
+      "mean_error_usd": -56.98395570525207,
+      "median_abs_error_usd": 57.33981269376818,
+      "p90_abs_error_usd": 69.54989533974731,
+      "p99_abs_error_usd": 87.49247874306573,
+      "fraction_within_1_usd": 5.841462702260646e-05,
+      "fraction_within_3_usd": 0.00035048776213563875,
+      "fraction_within_10_usd": 0.0014603656755651615
+    },
+    {
+      "candidate_name": "median_all",
+      "matched_event_count": 17119,
+      "event_coverage": 0.9996496350364964,
+      "mean_error_usd": -56.981128348347426,
+      "median_abs_error_usd": 58.38224939904467,
+      "p90_abs_error_usd": 70.72402513068228,
+      "p99_abs_error_usd": 82.32016289089135,
+      "fraction_within_1_usd": 0.00023365850809042583,
+      "fraction_within_3_usd": 0.0005841462702260646,
+      "fraction_within_10_usd": 0.0021029265728138326
+    },
+    {
+      "candidate_name": "trimmed_mean",
+      "matched_event_count": 17119,
+      "event_coverage": 0.9996496350364964,
+      "mean_error_usd": -56.981128348347426,
+      "median_abs_error_usd": 58.38224939904467,
+      "p90_abs_error_usd": 70.72402513068228,
+      "p99_abs_error_usd": 82.32016289089135,
+      "fraction_within_1_usd": 0.00023365850809042583,
+      "fraction_within_3_usd": 0.0005841462702260646,
+      "fraction_within_10_usd": 0.0021029265728138326
+    }
+  ],
+  "time_of_day_breakdown": [
+    {
+      "bucket": "00-03 UTC",
+      "count": 2780,
+      "mean_error_usd": 0.2491418297401409,
+      "median_abs_error_usd": 4.714783171119052,
+      "p90_abs_error_usd": 10.644797466399902
+    },
+    {
+      "bucket": "04-07 UTC",
+      "count": 2986,
+      "mean_error_usd": 5.527298035449636,
+      "median_abs_error_usd": 5.8317415556593915,
+      "p90_abs_error_usd": 22.870625439289142
+    },
+    {
+      "bucket": "08-11 UTC",
+      "count": 2862,
+      "mean_error_usd": 3.5576984456923544,
+      "median_abs_error_usd": 4.975378290611843,
+      "p90_abs_error_usd": 12.94497668510012
+    },
+    {
+      "bucket": "12-15 UTC",
+      "count": 3193,
+      "mean_error_usd": -0.8201136343120282,
+      "median_abs_error_usd": 5.076146849998622,
+      "p90_abs_error_usd": 14.614043183662583
+    },
+    {
+      "bucket": "16-19 UTC",
+      "count": 2684,
+      "mean_error_usd": 1.2590437357701378,
+      "median_abs_error_usd": 6.287245121857268,
+      "p90_abs_error_usd": 12.82405957429437
+    },
+    {
+      "bucket": "20-23 UTC",
+      "count": 2341,
+      "mean_error_usd": -1.991154064259379,
+      "median_abs_error_usd": 4.787418150008307,
+      "p90_abs_error_usd": 11.677896350010997
+    }
+  ],
+  "day_of_week_breakdown": [
+    {
+      "bucket": "Monday",
+      "count": 6037,
+      "mean_error_usd": -4.01796838021345,
+      "median_abs_error_usd": 4.964110849992721,
+      "p90_abs_error_usd": 12.364259698375832
+    },
+    {
+      "bucket": "Tuesday",
+      "count": 5801,
+      "mean_error_usd": 1.9918976925564014,
+      "median_abs_error_usd": 4.318262077882537,
+      "p90_abs_error_usd": 11.028315597184701
+    },
+    {
+      "bucket": "Wednesday",
+      "count": 4439,
+      "mean_error_usd": 8.47249871556548,
+      "median_abs_error_usd": 8.292132049973588,
+      "p90_abs_error_usd": 21.810610716510563
+    },
+    {
+      "bucket": "Sunday",
+      "count": 569,
+      "mean_error_usd": -2.511998491119495,
+      "median_abs_error_usd": 3.36383925001428,
+      "p90_abs_error_usd": 8.641755029791966
+    }
+  ],
+  "volatility_breakdown": [
+    {
+      "bucket": "low",
+      "count": 5616,
+      "mean_error_usd": 0.9642791896359342,
+      "median_abs_error_usd": 4.882813727082976,
+      "p90_abs_error_usd": 12.759713350009406
+    },
+    {
+      "bucket": "medium",
+      "count": 5615,
+      "mean_error_usd": 1.7937434125792882,
+      "median_abs_error_usd": 5.077857650016085,
+      "p90_abs_error_usd": 14.16339673000331
+    },
+    {
+      "bucket": "high",
+      "count": 5615,
+      "mean_error_usd": 1.4232158271578186,
+      "median_abs_error_usd": 5.866643649991602,
+      "p90_abs_error_usd": 15.987624531105407
+    }
+  ],
+  "source_availability_breakdown": [
+    {
+      "bucket": "2 sources",
+      "count": 1270,
+      "mean_error_usd": 2.627516000163175,
+      "median_abs_error_usd": 5.916554298695701,
+      "p90_abs_error_usd": 15.340068069525302
+    },
+    {
+      "bucket": "3 sources",
+      "count": 15576,
+      "mean_error_usd": 1.2931222868459187,
+      "median_abs_error_usd": 5.226100731597398,
+      "p90_abs_error_usd": 14.012262150507013
+    }
+  ],
+  "proximity_breakdown": [
+    {
+      "bucket": "0-5s_after_update",
+      "count": 84116,
+      "mean_error_usd": 1.4399174683699503,
+      "median_abs_error_usd": 5.7928039679754875,
+      "p90_abs_error_usd": 17.303869050934736
+    },
+    {
+      "bucket": "5-10s_after_update",
+      "count": 54593,
+      "mean_error_usd": 1.4621997450529869,
+      "median_abs_error_usd": 7.633514325993019,
+      "p90_abs_error_usd": 24.35429965786171
+    },
+    {
+      "bucket": "10-15s_after_update",
+      "count": 6299,
+      "mean_error_usd": 2.1325204524692594,
+      "median_abs_error_usd": 9.238961750015733,
+      "p90_abs_error_usd": 27.77558736570354
+    },
+    {
+      "bucket": "15-20s_after_update",
+      "count": 6215,
+      "mean_error_usd": 1.8011638776609173,
+      "median_abs_error_usd": 10.761599827950704,
+      "p90_abs_error_usd": 31.412336129476902
+    },
+    {
+      "bucket": "20-25s_after_update",
+      "count": 2488,
+      "mean_error_usd": 0.14139094532162724,
+      "median_abs_error_usd": 11.476518851261062,
+      "p90_abs_error_usd": 29.795522249987698
+    },
+    {
+      "bucket": "25-30s_after_update",
+      "count": 2255,
+      "mean_error_usd": -0.5615425641181003,
+      "median_abs_error_usd": 11.753995649996796,
+      "p90_abs_error_usd": 32.91820956955198
+    },
+    {
+      "bucket": "0-5s_before_next_update",
+      "count": 67313,
+      "mean_error_usd": 1.5020238657589224,
+      "median_abs_error_usd": 9.608637249970343,
+      "p90_abs_error_usd": 31.184100170011526
+    },
+    {
+      "bucket": "other",
+      "count": 15257,
+      "mean_error_usd": -1.490694418235041,
+      "median_abs_error_usd": 18.39563744998304,
+      "p90_abs_error_usd": 51.3426198579429
+    }
+  ],
+  "source_counts_at_events": {
+    "0": 6,
+    "3": 15576,
+    "2": 1541,
+    "1": 2
+  },
+  "artifact_paths": {
+    "validation_report_md": "docs\\synthetic_chainlink_validation_report.md",
+    "known_failure_modes_md": "docs\\known_failure_modes.md",
+    "decision_log_md": "docs\\decision_log.md"
+  }
+}

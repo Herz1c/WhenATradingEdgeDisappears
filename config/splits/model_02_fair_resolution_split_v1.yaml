@@ -1,0 +1,23 @@
+split_id: model_02_fair_resolution_split_v1
+model_id: model_02_fair_resolution
+version: v1
+method: anchored_walkforward
+ordering_column: snapshot_ts_ns
+ordering_unit: snapshot
+split_strategy: day_based
+train:
+  start_day: '2026-04-19'
+  end_day: '2026-05-13'      # extended training: 25 days (vs prior 21)
+validation:
+  start_day: '2026-05-14'    # 1-day val purely for trainer compatibility;
+  end_day: '2026-05-14'      # calibrator will be stripped after training.
+test:
+  start_day: '2026-05-15'
+  end_day: '2026-05-20'      # 6 days OOS for trading evaluation
+purge_days: 0
+embargo_days: 0
+min_train_rows: 100000
+min_val_rows: 10000
+min_test_rows: 50000
+auto_extend: false
+preserve_validation_rows_on_short_window: true

@@ -1,0 +1,39 @@
+orchestration_v1:
+  default_max_workers: 1
+  dry_run_mode: false
+  fail_fast: true
+  steps:
+    - id: registries
+      command: build-registries
+      required: true
+    - id: live_reference
+      command: build-live-reference-events
+      required: true
+    - id: phase3_datasets
+      command: build-phase3-datasets
+      required: true
+    - id: event_triggered
+      command: build-event-triggered-snapshots
+      required: false
+    - id: phase8_datasets
+      command: build-phase8-datasets
+      required: true
+    - id: external_btc
+      command: build-external-btc-events
+      required: false
+    - id: polymarket_ws
+      command: build-polymarket-ws-events
+      required: false
+    - id: execution_intent
+      command: build-execution-intent-dataset-v1
+      required: true
+    - id: coverage_matrix
+      command: generate-coverage-matrix
+      required: true
+    - id: audit
+      command: audit-all-datasets
+      required: true
+    - id: reproducibility
+      command: generate-reproducibility-report
+      required: true
+

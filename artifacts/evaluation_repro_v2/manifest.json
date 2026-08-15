@@ -1,0 +1,250 @@
+{
+  "bundle_version": "evaluation_repro_v2",
+  "created_at": "2026-08-09T17:59:46.452138+00:00",
+  "dataset": {
+    "full_private_test_sha256": "1e041a2c60bf80f542099712eb13750ed6d4b9f1be0d79b551ae0506cd58ebaa",
+    "mini_dates": [
+      "2026-06-28",
+      "2026-06-28",
+      "2026-06-29",
+      "2026-06-29",
+      "2026-06-30",
+      "2026-06-30",
+      "2026-07-01",
+      "2026-07-01",
+      "2026-07-02",
+      "2026-07-02"
+    ],
+    "mini_markets": [
+      "btc-updown-5m-1782605100",
+      "btc-updown-5m-1782607800",
+      "btc-updown-5m-1782714000",
+      "btc-updown-5m-1782720900",
+      "btc-updown-5m-1782840900",
+      "btc-updown-5m-1782841200",
+      "btc-updown-5m-1782914100",
+      "btc-updown-5m-1782914400",
+      "btc-updown-5m-1782981900",
+      "btc-updown-5m-1782982800"
+    ],
+    "mini_original_ep_indices": [
+      0,
+      3,
+      185,
+      202,
+      326,
+      327,
+      359,
+      360,
+      465,
+      468
+    ],
+    "private_counts": {
+      "test": 516,
+      "train": 7470,
+      "val": 917
+    },
+    "private_split_hashes": {
+      "test.npz": "1e041a2c60bf80f542099712eb13750ed6d4b9f1be0d79b551ae0506cd58ebaa",
+      "train.npz": "3e19a5f2b69859e7b7a0e080f6cbe733258ca33e4a958dcf7b85e08c2e560e89",
+      "val.npz": "361bbe7e58d10fd2f93ba4abe9074d02703843f0d1c9f40b5c199d20091de57a"
+    },
+    "reports_sha256": {
+      "101": "ddba4674718881169f7e6085ad3380b371f30ec421848a619ecd6bccd71473e1",
+      "11": "f27edfbc262d67579d38865bbef374893a2d058beca84a33b327a297490f4e2b",
+      "23": "354a122e34d1fce2afcab23bc6ec81cb874010350321eb8ed240fbd1ac520c98",
+      "42": "3b00491a2034ca25350e802b2e723002fa12adeb9174be1eaf1a6ecf20224e15",
+      "7": "2ca81eda2f9ca73da2a85963be3cef3be9b21a387b8987a1669b7a2a7866d6df"
+    },
+    "seeds": [
+      7,
+      11,
+      23,
+      42,
+      101
+    ],
+    "splits": [
+      "val",
+      "test"
+    ]
+  },
+  "exclusions": [
+    "API keys, wallets, account state, and secrets",
+    "private Git objects and diffs",
+    "raw market corpus and full episode tensors",
+    "complete private logs and full feature vectors",
+    "training prediction arrays, which are unnecessary for public evaluation checks"
+  ],
+  "files": [
+    {
+      "bytes": 609123,
+      "public_path": "artifacts/evaluation_repro_v2/checkpoints/seed101.pt",
+      "sha256": "52a170de6f4420556295085c00dd7838b2e8eb915f3166e98eabdf00a2720003",
+      "source_relative_path": "artifacts/tcn_v2_c64_b7_ttc15_150_seed101/model.pt"
+    },
+    {
+      "bytes": 609123,
+      "public_path": "artifacts/evaluation_repro_v2/checkpoints/seed11.pt",
+      "sha256": "d4f11b61729076f16751e34c834670b22c0a8175d733583da81bda58dc1963a5",
+      "source_relative_path": "artifacts/tcn_v2_c64_b7_ttc15_150_seed11/model.pt"
+    },
+    {
+      "bytes": 609123,
+      "public_path": "artifacts/evaluation_repro_v2/checkpoints/seed23.pt",
+      "sha256": "22585ba3e78bba37647e417c8a68f9e579aa920e5667b207396adbecbaf695a5",
+      "source_relative_path": "artifacts/tcn_v2_c64_b7_ttc15_150_seed23/model.pt"
+    },
+    {
+      "bytes": 609123,
+      "public_path": "artifacts/evaluation_repro_v2/checkpoints/seed42.pt",
+      "sha256": "a1ab9285f8b320f49bfdedfa741df47e1e2b111f383b47e7bedf4dd18b6478b2",
+      "source_relative_path": "artifacts/tcn_v2_c64_b7_ttc15_150_seed42/model.pt"
+    },
+    {
+      "bytes": 609123,
+      "public_path": "artifacts/evaluation_repro_v2/checkpoints/seed7.pt",
+      "sha256": "272e497d8846bb96a682442916d82d91e0550f9949aa6802cf03150b7be3716d",
+      "source_relative_path": "artifacts/tcn_v2_c64_b7_ttc15_150_seed7/model.pt"
+    },
+    {
+      "bytes": 181,
+      "public_path": "artifacts/evaluation_repro_v2/dataset_metadata/audit_names.json",
+      "sha256": "006de50d74323e158cf94c144bef61cda7b82894e7367230120378d3c17b9628",
+      "source_relative_path": "data/datasets/btc_5m_episodes_v2_200ms/audit_names.json"
+    },
+    {
+      "bytes": 1559,
+      "public_path": "artifacts/evaluation_repro_v2/dataset_metadata/feature_names.json",
+      "sha256": "a959914a64e26ac4686af14d3b948a01b716e7ad3ddcaf494f33f5d019cfe6a7",
+      "source_relative_path": "data/datasets/btc_5m_episodes_v2_200ms/feature_names.json"
+    },
+    {
+      "bytes": 4236,
+      "public_path": "artifacts/evaluation_repro_v2/dataset_metadata/normalization.json",
+      "sha256": "e3884d30bda0e3fb234455ecdf3c2bee49e1eb15467b83074d9b1ed33988e001",
+      "source_relative_path": "data/datasets/btc_5m_episodes_v2_200ms/normalization.json"
+    },
+    {
+      "bytes": 98,
+      "public_path": "artifacts/evaluation_repro_v2/dataset_metadata/quote_names.json",
+      "sha256": "3e5f51401b0989fc1fd4fc08cc779cdb27044c3454bdec663c96649d7985264c",
+      "source_relative_path": "data/datasets/btc_5m_episodes_v2_200ms/quote_names.json"
+    },
+    {
+      "bytes": 8813,
+      "public_path": "artifacts/evaluation_repro_v2/dataset_metadata/splits_v2_public.json",
+      "sha256": "e54fdc409488a2650142f37d31eac46d6048dad28daa94a999a3b9390ca5fe8c",
+      "source_relative_path": "data/datasets/btc_5m_episodes_v2_200ms/splits_v2.json (path redacted)"
+    },
+    {
+      "bytes": 25989,
+      "public_path": "artifacts/evaluation_repro_v2/mini_inference/expected_seed101.npz",
+      "sha256": "2cf0fdd8d4d3b100ebde47abd47b29f10c9bf3da0cbfd4ef3eae256aae40e8ed",
+      "source_relative_path": "derived from artifacts/tcn_v2_c64_b7_ttc15_150_seed101/predictions_test.npz"
+    },
+    {
+      "bytes": 25991,
+      "public_path": "artifacts/evaluation_repro_v2/mini_inference/expected_seed11.npz",
+      "sha256": "2270b430480888f44a82ca6def92fc185c775bcad96ff050019dbaf52c178364",
+      "source_relative_path": "derived from artifacts/tcn_v2_c64_b7_ttc15_150_seed11/predictions_test.npz"
+    },
+    {
+      "bytes": 26149,
+      "public_path": "artifacts/evaluation_repro_v2/mini_inference/expected_seed23.npz",
+      "sha256": "7b81150d7631f002c121543fee38b0de497e699081152e2f3489c44dda8e5415",
+      "source_relative_path": "derived from artifacts/tcn_v2_c64_b7_ttc15_150_seed23/predictions_test.npz"
+    },
+    {
+      "bytes": 26197,
+      "public_path": "artifacts/evaluation_repro_v2/mini_inference/expected_seed42.npz",
+      "sha256": "b865298a04ffd621937f51f56b3a5b877f96ef40aa7a1837f3bd376b982950a7",
+      "source_relative_path": "derived from artifacts/tcn_v2_c64_b7_ttc15_150_seed42/predictions_test.npz"
+    },
+    {
+      "bytes": 26223,
+      "public_path": "artifacts/evaluation_repro_v2/mini_inference/expected_seed7.npz",
+      "sha256": "bc027327fad72ae3f326847bb242c02904d49f1beb13a2fe9da3846eef042344",
+      "source_relative_path": "derived from artifacts/tcn_v2_c64_b7_ttc15_150_seed7/predictions_test.npz"
+    },
+    {
+      "bytes": 927282,
+      "public_path": "artifacts/evaluation_repro_v2/mini_inference/test_subset_10_markets.npz",
+      "sha256": "56f4513d51a83ab2956d03cdd9fb9f33b73c82b13ee10a030b675db698c8d48e",
+      "source_relative_path": "derived from data/datasets/btc_5m_episodes_v2_200ms/test.npz"
+    },
+    {
+      "bytes": 795397,
+      "public_path": "artifacts/evaluation_repro_v2/predictions/seed101_test.npz",
+      "sha256": "3537af0dd90e022024057cea104771f6857343acea93d3b42b4371159d031328",
+      "source_relative_path": "artifacts/tcn_v2_c64_b7_ttc15_150_seed101/predictions_test.npz"
+    },
+    {
+      "bytes": 551558,
+      "public_path": "artifacts/evaluation_repro_v2/predictions/seed101_val.npz",
+      "sha256": "b6614574c44191bc2e0b590b57089be3d710cc6b0bd71b638fa17eb06ff684ca",
+      "source_relative_path": "artifacts/tcn_v2_c64_b7_ttc15_150_seed101/predictions_val.npz"
+    },
+    {
+      "bytes": 797006,
+      "public_path": "artifacts/evaluation_repro_v2/predictions/seed11_test.npz",
+      "sha256": "ab25037b3c27ed9755a5d4bcb027f8f02fa779c8ba83f3b4ca656742293233c0",
+      "source_relative_path": "artifacts/tcn_v2_c64_b7_ttc15_150_seed11/predictions_test.npz"
+    },
+    {
+      "bytes": 551602,
+      "public_path": "artifacts/evaluation_repro_v2/predictions/seed11_val.npz",
+      "sha256": "3c87fa6692506dfe7742df1db4c0ff7cb8dcf45871120d34d17d2dfb596c3df7",
+      "source_relative_path": "artifacts/tcn_v2_c64_b7_ttc15_150_seed11/predictions_val.npz"
+    },
+    {
+      "bytes": 789783,
+      "public_path": "artifacts/evaluation_repro_v2/predictions/seed23_test.npz",
+      "sha256": "52f6a3230f42843d1cbb7d7b5b190160810122e06b5fb9e99e971ab588884631",
+      "source_relative_path": "artifacts/tcn_v2_c64_b7_ttc15_150_seed23/predictions_test.npz"
+    },
+    {
+      "bytes": 553678,
+      "public_path": "artifacts/evaluation_repro_v2/predictions/seed23_val.npz",
+      "sha256": "91883bf1539d9c4f7ce36ff4e13499ec1e154864116aa0c38593309749815aac",
+      "source_relative_path": "artifacts/tcn_v2_c64_b7_ttc15_150_seed23/predictions_val.npz"
+    },
+    {
+      "bytes": 801719,
+      "public_path": "artifacts/evaluation_repro_v2/predictions/seed42_test.npz",
+      "sha256": "976b2af95d08c154b6be8fec261b8e8fee4418374e2a0ac0c4bb723a8259bd50",
+      "source_relative_path": "artifacts/tcn_v2_c64_b7_ttc15_150_seed42/predictions_test.npz"
+    },
+    {
+      "bytes": 554699,
+      "public_path": "artifacts/evaluation_repro_v2/predictions/seed42_val.npz",
+      "sha256": "61cac826faf5ded3030b70e0e760a4afbe864e6cd1b8bba874db3271e4026f32",
+      "source_relative_path": "artifacts/tcn_v2_c64_b7_ttc15_150_seed42/predictions_val.npz"
+    },
+    {
+      "bytes": 801745,
+      "public_path": "artifacts/evaluation_repro_v2/predictions/seed7_test.npz",
+      "sha256": "0543967eebb5cb21c38bd08f0ea50fbe265b45ee6ff524621b3c76b19c7f5c7e",
+      "source_relative_path": "artifacts/tcn_v2_c64_b7_ttc15_150_seed7/predictions_test.npz"
+    },
+    {
+      "bytes": 553837,
+      "public_path": "artifacts/evaluation_repro_v2/predictions/seed7_val.npz",
+      "sha256": "8fe4515807164edc7775ecd42b1e3268b564ed2180d6f0c6892898852f59f433",
+      "source_relative_path": "artifacts/tcn_v2_c64_b7_ttc15_150_seed7/predictions_val.npz"
+    }
+  ],
+  "git": {
+    "commit_count": 34,
+    "head": "5ba8fc999a0e3f87766a5ae1763b50f8e9ed23dc",
+    "origin_main_local_tracking_ref": "378465b41a80d34f1edd01985a8c71e0d3cbd660",
+    "private_status_sha256": "a59a72e595e4404fcdcccda96cc97a9afb0012334a7a4244e907fd6ededc6bb2"
+  },
+  "live_logs": {
+    "days": [
+      "2026-07-12",
+      "2026-07-13"
+    ],
+    "total_enter_records": 164
+  },
+  "policy": "explicit allowlist; private source read-only"
+}

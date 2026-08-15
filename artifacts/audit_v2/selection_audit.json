@@ -1,0 +1,75 @@
+{
+  "bootstrap_reps": 20000,
+  "conclusion": "The apparent backtest winner does not survive the 847-candidate selection adjustment.",
+  "corrected_public_reproduction": {
+    "appended_candidate": "locked_combined_two_slot_strategy",
+    "appended_total_pnl": 214.14611799999997,
+    "best_candidate": "locked_combined_two_slot_strategy",
+    "exceedances": 11333,
+    "finite_sample_corrected_p_value": 0.5666716664166792,
+    "n_candidates": 847,
+    "null_quantiles": {
+      "0.5": 7.160211469786663,
+      "0.9": 10.908096457058821,
+      "0.95": 12.033184283225749,
+      "0.975": 13.04902834053513,
+      "0.99": 14.267834015429985
+    },
+    "observed_max_mean_daily_pnl": 6.692066187499999,
+    "passes_10pct": false
+  },
+  "days": [
+    "2026-05-14",
+    "2026-05-15",
+    "2026-05-16",
+    "2026-05-17",
+    "2026-05-18",
+    "2026-05-19",
+    "2026-05-20",
+    "2026-05-21",
+    "2026-05-22",
+    "2026-05-25",
+    "2026-05-26",
+    "2026-05-27",
+    "2026-05-28",
+    "2026-05-29",
+    "2026-05-30",
+    "2026-05-31",
+    "2026-06-01",
+    "2026-06-02",
+    "2026-06-10",
+    "2026-06-11",
+    "2026-06-15",
+    "2026-06-16",
+    "2026-06-23",
+    "2026-06-24",
+    "2026-06-25",
+    "2026-06-26",
+    "2026-06-27",
+    "2026-06-28",
+    "2026-06-29",
+    "2026-06-30",
+    "2026-07-01",
+    "2026-07-02"
+  ],
+  "generated_by": "tools/reproduce_public_evidence.py",
+  "input_sha256": {
+    "snooping_report": "23ac3cb9554df475940263ef47f1154e703a061a6a760d01e55fda3c2a575587",
+    "wrc_universe_daily_pnl": "0eefacf685fe29c24cf884a0c4426f976f8e7a7499a511eb549861a4e0e73f50"
+  },
+  "limits": [
+    "The candidate count is a documented lower bound, not a complete count of every human or computational trial.",
+    "The historical PnL matrix uses source-time books and therefore is not live-causal performance evidence.",
+    "The original 846-candidate stored p-value is retained for provenance, not treated as reproducible with this corrected universe."
+  ],
+  "mean_block_days": 3.0,
+  "method": "White's Reality Check with recentered candidate returns and stationary day bootstrap",
+  "n_days": 32,
+  "original_artifact": {
+    "issue": "the searched matrix omitted the subsequently reported combined locked strategy",
+    "n_candidates": 846,
+    "stored_bootstrap_reps": 2000,
+    "stored_p_value": 0.8355
+  },
+  "seed": 20260809
+}

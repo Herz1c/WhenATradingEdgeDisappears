@@ -1,0 +1,1137 @@
+dataset_name: market_interval_dataset_v1
+columns:
+  snapshot_ts_ns:
+    dtype: int64
+    nullable: false
+    leakage_only: false
+    training_eligible: false
+    source: derived_time
+    description: Phase 3 dataset column `snapshot_ts_ns`.
+  snapshot_ts_iso:
+    dtype: object
+    nullable: false
+    leakage_only: false
+    training_eligible: false
+    source: derived_time
+    description: Phase 3 dataset column `snapshot_ts_iso`.
+  snapshot_ts_seconds:
+    dtype: int64
+    nullable: false
+    leakage_only: false
+    training_eligible: false
+    source: derived_time
+    description: Phase 3 dataset column `snapshot_ts_seconds`.
+  sample_family:
+    dtype: object
+    nullable: false
+    leakage_only: false
+    training_eligible: false
+    source: derived_time
+    description: Phase 3 dataset column `sample_family`.
+  sample_bucket_ms:
+    dtype: int64
+    nullable: false
+    leakage_only: false
+    training_eligible: false
+    source: derived_time
+    description: Phase 3 dataset column `sample_bucket_ms`.
+  market_slug:
+    dtype: object
+    nullable: false
+    leakage_only: false
+    training_eligible: false
+    source: derived
+    description: Phase 3 dataset column `market_slug`.
+  market_id:
+    dtype: object
+    nullable: false
+    leakage_only: false
+    training_eligible: false
+    source: derived
+    description: Phase 3 dataset column `market_id`.
+  condition_id:
+    dtype: object
+    nullable: false
+    leakage_only: false
+    training_eligible: false
+    source: derived
+    description: Phase 3 dataset column `condition_id`.
+  market_open_ts_ns:
+    dtype: int64
+    nullable: false
+    leakage_only: false
+    training_eligible: false
+    source: derived
+    description: Phase 3 dataset column `market_open_ts_ns`.
+  market_close_ts_ns:
+    dtype: int64
+    nullable: false
+    leakage_only: false
+    training_eligible: false
+    source: derived
+    description: Phase 3 dataset column `market_close_ts_ns`.
+  market_open_iso:
+    dtype: object
+    nullable: false
+    leakage_only: false
+    training_eligible: false
+    source: derived
+    description: Phase 3 dataset column `market_open_iso`.
+  market_close_iso:
+    dtype: object
+    nullable: false
+    leakage_only: false
+    training_eligible: false
+    source: derived
+    description: Phase 3 dataset column `market_close_iso`.
+  price_to_beat:
+    dtype: float64
+    nullable: false
+    leakage_only: false
+    training_eligible: true
+    source: polymarket_strike
+    description: Phase 3 dataset column `price_to_beat`.
+  resolved_side:
+    dtype: object
+    nullable: false
+    leakage_only: true
+    training_eligible: false
+    source: polymarket_resolution
+    description: Canonical supervised target side for the market.
+  resolved_side_label:
+    dtype: int64
+    nullable: false
+    leakage_only: false
+    training_eligible: false
+    source: polymarket_resolution
+    description: 'Binary supervised target for the market: 1=up, 0=down.'
+  snapshot_hour_utc:
+    dtype: int64
+    nullable: false
+    leakage_only: false
+    training_eligible: true
+    source: derived_time
+    description: Phase 3 dataset column `snapshot_hour_utc`.
+  snapshot_minute_utc:
+    dtype: int64
+    nullable: false
+    leakage_only: false
+    training_eligible: true
+    source: derived_time
+    description: Phase 3 dataset column `snapshot_minute_utc`.
+  snapshot_day_of_week:
+    dtype: int64
+    nullable: false
+    leakage_only: false
+    training_eligible: true
+    source: derived_time
+    description: Phase 3 dataset column `snapshot_day_of_week`.
+  snapshot_second_of_day_utc:
+    dtype: int64
+    nullable: false
+    leakage_only: false
+    training_eligible: true
+    source: derived_time
+    description: Phase 3 dataset column `snapshot_second_of_day_utc`.
+  market_interval_seconds:
+    dtype: int64
+    nullable: false
+    leakage_only: false
+    training_eligible: true
+    source: derived_time
+    description: Phase 3 dataset column `market_interval_seconds`.
+  t_since_open_s:
+    dtype: float64
+    nullable: false
+    leakage_only: false
+    training_eligible: true
+    source: derived_time
+    description: Phase 3 dataset column `t_since_open_s`.
+  t_to_close_s:
+    dtype: float64
+    nullable: false
+    leakage_only: false
+    training_eligible: true
+    source: derived_time
+    description: Phase 3 dataset column `t_to_close_s`.
+  session_progress_fraction:
+    dtype: float64
+    nullable: false
+    leakage_only: false
+    training_eligible: true
+    source: derived_time
+    description: Phase 3 dataset column `session_progress_fraction`.
+  phase_bucket:
+    dtype: object
+    nullable: false
+    leakage_only: false
+    training_eligible: true
+    source: derived_time
+    description: Phase 3 dataset column `phase_bucket`.
+  live_btc_usd:
+    dtype: float64
+    nullable: true
+    leakage_only: false
+    training_eligible: true
+    source: live_reference_events_v1
+    description: BTC context field `live_btc_usd` derived from canonical `live_reference_events_v1`.
+  live_price_valid:
+    dtype: bool
+    nullable: false
+    leakage_only: false
+    training_eligible: true
+    source: live_reference_events_v1
+    description: BTC context field `live_price_valid` derived from canonical `live_reference_events_v1`.
+  live_reference_trusted:
+    dtype: bool
+    nullable: false
+    leakage_only: false
+    training_eligible: false
+    source: live_reference_events_v1
+    description: Backward-compatible alias for live_reference_carried_trusted; true
+      when the row has a valid live price with either a fresh active residual window
+      or a carried-forward bias.
+  live_reference_strict_trusted:
+    dtype: bool
+    nullable: false
+    leakage_only: false
+    training_eligible: false
+    source: live_reference_events_v1
+    description: True when the causal live reference price is valid and the official
+      [t-60m, t-30m] delayed Chainlink residual window is active.
+  live_reference_carried_trusted:
+    dtype: bool
+    nullable: false
+    leakage_only: false
+    training_eligible: false
+    source: live_reference_events_v1
+    description: True when the causal live reference price is valid and either the
+      strict residual window is active or the last valid bias is being carried forward.
+  live_price_degraded:
+    dtype: bool
+    nullable: false
+    leakage_only: false
+    training_eligible: true
+    source: live_reference_events_v1
+    description: BTC context field `live_price_degraded` derived from canonical `live_reference_events_v1`.
+  live_source_count:
+    dtype: int64
+    nullable: false
+    leakage_only: false
+    training_eligible: true
+    source: live_reference_events_v1
+    description: BTC context field `live_source_count` derived from canonical `live_reference_events_v1`.
+  live_bias_bootstrapped:
+    dtype: bool
+    nullable: false
+    leakage_only: false
+    training_eligible: false
+    source: live_reference_events_v1
+    description: True when live_reference_events_v1 has accepted at least one causal
+      delayed Chainlink bias observation.
+  live_bias_active:
+    dtype: bool
+    nullable: false
+    leakage_only: false
+    training_eligible: false
+    source: live_reference_events_v1
+    description: True when live_reference_events_v1 is applying the official [t-60m,
+      t-30m] delayed residual mean at the snapshot.
+  live_bias_carried_forward:
+    dtype: bool
+    nullable: false
+    leakage_only: false
+    training_eligible: false
+    source: live_reference_events_v1
+    description: True when live_reference_events_v1 is applying the last valid active-window
+      bias because the strict residual window is empty.
+  live_bias_mode:
+    dtype: object
+    nullable: false
+    leakage_only: false
+    training_eligible: false
+    source: live_reference_events_v1
+    description: 'Applied Phase 2 bias state: active_window, carried_forward, or unavailable.'
+  live_bias_state_stale:
+    dtype: bool
+    nullable: false
+    leakage_only: false
+    training_eligible: false
+    source: live_reference_events_v1
+    description: True when live_reference_events_v1 has bootstrapped calibration but
+      the [t-60m, t-30m] residual window is empty.
+  live_bias_neutralized:
+    dtype: bool
+    nullable: false
+    leakage_only: false
+    training_eligible: false
+    source: live_reference_events_v1
+    description: True when live_reference_events_v1 has bootstrapped calibration but
+      no active or carried bias is applied.
+  live_bias_observation_count:
+    dtype: int64
+    nullable: false
+    leakage_only: false
+    training_eligible: true
+    source: live_reference_events_v1
+    description: BTC context field `live_bias_observation_count` derived from canonical
+      `live_reference_events_v1`.
+  live_active_window_bias:
+    dtype: float64
+    nullable: true
+    leakage_only: false
+    training_eligible: false
+    source: live_reference_events_v1
+    description: Fresh strict-window delayed Chainlink residual mean; NaN when the
+      strict window is empty.
+  live_bias_state_age_seconds:
+    dtype: float64
+    nullable: true
+    leakage_only: false
+    training_eligible: false
+    source: live_reference_events_v1
+    description: Diagnostic calibration-state age for the newest active delayed Chainlink
+      event; non-trainable because it is NaN whenever the residual window is empty.
+  live_applied_bias_age_seconds:
+    dtype: float64
+    nullable: true
+    leakage_only: false
+    training_eligible: false
+    source: live_reference_events_v1
+    description: Age in seconds of the Chainlink event timestamp backing the applied
+      bias; continues increasing while bias is carried forward.
+  binance_spot_mid:
+    dtype: float64
+    nullable: true
+    leakage_only: false
+    training_eligible: true
+    source: live_reference_events_v1
+    description: BTC context field `binance_spot_mid` derived from canonical `live_reference_events_v1`.
+  binance_usdm_mid:
+    dtype: float64
+    nullable: true
+    leakage_only: false
+    training_eligible: true
+    source: live_reference_events_v1
+    description: BTC context field `binance_usdm_mid` derived from canonical `live_reference_events_v1`.
+  hyperliquid_mid:
+    dtype: float64
+    nullable: true
+    leakage_only: false
+    training_eligible: true
+    source: live_reference_events_v1
+    description: BTC context field `hyperliquid_mid` derived from canonical `live_reference_events_v1`.
+  delta_to_strike:
+    dtype: float64
+    nullable: true
+    leakage_only: false
+    training_eligible: true
+    source: live_reference_events_v1
+    description: Phase 3 dataset column `delta_to_strike`.
+  abs_delta_to_strike:
+    dtype: float64
+    nullable: true
+    leakage_only: false
+    training_eligible: true
+    source: live_reference_events_v1
+    description: Phase 3 dataset column `abs_delta_to_strike`.
+  delta_to_strike_over_recent_vol:
+    dtype: float64
+    nullable: true
+    leakage_only: false
+    training_eligible: true
+    source: live_reference_events_v1
+    description: Phase 3 dataset column `delta_to_strike_over_recent_vol`.
+  delta_sign:
+    dtype: int64
+    nullable: false
+    leakage_only: false
+    training_eligible: true
+    source: live_reference_events_v1
+    description: Phase 3 dataset column `delta_sign`.
+  time_spent_above_strike_recent_s:
+    dtype: int64
+    nullable: false
+    leakage_only: false
+    training_eligible: true
+    source: live_reference_events_v1
+    description: Phase 3 dataset column `time_spent_above_strike_recent_s`.
+  time_spent_below_strike_recent_s:
+    dtype: int64
+    nullable: false
+    leakage_only: false
+    training_eligible: true
+    source: live_reference_events_v1
+    description: Phase 3 dataset column `time_spent_below_strike_recent_s`.
+  btc_return_1s:
+    dtype: float64
+    nullable: true
+    leakage_only: false
+    training_eligible: true
+    source: live_reference_events_v1
+    description: BTC context field `btc_return_1s` derived from canonical `live_reference_events_v1`.
+  btc_return_3s:
+    dtype: float64
+    nullable: true
+    leakage_only: false
+    training_eligible: true
+    source: live_reference_events_v1
+    description: BTC context field `btc_return_3s` derived from canonical `live_reference_events_v1`.
+  btc_return_5s:
+    dtype: float64
+    nullable: true
+    leakage_only: false
+    training_eligible: true
+    source: live_reference_events_v1
+    description: BTC context field `btc_return_5s` derived from canonical `live_reference_events_v1`.
+  btc_return_10s:
+    dtype: float64
+    nullable: true
+    leakage_only: false
+    training_eligible: true
+    source: live_reference_events_v1
+    description: BTC context field `btc_return_10s` derived from canonical `live_reference_events_v1`.
+  btc_realized_vol_5s:
+    dtype: float64
+    nullable: true
+    leakage_only: false
+    training_eligible: true
+    source: live_reference_events_v1
+    description: BTC context field `btc_realized_vol_5s` derived from canonical `live_reference_events_v1`.
+  btc_realized_vol_15s:
+    dtype: float64
+    nullable: true
+    leakage_only: false
+    training_eligible: true
+    source: live_reference_events_v1
+    description: BTC context field `btc_realized_vol_15s` derived from canonical `live_reference_events_v1`.
+  btc_acceleration_proxy:
+    dtype: float64
+    nullable: true
+    leakage_only: false
+    training_eligible: true
+    source: live_reference_events_v1
+    description: BTC context field `btc_acceleration_proxy` derived from canonical
+      `live_reference_events_v1`.
+  btc_jerk_proxy:
+    dtype: float64
+    nullable: true
+    leakage_only: false
+    training_eligible: true
+    source: live_reference_events_v1
+    description: BTC context field `btc_jerk_proxy` derived from canonical `live_reference_events_v1`.
+  cross_source_spread_usd:
+    dtype: float64
+    nullable: true
+    leakage_only: false
+    training_eligible: true
+    source: live_reference_events_v1
+    description: Phase 3 dataset column `cross_source_spread_usd`.
+  spot_perp_divergence_usd:
+    dtype: float64
+    nullable: true
+    leakage_only: false
+    training_eligible: true
+    source: live_reference_events_v1
+    description: Phase 3 dataset column `spot_perp_divergence_usd`.
+  flip_happened_after_t:
+    dtype: bool
+    nullable: false
+    leakage_only: true
+    training_eligible: false
+    source: live_reference_events_v1
+    description: Diagnostic-only future-derived flag indicating whether strike-relative
+      sign flips after the snapshot.
+  terminal_delta_to_strike:
+    dtype: float64
+    nullable: false
+    leakage_only: true
+    training_eligible: false
+    source: live_reference_events_v1
+    description: Diagnostic-only terminal live BTC delta to strike for the market.
+  terminal_margin_to_strike:
+    dtype: float64
+    nullable: false
+    leakage_only: true
+    training_eligible: false
+    source: live_reference_events_v1
+    description: Diagnostic-only absolute terminal live BTC margin to strike for the
+      market.
+  hold_to_close_edge_vs_mid:
+    dtype: float64
+    nullable: true
+    leakage_only: true
+    training_eligible: false
+    source: phase3_contract
+    description: Diagnostic-only edge-to-close quantity derived from the winning token
+      mid.
+  yes_no_coupling_residual:
+    dtype: float64
+    nullable: true
+    leakage_only: false
+    training_eligible: true
+    source: polymarket_l2
+    description: Phase 3 dataset column `yes_no_coupling_residual`.
+  maker_base_fee_bps:
+    dtype: float64
+    nullable: true
+    leakage_only: false
+    training_eligible: true
+    source: polymarket_rest
+    description: Phase 3 dataset column `maker_base_fee_bps`.
+  taker_base_fee_bps:
+    dtype: float64
+    nullable: true
+    leakage_only: false
+    training_eligible: true
+    source: polymarket_rest
+    description: Phase 3 dataset column `taker_base_fee_bps`.
+  market_rewards_min_size:
+    dtype: float64
+    nullable: true
+    leakage_only: false
+    training_eligible: true
+    source: polymarket_rest
+    description: Phase 3 dataset column `market_rewards_min_size`.
+  market_rewards_max_spread:
+    dtype: float64
+    nullable: true
+    leakage_only: false
+    training_eligible: true
+    source: polymarket_rest
+    description: Phase 3 dataset column `market_rewards_max_spread`.
+  has_canonical_resolution:
+    dtype: bool
+    nullable: false
+    leakage_only: false
+    training_eligible: false
+    source: phase3_contract
+    description: True when the row is backed by a matched canonical resolution label.
+  is_trainable:
+    dtype: bool
+    nullable: false
+    leakage_only: false
+    training_eligible: false
+    source: phase3_contract
+    description: Market-level trainability flag after Phase 3 market exclusion checks.
+  up_token_best_bid:
+    dtype: float64
+    nullable: true
+    leakage_only: false
+    training_eligible: true
+    source: polymarket_l2
+    description: Polymarket token microstructure field `up_token_best_bid` derived
+      from finalized-clean `.l2` snapshots and recent event summaries.
+  up_token_best_ask:
+    dtype: float64
+    nullable: true
+    leakage_only: false
+    training_eligible: true
+    source: polymarket_l2
+    description: Polymarket token microstructure field `up_token_best_ask` derived
+      from finalized-clean `.l2` snapshots and recent event summaries.
+  up_token_mid:
+    dtype: float64
+    nullable: true
+    leakage_only: false
+    training_eligible: true
+    source: polymarket_l2
+    description: Polymarket token microstructure field `up_token_mid` derived from
+      finalized-clean `.l2` snapshots and recent event summaries.
+  up_token_spread:
+    dtype: float64
+    nullable: true
+    leakage_only: false
+    training_eligible: true
+    source: polymarket_l2
+    description: Polymarket token microstructure field `up_token_spread` derived from
+      finalized-clean `.l2` snapshots and recent event summaries.
+  up_token_microprice:
+    dtype: float64
+    nullable: true
+    leakage_only: false
+    training_eligible: true
+    source: polymarket_l2
+    description: Polymarket token microstructure field `up_token_microprice` derived
+      from finalized-clean `.l2` snapshots and recent event summaries.
+  up_token_bid_depth_total:
+    dtype: float64
+    nullable: true
+    leakage_only: false
+    training_eligible: true
+    source: polymarket_l2
+    description: Polymarket token microstructure field `up_token_bid_depth_total`
+      derived from finalized-clean `.l2` snapshots and recent event summaries.
+  up_token_ask_depth_total:
+    dtype: float64
+    nullable: true
+    leakage_only: false
+    training_eligible: true
+    source: polymarket_l2
+    description: Polymarket token microstructure field `up_token_ask_depth_total`
+      derived from finalized-clean `.l2` snapshots and recent event summaries.
+  up_token_imbalance:
+    dtype: float64
+    nullable: true
+    leakage_only: false
+    training_eligible: true
+    source: polymarket_l2
+    description: Polymarket token microstructure field `up_token_imbalance` derived
+      from finalized-clean `.l2` snapshots and recent event summaries.
+  up_token_last_trade_price:
+    dtype: float64
+    nullable: true
+    leakage_only: false
+    training_eligible: true
+    source: polymarket_l2
+    description: Polymarket token microstructure field `up_token_last_trade_price`
+      derived from finalized-clean `.l2` snapshots and recent event summaries.
+  up_token_tick_size:
+    dtype: float64
+    nullable: true
+    leakage_only: false
+    training_eligible: true
+    source: polymarket_l2
+    description: Polymarket token microstructure field `up_token_tick_size` derived
+      from finalized-clean `.l2` snapshots and recent event summaries.
+  down_token_best_bid:
+    dtype: float64
+    nullable: true
+    leakage_only: false
+    training_eligible: true
+    source: polymarket_l2
+    description: Polymarket token microstructure field `down_token_best_bid` derived
+      from finalized-clean `.l2` snapshots and recent event summaries.
+  down_token_best_ask:
+    dtype: float64
+    nullable: true
+    leakage_only: false
+    training_eligible: true
+    source: polymarket_l2
+    description: Polymarket token microstructure field `down_token_best_ask` derived
+      from finalized-clean `.l2` snapshots and recent event summaries.
+  down_token_mid:
+    dtype: float64
+    nullable: true
+    leakage_only: false
+    training_eligible: true
+    source: polymarket_l2
+    description: Polymarket token microstructure field `down_token_mid` derived from
+      finalized-clean `.l2` snapshots and recent event summaries.
+  down_token_spread:
+    dtype: float64
+    nullable: true
+    leakage_only: false
+    training_eligible: true
+    source: polymarket_l2
+    description: Polymarket token microstructure field `down_token_spread` derived
+      from finalized-clean `.l2` snapshots and recent event summaries.
+  down_token_microprice:
+    dtype: float64
+    nullable: true
+    leakage_only: false
+    training_eligible: true
+    source: polymarket_l2
+    description: Polymarket token microstructure field `down_token_microprice` derived
+      from finalized-clean `.l2` snapshots and recent event summaries.
+  down_token_bid_depth_total:
+    dtype: float64
+    nullable: true
+    leakage_only: false
+    training_eligible: true
+    source: polymarket_l2
+    description: Polymarket token microstructure field `down_token_bid_depth_total`
+      derived from finalized-clean `.l2` snapshots and recent event summaries.
+  down_token_ask_depth_total:
+    dtype: float64
+    nullable: true
+    leakage_only: false
+    training_eligible: true
+    source: polymarket_l2
+    description: Polymarket token microstructure field `down_token_ask_depth_total`
+      derived from finalized-clean `.l2` snapshots and recent event summaries.
+  down_token_imbalance:
+    dtype: float64
+    nullable: true
+    leakage_only: false
+    training_eligible: true
+    source: polymarket_l2
+    description: Polymarket token microstructure field `down_token_imbalance` derived
+      from finalized-clean `.l2` snapshots and recent event summaries.
+  down_token_last_trade_price:
+    dtype: float64
+    nullable: true
+    leakage_only: false
+    training_eligible: true
+    source: polymarket_l2
+    description: Polymarket token microstructure field `down_token_last_trade_price`
+      derived from finalized-clean `.l2` snapshots and recent event summaries.
+  down_token_tick_size:
+    dtype: float64
+    nullable: true
+    leakage_only: false
+    training_eligible: true
+    source: polymarket_l2
+    description: Polymarket token microstructure field `down_token_tick_size` derived
+      from finalized-clean `.l2` snapshots and recent event summaries.
+  up_token_l2_book_updates_1s:
+    dtype: int64
+    nullable: false
+    leakage_only: false
+    training_eligible: true
+    source: polymarket_l2
+    description: Polymarket token microstructure field `up_token_l2_book_updates_1s`
+      derived from finalized-clean `.l2` snapshots and recent event summaries.
+  up_token_price_change_updates_1s:
+    dtype: int64
+    nullable: false
+    leakage_only: false
+    training_eligible: true
+    source: polymarket_l2
+    description: Polymarket token microstructure field `up_token_price_change_updates_1s`
+      derived from finalized-clean `.l2` snapshots and recent event summaries.
+  up_token_best_bid_ask_updates_1s:
+    dtype: int64
+    nullable: false
+    leakage_only: false
+    training_eligible: true
+    source: polymarket_l2
+    description: Polymarket token microstructure field `up_token_best_bid_ask_updates_1s`
+      derived from finalized-clean `.l2` snapshots and recent event summaries.
+  up_token_trade_updates_1s:
+    dtype: int64
+    nullable: false
+    leakage_only: false
+    training_eligible: true
+    source: polymarket_l2
+    description: Polymarket token microstructure field `up_token_trade_updates_1s`
+      derived from finalized-clean `.l2` snapshots and recent event summaries.
+  up_token_price_change_updates_5s:
+    dtype: int64
+    nullable: false
+    leakage_only: false
+    training_eligible: true
+    source: polymarket_l2
+    description: Polymarket token microstructure field `up_token_price_change_updates_5s`
+      derived from finalized-clean `.l2` snapshots and recent event summaries.
+  up_token_trade_count_5s:
+    dtype: int64
+    nullable: false
+    leakage_only: false
+    training_eligible: true
+    source: polymarket_l2
+    description: Polymarket token microstructure field `up_token_trade_count_5s` derived
+      from finalized-clean `.l2` snapshots and recent event summaries.
+  up_token_signed_trade_size_5s:
+    dtype: float64
+    nullable: false
+    leakage_only: false
+    training_eligible: true
+    source: polymarket_l2
+    description: Polymarket token microstructure field `up_token_signed_trade_size_5s`
+      derived from finalized-clean `.l2` snapshots and recent event summaries.
+  up_token_absolute_trade_size_5s:
+    dtype: float64
+    nullable: false
+    leakage_only: false
+    training_eligible: true
+    source: polymarket_l2
+    description: Polymarket token microstructure field `up_token_absolute_trade_size_5s`
+      derived from finalized-clean `.l2` snapshots and recent event summaries.
+  down_token_l2_book_updates_1s:
+    dtype: int64
+    nullable: false
+    leakage_only: false
+    training_eligible: true
+    source: polymarket_l2
+    description: Polymarket token microstructure field `down_token_l2_book_updates_1s`
+      derived from finalized-clean `.l2` snapshots and recent event summaries.
+  down_token_price_change_updates_1s:
+    dtype: int64
+    nullable: false
+    leakage_only: false
+    training_eligible: true
+    source: polymarket_l2
+    description: Polymarket token microstructure field `down_token_price_change_updates_1s`
+      derived from finalized-clean `.l2` snapshots and recent event summaries.
+  down_token_best_bid_ask_updates_1s:
+    dtype: int64
+    nullable: false
+    leakage_only: false
+    training_eligible: true
+    source: polymarket_l2
+    description: Polymarket token microstructure field `down_token_best_bid_ask_updates_1s`
+      derived from finalized-clean `.l2` snapshots and recent event summaries.
+  down_token_trade_updates_1s:
+    dtype: int64
+    nullable: false
+    leakage_only: false
+    training_eligible: true
+    source: polymarket_l2
+    description: Polymarket token microstructure field `down_token_trade_updates_1s`
+      derived from finalized-clean `.l2` snapshots and recent event summaries.
+  down_token_price_change_updates_5s:
+    dtype: int64
+    nullable: false
+    leakage_only: false
+    training_eligible: true
+    source: polymarket_l2
+    description: Polymarket token microstructure field `down_token_price_change_updates_5s`
+      derived from finalized-clean `.l2` snapshots and recent event summaries.
+  down_token_trade_count_5s:
+    dtype: int64
+    nullable: false
+    leakage_only: false
+    training_eligible: true
+    source: polymarket_l2
+    description: Polymarket token microstructure field `down_token_trade_count_5s`
+      derived from finalized-clean `.l2` snapshots and recent event summaries.
+  down_token_signed_trade_size_5s:
+    dtype: float64
+    nullable: false
+    leakage_only: false
+    training_eligible: true
+    source: polymarket_l2
+    description: Polymarket token microstructure field `down_token_signed_trade_size_5s`
+      derived from finalized-clean `.l2` snapshots and recent event summaries.
+  down_token_absolute_trade_size_5s:
+    dtype: float64
+    nullable: false
+    leakage_only: false
+    training_eligible: true
+    source: polymarket_l2
+    description: Polymarket token microstructure field `down_token_absolute_trade_size_5s`
+      derived from finalized-clean `.l2` snapshots and recent event summaries.
+  coupling_anomaly:
+    dtype: bool
+    nullable: false
+    leakage_only: false
+    training_eligible: false
+    source: phase3_contract
+    description: True when |up_token_mid + down_token_mid - 1| exceeds 0.05.
+  crossed_book:
+    dtype: bool
+    nullable: false
+    leakage_only: false
+    training_eligible: false
+    source: phase3_contract
+    description: True when either token book is crossed or locked under the strict
+      >= rule.
+  up_token_mid_complete:
+    dtype: bool
+    nullable: false
+    leakage_only: false
+    training_eligible: false
+    source: polymarket_l2
+    description: True when the UP token has both best bid and best ask and therefore
+      a valid mid.
+  down_token_mid_complete:
+    dtype: bool
+    nullable: false
+    leakage_only: false
+    training_eligible: false
+    source: polymarket_l2
+    description: True when the DOWN token has both best bid and best ask and therefore
+      a valid mid.
+  token_mid_complete:
+    dtype: bool
+    nullable: false
+    leakage_only: false
+    training_eligible: false
+    source: phase3_contract
+    description: True when both UP and DOWN token mids are available.
+  up_token_one_sided_book:
+    dtype: bool
+    nullable: false
+    leakage_only: false
+    training_eligible: false
+    source: polymarket_l2
+    description: True when exactly one of UP best bid / best ask is available.
+  down_token_one_sided_book:
+    dtype: bool
+    nullable: false
+    leakage_only: false
+    training_eligible: false
+    source: polymarket_l2
+    description: True when exactly one of DOWN best bid / best ask is available.
+  one_sided_book:
+    dtype: bool
+    nullable: false
+    leakage_only: false
+    training_eligible: false
+    source: phase3_contract
+    description: True when either token has a one-sided top of book.
+  spot_perp_available:
+    dtype: bool
+    nullable: false
+    leakage_only: false
+    training_eligible: false
+    source: phase3_contract
+    description: True when spot/perp divergence was computed from both Binance spot
+      and USD-M mids.
+  prior_market_count:
+    dtype: int64
+    nullable: false
+    leakage_only: false
+    training_eligible: true
+    source: phase3_history_derived
+    description: Phase 3 dataset column `prior_market_count`.
+  previous_market_resolved_side_label:
+    dtype: int64
+    nullable: false
+    leakage_only: false
+    training_eligible: true
+    source: phase3_history_derived
+    description: Phase 3 dataset column `previous_market_resolved_side_label`.
+  resolved_up_streak_before_open:
+    dtype: int64
+    nullable: false
+    leakage_only: false
+    training_eligible: true
+    source: phase3_history_derived
+    description: Phase 3 dataset column `resolved_up_streak_before_open`.
+  resolved_down_streak_before_open:
+    dtype: int64
+    nullable: false
+    leakage_only: false
+    training_eligible: true
+    source: phase3_history_derived
+    description: Phase 3 dataset column `resolved_down_streak_before_open`.
+  resolved_up_ratio_last_12:
+    dtype: float64
+    nullable: true
+    leakage_only: false
+    training_eligible: true
+    source: phase3_history_derived
+    description: Phase 3 dataset column `resolved_up_ratio_last_12`.
+  resolved_up_ratio_last_24:
+    dtype: float64
+    nullable: true
+    leakage_only: false
+    training_eligible: true
+    source: phase3_history_derived
+    description: Phase 3 dataset column `resolved_up_ratio_last_24`.
+  btc_return_60s:
+    dtype: float64
+    nullable: true
+    leakage_only: false
+    training_eligible: true
+    source: live_reference_events_v1
+    description: BTC context field `btc_return_60s` derived from canonical `live_reference_events_v1`.
+  btc_return_180s:
+    dtype: float64
+    nullable: true
+    leakage_only: false
+    training_eligible: true
+    source: live_reference_events_v1
+    description: BTC context field `btc_return_180s` derived from canonical `live_reference_events_v1`.
+  btc_return_300s:
+    dtype: float64
+    nullable: true
+    leakage_only: false
+    training_eligible: true
+    source: live_reference_events_v1
+    description: BTC context field `btc_return_300s` derived from canonical `live_reference_events_v1`.
+  btc_return_900s:
+    dtype: float64
+    nullable: true
+    leakage_only: false
+    training_eligible: true
+    source: live_reference_events_v1
+    description: BTC context field `btc_return_900s` derived from canonical `live_reference_events_v1`.
+  btc_return_1800s:
+    dtype: float64
+    nullable: true
+    leakage_only: false
+    training_eligible: true
+    source: live_reference_events_v1
+    description: BTC context field `btc_return_1800s` derived from canonical `live_reference_events_v1`.
+  btc_realized_vol_60s:
+    dtype: float64
+    nullable: true
+    leakage_only: false
+    training_eligible: true
+    source: live_reference_events_v1
+    description: BTC context field `btc_realized_vol_60s` derived from canonical `live_reference_events_v1`.
+  btc_realized_vol_300s:
+    dtype: float64
+    nullable: true
+    leakage_only: false
+    training_eligible: true
+    source: live_reference_events_v1
+    description: BTC context field `btc_realized_vol_300s` derived from canonical
+      `live_reference_events_v1`.
+  btc_realized_vol_900s:
+    dtype: float64
+    nullable: true
+    leakage_only: false
+    training_eligible: true
+    source: live_reference_events_v1
+    description: BTC context field `btc_realized_vol_900s` derived from canonical
+      `live_reference_events_v1`.
+  prev_interval_btc_open:
+    dtype: float64
+    nullable: true
+    leakage_only: false
+    training_eligible: true
+    source: phase3_history_derived
+    description: Phase 3 dataset column `prev_interval_btc_open`.
+  prev_interval_btc_high:
+    dtype: float64
+    nullable: true
+    leakage_only: false
+    training_eligible: true
+    source: phase3_history_derived
+    description: Phase 3 dataset column `prev_interval_btc_high`.
+  prev_interval_btc_low:
+    dtype: float64
+    nullable: true
+    leakage_only: false
+    training_eligible: true
+    source: phase3_history_derived
+    description: Phase 3 dataset column `prev_interval_btc_low`.
+  prev_interval_btc_close:
+    dtype: float64
+    nullable: true
+    leakage_only: false
+    training_eligible: true
+    source: phase3_history_derived
+    description: Phase 3 dataset column `prev_interval_btc_close`.
+  prev_interval_btc_range:
+    dtype: float64
+    nullable: true
+    leakage_only: false
+    training_eligible: true
+    source: phase3_history_derived
+    description: Phase 3 dataset column `prev_interval_btc_range`.
+  market_view:
+    dtype: object
+    nullable: false
+    leakage_only: false
+    training_eligible: false
+    source: derived_time
+    description: Phase 3 dataset column `market_view`.
+  early_direction_sign:
+    dtype: int64
+    nullable: false
+    leakage_only: false
+    training_eligible: false
+    source: phase3_contract
+    description: Phase 3 dataset column `early_direction_sign`.
+  close_to_open_btc_sign:
+    dtype: int64
+    nullable: false
+    leakage_only: false
+    training_eligible: false
+    source: phase3_contract
+    description: Phase 3 dataset column `close_to_open_btc_sign`.
+  first_30s_drift_sign:
+    dtype: int64
+    nullable: false
+    leakage_only: false
+    training_eligible: false
+    source: phase3_contract
+    description: Phase 3 dataset column `first_30s_drift_sign`.
+  market_fully_without_live_reference:
+    dtype: bool
+    nullable: false
+    leakage_only: false
+    training_eligible: false
+    source: phase3_contract
+    description: True when every row for the market lacks a valid live BTC reference.
+  market_fully_without_trusted_live_reference:
+    dtype: bool
+    nullable: false
+    leakage_only: false
+    training_eligible: false
+    source: phase3_contract
+    description: True when every row for the market lacks a trusted live reference
+      after bias guardrails.
+  market_fully_without_token_mid_complete:
+    dtype: bool
+    nullable: false
+    leakage_only: false
+    training_eligible: false
+    source: phase3_contract
+    description: True when every row for the market lacks complete UP and DOWN token
+      mids.
+  training_feature_eligible:
+    dtype: bool
+    nullable: false
+    leakage_only: false
+    training_eligible: false
+    source: phase3_contract
+    description: True when the row satisfies all Phase 3 feature-quality gates and
+      may enter the training feature matrix.
+  exclusion_reason:
+    dtype: object
+    nullable: false
+    leakage_only: false
+    training_eligible: false
+    source: phase3_contract
+    description: Primary row-level exclusion reason; empty string when the row is
+      eligible.
+  complete_feature_matrix_eligible:
+    dtype: bool
+    nullable: false
+    leakage_only: false
+    training_eligible: false
+    source: phase3_contract
+    description: True when the row is training-feature eligible and the default full
+      v1 feature matrix has no required missing token-mid or spot/perp fields.
+  feature_matrix_exclusion_reason:
+    dtype: object
+    nullable: false
+    leakage_only: false
+    training_eligible: false
+    source: phase3_contract
+    description: Primary exclusion reason for the complete default v1 feature matrix;
+      empty string when complete_feature_matrix_eligible is true.
+  market_5m_training_row_count:
+    dtype: int64
+    nullable: false
+    leakage_only: false
+    training_eligible: false
+    source: phase3_contract
+    description: Number of training_feature_eligible rows for this market in the current
+      materialized view.
+  market_5m_complete_row_count:
+    dtype: int64
+    nullable: false
+    leakage_only: false
+    training_eligible: false
+    source: phase3_contract
+    description: Number of complete_feature_matrix_eligible rows for this market in
+      the current materialized view.
+  market_5m_complete_rate:
+    dtype: float64
+    nullable: false
+    leakage_only: false
+    training_eligible: false
+    source: phase3_contract
+    description: Complete matrix row count divided by training row count for this
+      5-minute market in the current materialized view.
+  market_full_matrix_trainable:
+    dtype: bool
+    nullable: false
+    leakage_only: false
+    training_eligible: false
+    source: phase3_contract
+    description: True when market_5m_complete_rate is at least 0.80 and the market
+      has at least one training row.
+  full_matrix_training_eligible:
+    dtype: bool
+    nullable: false
+    leakage_only: false
+    training_eligible: false
+    source: phase3_contract
+    description: True when the row is complete_feature_matrix_eligible and its 5-minute
+      market has at least 80% complete rows in this materialized view.
+  full_matrix_exclusion_reason:
+    dtype: object
+    nullable: false
+    leakage_only: false
+    training_eligible: false
+    source: phase3_contract
+    description: Primary exclusion reason for full_matrix_training_eligible; empty
+      string when full_matrix_training_eligible is true.

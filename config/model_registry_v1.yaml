@@ -1,0 +1,1023 @@
+version: 1
+last_updated: '2026-05-12'
+models:
+  model_01_bias:
+    display_name: 5-minute interval bias model
+    model_id: model_01_bias
+    phase: 4
+    status: baseline_trained
+    training_completed: '2026-05-08'
+    training_data_window: '2026-04-19..2026-05-06'
+    training_split: 'train=2026-04-19..2026-05-04 (16d) | val=2026-05-05 | test=2026-05-06'
+    gate_result: AUDIT_FAIL_2026-05-12
+    gate_note: |
+      ORIGINAL: beats delta_to_strike_heuristic on val+test; PASS.
+      AUDIT (2026-05-12): the previous gate baseline was a strawman
+      `sigmoid(delta * 0.5)` whose log_loss=1.35.  Replaced with properly
+      fitted delta_to_strike LR baseline (log_loss=0.651 on test).
+      Honest verdict per variant on test day:
+        preopen  LR/LGBM: FAIL  (loses to constant baseline)
+        first15s LR/LGBM: FAIL  (loses to constant baseline)
+        first30s LR/LGBM: BEATS constant but LOSES to delta_LR_baseline.
+      No Model 01 variant adds signal beyond delta-to-strike.
+      Recommendation: defer to Models 02/05 (much larger row counts,
+      both pass honest gate) until training window reaches ~60 days.
+    purpose: Prior probability for interval direction before market opens
+    roadmap_section: XIV Model 1
+    dataset:
+      family: market_interval_dataset
+      version: v1
+      variants:
+      - preopen
+      - first15s
+      - first30s
+      paths:
+        preopen: data/datasets/market_interval_dataset_v1_preopen/
+        first15s: data/datasets/market_interval_dataset_v1_first15s/
+        first30s: data/datasets/market_interval_dataset_v1_first30s/
+      schema_contract: config/schemas/market_interval_dataset_v1_schema.yaml
+      dataset_hash_required: true
+    feature_set:
+      version: v1
+      config: config/feature_sets/model_01_bias_features_v1.yaml
+    target:
+      primary: resolved_side_label
+      auxiliary:
+      - early_direction_sign
+      - first_30s_drift_sign
+      leakage_only_cols:
+      - resolved_side
+      - resolved_side_label
+      - flip_happened_after_t
+      - terminal_delta_to_strike
+      - terminal_margin_to_strike
+      - hold_to_close_edge_vs_mid
+      - resolved_ts_ns
+      - winning_asset_id
+    split:
+      method: anchored_walkforward
+      config: config/splits/model_01_bias_split_v1.yaml
+      unit: market
+      ordering_col: market_open_ts_ns
+      purge_days: 1
+      embargo_days: 0
+    algorithms:
+      baseline: logistic_regression
+      primary: lightgbm
+    evaluation:
+      metrics:
+      - log_loss
+      - brier_score
+      - ece
+      - fee_adjusted_edge
+      - calibration_curve
+      gate: must_beat_delta_to_strike_heuristic
+    artifacts:
+      base_path: artifacts/model_01_bias/
+      model_file: model.pkl
+      eval_report: eval_report.md
+      experiment_log: experiment_log.jsonl
+      calibration_file: calibration.pkl
+      feature_importance: feature_importance.json
+  model_02_fair_resolution:
+    display_name: Fair-resolution model
+    model_id: model_02_fair_resolution
+    phase: 4
+    status: baseline_trained
+    training_completed: '2026-05-08'
+    training_data_window: '2026-04-19..2026-05-06'
+    training_split: 'train=2026-04-19..2026-05-04 (~683K coarse rows) | val=2026-05-05 | test=2026-05-06'
+    gate_result: PASS
+    gate_note: all 3 runs beat delta_to_strike heuristic on val+test; dense_close variant shows exceptional signal (test ll=0.402 vs baseline 0.692)
+    purpose: P(Up | all info available at time t)
+    roadmap_section: XIV Model 2
+    dataset:
+      family: resolution_snapshot_dataset
+      version: v1
+      variants:
+      - coarse
+      - dense_close
+      paths:
+        coarse: data/datasets/resolution_snapshot_dataset_v1_coarse/
+        dense_close: data/datasets/resolution_snapshot_dataset_v1_dense_close/
+      schema_contract: config/schemas/resolution_snapshot_dataset_v1_coarse_schema.yaml
+      dataset_hash_required: true
+    feature_set:
+      version: v1
+      config: config/feature_sets/model_02_fair_resolution_features_v1.yaml
+    target:
+      primary: resolved_side_label
+      leakage_only_cols:
+      - resolved_side
+      - resolved_side_label
+      - flip_happened_after_t
+      - terminal_delta_to_strike
+      - terminal_margin_to_strike
+      - hold_to_close_edge_vs_mid
+      - resolved_ts_ns
+      - winning_asset_id
+    split:
+      method: anchored_walkforward
+      config: config/splits/model_02_fair_resolution_split_v1.yaml
+      unit: snapshot
+      ordering_col: snapshot_ts_ns
+      purge_days: 1
+      embargo_days: 0
+    algorithms:
+      baseline: logistic_regression
+      primary: lightgbm
+    evaluation:
+      metrics:
+      - log_loss
+      - brier_score
+      - ece
+      - fee_adjusted_edge
+      - edge_by_time_to_close
+      - calibration_curve
+      gate: must_beat_delta_to_strike_heuristic
+    artifacts:
+      base_path: artifacts/model_02_fair_resolution/
+      model_file: model.pkl
+      eval_report: eval_report.md
+      experiment_log: experiment_log.jsonl
+      calibration_file: calibration.pkl
+      feature_importance: feature_importance.json
+  model_03_fill_probability:
+    display_name: Fill probability model
+    model_id: model_03_fill_probability
+    phase: 6
+    status: baseline_trained
+    training_completed: '2026-05-12'
+    training_data_window: '2026-04-19..2026-05-06'
+    training_split: 'train=Apr 19-May 4 (22.9M rows, LGBM cap 8M) | val=May 5 (2.4M) | test=May 6 (2.28M)'
+    gate_result: PASS
+    gate_note: >
+      LightGBM test log_loss=0.547, beats constant_fill_rate (0.690) by -20.7%,
+      beats price_level_conditioned (0.650) by -15.9%, beats post_only_conditioned
+      by -14.3%.  LR baseline test log_loss=0.617, beats constant by -10.5%.
+      Calibration honest (val 50/50 cal/eval, val ECE=0.062, test ECE=0.070).
+      Strong stratification: ASK side fill rates 50-79%, BID side 29-42%
+      (fundamental market structure asymmetry).
+    purpose: P(fill | quote specification and market state)
+    roadmap_section: XIV Model 3
+    dataset:
+      family: execution_intent_dataset
+      version: v1
+      paths:
+        default: data/datasets/execution_intent_dataset_v1/
+      schema_contract: config/schemas/execution_intent_dataset_v1_schema.yaml
+      dataset_hash_required: true
+    feature_set:
+      version: v1
+      config: config/feature_sets/model_03_fill_probability_features_v1.yaml
+    target:
+      primary: filled
+      auxiliary:
+      - time_to_fill_s
+      - full_fill
+      leakage_only_cols:
+      - resolved_side
+      - resolved_side_label
+      - flip_happened_after_t
+      - terminal_delta_to_strike
+      - terminal_margin_to_strike
+      - hold_to_close_edge_vs_mid
+      - resolved_ts_ns
+      - winning_asset_id
+      - cancel_request_ts_ns
+      - cancel_effective_ts_ns
+      - replace_requested
+      - replace_request_ts_ns
+      - replace_effective_ts_ns
+      - replaced
+      - replace_post_only_rejected
+      - submitted
+      - post_only_rejected
+      - post_only_crossed_book
+      - filled
+      - full_fill
+      - partial_fill
+      - fill_uncertain
+      - fill_ts_ns
+      - last_fill_ts_ns
+      - time_to_fill_s
+      - time_to_last_fill_s
+      - fill_count
+      - fill_price
+      - fill_size
+      - fill_notional
+      - maker_fill
+      - taker_fill
+      - cancelled
+      - cancel_effective
+      - fees_paid
+      - rebate_earned
+      - gross_pnl_to_close
+      - net_pnl_to_close
+      - markout_1s
+      - markout_3s
+      - markout_5s
+      - markout_15s
+      - markout_to_close
+      - markout_1s_available
+      - markout_3s_available
+      - markout_5s_available
+      - markout_15s_available
+      - markout_to_close_available
+      - adverse_selection_5s
+      - toxic_fill_5s
+    split:
+      method: anchored_walkforward
+      config: config/splits/model_03_fill_probability_split_v1.yaml
+      unit: intent
+      ordering_col: order_ts_ns
+      purge_days: 1
+      embargo_days: 0
+    algorithms:
+      baseline: logistic_regression
+      primary: lightgbm
+    evaluation:
+      metrics:
+      - log_loss
+      - brier_score
+      - ece
+      - fill_rate_by_offset
+      - fill_rate_by_phase
+      gate: must_beat_naive_fill_rate_heuristic
+    artifacts:
+      base_path: artifacts/model_03_fill_probability/
+      model_file: model.pkl
+      eval_report: eval_report.md
+      experiment_log: experiment_log.jsonl
+      calibration_file: calibration.pkl
+      feature_importance: feature_importance.json
+  model_04b_markout_to_close:
+    display_name: Markout-to-close PnL prediction (Model 4 variant)
+    model_id: model_04b_markout_to_close
+    phase: 6
+    status: baseline_trained
+    training_completed: '2026-05-12'
+    training_data_window: '2026-04-19..2026-05-06'
+    training_split: 'train=Apr 19-May 4 (8.8M filled rows, LGBM cap 8M) | val=May 5 (974K) | test=May 6 (990K)'
+    gate_result: PASS
+    gate_note: >
+      Variant of Model 04 with target=markout_to_close (instead of markout_1s).
+      Trained as PnL prediction, not toxicity proxy.
+      LightGBM test MAE=1.023, sign_acc=56.4%, BEATS constant_zero AND constant_mean.
+      DRAMATICALLY BETTER RANKER for held-to-close PnL strategy: on test day
+      May 6, ranking top-25% quotes by Model 4b gives $131,610 sum PnL vs
+      $7,633 with v1 ranking (17.2x lift).  Top-10% per-attempt PnL:
+      v1=+1.5c, 4b=+39.1c (26x).  Top-1% overlap with v1: only 5.7% --
+      models pick very different subsets.
+      SUPERSEDES Model 04 v1 as primary ranker for maker quote selection.
+      v1 retained as toxicity filter (defensive use).
+    purpose: Per-share net PnL prediction conditional on fill (full hold-to-close horizon)
+    roadmap_section: XIV Model 4 (variant b)
+    sub_models:
+      lightgbm:
+        target: markout_to_close
+        pos_rate_test: filled-only (filter)
+        test_mae: 1.023
+        test_sign_accuracy: 0.564
+    artifacts:
+      base_path: artifacts/model_04b_markout_to_close/
+      training_script: train_adverse_selection_to_close.py
+      analysis_report: artifacts/phase6_held_to_close_pnl_analysis.json
+  model_04_adverse_selection:
+    display_name: Adverse selection model
+    model_id: model_04_adverse_selection
+    phase: 6
+    status: baseline_trained
+    training_completed: '2026-05-12'
+    training_data_window: '2026-04-19..2026-05-06'
+    training_split: 'train=Apr 19-May 4 (8.8M filled rows, LGBM cap 8M) | val=May 5 (974K) | test=May 6 (990K)'
+    gate_result: PASS
+    gate_note: >
+      LightGBM test MAE=0.147, BEATS constant_zero (0.156) and constant_mean (0.186).
+      Test sign_accuracy=67.4% (vs 50% random).  Ridge baseline MAE=0.170
+      loses to constant_zero but beats constant_mean.
+      Adverse-fill detection (markout<-0.005) precision=47.6% recall=63.9%.
+      Strong t_to_close stratification: 0-10s actual mean +0.013 (favorable),
+      120-300s -0.092 (strongly adverse).  Target distribution: train mean
+      markout=-0.065 (NEGATIVE), 29% adverse fills, 68% favorable but
+      magnitude of adverse wins on average.
+    purpose: Expected markout after fill; adverse fill detection
+    roadmap_section: XIV Model 4
+    dataset:
+      family: execution_intent_dataset
+      version: v1
+      filter: filled == True
+      paths:
+        default: data/datasets/execution_intent_dataset_v1/
+      schema_contract: config/schemas/execution_intent_dataset_v1_schema.yaml
+      dataset_hash_required: true
+    feature_set:
+      version: v1
+      config: config/feature_sets/model_04_adverse_selection_features_v1.yaml
+    target:
+      primary: markout_1s
+      auxiliary:
+      - markout_3s
+      - markout_5s
+      - markout_to_close
+      - adverse_selection_5s
+      leakage_only_cols:
+      - resolved_side
+      - resolved_side_label
+      - flip_happened_after_t
+      - terminal_delta_to_strike
+      - terminal_margin_to_strike
+      - hold_to_close_edge_vs_mid
+      - resolved_ts_ns
+      - winning_asset_id
+      - cancel_request_ts_ns
+      - cancel_effective_ts_ns
+      - replace_requested
+      - replace_request_ts_ns
+      - replace_effective_ts_ns
+      - replaced
+      - replace_post_only_rejected
+      - submitted
+      - post_only_rejected
+      - post_only_crossed_book
+      - filled
+      - full_fill
+      - partial_fill
+      - fill_uncertain
+      - fill_ts_ns
+      - last_fill_ts_ns
+      - time_to_fill_s
+      - time_to_last_fill_s
+      - fill_count
+      - fill_price
+      - fill_size
+      - fill_notional
+      - maker_fill
+      - taker_fill
+      - cancelled
+      - cancel_effective
+      - fees_paid
+      - rebate_earned
+      - gross_pnl_to_close
+      - net_pnl_to_close
+      - markout_1s
+      - markout_3s
+      - markout_5s
+      - markout_15s
+      - markout_to_close
+      - markout_1s_available
+      - markout_3s_available
+      - markout_5s_available
+      - markout_15s_available
+      - markout_to_close_available
+      - adverse_selection_5s
+      - toxic_fill_5s
+    split:
+      method: anchored_walkforward
+      config: config/splits/model_04_adverse_selection_split_v1.yaml
+      unit: intent
+      ordering_col: order_ts_ns
+      purge_days: 1
+      embargo_days: 0
+    algorithms:
+      baseline: linear_regression
+      primary: lightgbm
+    evaluation:
+      metrics:
+      - mae
+      - rmse
+      - adverse_flag_precision
+      - adverse_flag_recall
+      - markout_by_phase
+      gate: must_predict_adverse_fills_above_chance
+    artifacts:
+      base_path: artifacts/model_04_adverse_selection/
+      model_file: model.pkl
+      eval_report: eval_report.md
+      experiment_log: experiment_log.jsonl
+      calibration_file: calibration.pkl
+      feature_importance: feature_importance.json
+  model_05_closing_flip:
+    display_name: Closing-flip model
+    model_id: model_05_closing_flip
+    phase: 7
+    status: baseline_trained
+    training_completed: '2026-05-08'
+    training_data_window: '2026-04-19..2026-05-06'
+    training_split: 'train=2026-04-19..2026-05-04 (~850K rows) | val=2026-05-05 | test=2026-05-06'
+    gate_result: PASS
+    gate_note: LightGBM beats constant_flip_rate by 33% and abs_delta heuristic by 28% on test; flip rate 12% (imbalanced class — use continuous score not binary threshold)
+    purpose: P(resolution flips relative to current state in last N seconds)
+    roadmap_section: XIV Model 5
+    dataset:
+      family: resolution_snapshot_dataset
+      version: v1
+      variants:
+      - dense_close
+      paths:
+        dense_close: data/datasets/resolution_snapshot_dataset_v1_dense_close/
+      schema_contract: config/schemas/resolution_snapshot_dataset_v1_dense_close_schema.yaml
+      dataset_hash_required: true
+    feature_set:
+      version: v1
+      config: config/feature_sets/model_05_closing_flip_features_v1.yaml
+    target:
+      primary: flip_happened_after_t
+      leakage_only_cols:
+      - resolved_side
+      - resolved_side_label
+      - flip_happened_after_t
+      - terminal_delta_to_strike
+      - terminal_margin_to_strike
+      - hold_to_close_edge_vs_mid
+      - resolved_ts_ns
+      - winning_asset_id
+    split:
+      method: anchored_walkforward
+      config: config/splits/model_05_closing_flip_split_v1.yaml
+      unit: snapshot
+      ordering_col: snapshot_ts_ns
+      purge_days: 1
+      embargo_days: 0
+    algorithms:
+      baseline: logistic_regression
+      primary: lightgbm
+    evaluation:
+      metrics:
+      - brier_score
+      - ece
+      - flip_precision_recall
+      - flip_rate_by_delta_bucket
+      gate: must_beat_naive_flip_rate
+    artifacts:
+      base_path: artifacts/model_05_closing_flip/
+      model_file: model.pkl
+      eval_report: eval_report.md
+      experiment_log: experiment_log.jsonl
+      calibration_file: calibration.pkl
+      feature_importance: feature_importance.json
+  model_06_mispricing:
+    display_name: Mispricing model
+    model_id: model_06_mispricing
+    phase: 7
+    status: baseline_trained
+    training_completed: '2026-05-08'
+    training_data_window: '2026-04-19..2026-05-06'
+    training_split: 'train=2026-04-19..2026-05-04 (~769K rows non-null) | val=2026-05-05 | test=2026-05-06'
+    gate_result: CONDITIONAL_PASS
+    gate_note: LightGBM beats constant_mean MAE by 54% on test; signed-edge gate inapplicable (target is always positive — see training report)
+    purpose: Residual between fair value and current market pricing
+    roadmap_section: XIV Model 6
+    dataset:
+      family: resolution_snapshot_dataset
+      version: v1
+      variants:
+      - dense_close
+      paths:
+        dense_close: data/datasets/resolution_snapshot_dataset_v1_dense_close/
+      schema_contract: config/schemas/resolution_snapshot_dataset_v1_dense_close_schema.yaml
+      dataset_hash_required: true
+    feature_set:
+      version: v1
+      config: config/feature_sets/model_06_mispricing_features_v1.yaml
+    target:
+      primary: hold_to_close_edge_vs_mid
+      leakage_only_cols:
+      - resolved_side
+      - resolved_side_label
+      - flip_happened_after_t
+      - terminal_delta_to_strike
+      - terminal_margin_to_strike
+      - hold_to_close_edge_vs_mid
+      - resolved_ts_ns
+      - winning_asset_id
+    split:
+      method: anchored_walkforward
+      config: config/splits/model_06_mispricing_split_v1.yaml
+      unit: snapshot
+      ordering_col: snapshot_ts_ns
+      purge_days: 1
+      embargo_days: 0
+    algorithms:
+      baseline: linear_regression
+      primary: lightgbm
+    evaluation:
+      metrics:
+      - mae
+      - rmse
+      - edge_sign_accuracy
+      - mispricing_by_delta_bucket
+      gate: must_show_positive_edge_net_of_spread
+    artifacts:
+      base_path: artifacts/model_06_mispricing/
+      model_file: model.pkl
+      eval_report: eval_report.md
+      experiment_log: experiment_log.jsonl
+      calibration_file: calibration.pkl
+      feature_importance: feature_importance.json
+  model_07_microstructure_direction:
+    display_name: Token microstructure direction model
+    model_id: model_07_microstructure_direction
+    phase: 8
+    status: baseline_trained
+    training_completed: '2026-05-11'
+    training_data_window: '2026-04-19..2026-05-06'
+    training_split: 'train=2026-04-19..2026-05-04 (~1.1M non-zero rows) | val=2026-05-05 | test=2026-05-06'
+    gate_result: PASS
+    gate_note: 'LGBM 69.5% test accuracy vs 50% baseline; beats momentum (+8.9%); train/test gap 1.05x -- no overfitting; model sees real microstructure signal'
+    purpose: Short-horizon token mid movement direction
+    roadmap_section: XIV Model 7
+    dataset:
+      family: microstructure_sequence_dataset
+      version: v1
+      variants:
+      - tabular
+      - event64
+      - event128
+      paths:
+        tabular: data/datasets/microstructure_sequence_dataset_v1_tabular/
+        event64: data/datasets/microstructure_sequence_dataset_v1_event64/
+        event128: data/datasets/microstructure_sequence_dataset_v1_event128/
+      schema_contract: config/schemas/microstructure_sequence_dataset_v1_schema.yaml
+      dataset_hash_required: true
+    feature_set:
+      version: v1
+      config: config/feature_sets/model_07_microstructure_direction_features_v1.yaml
+    target:
+      primary: mid_move_sign_5s
+      auxiliary:
+      - mid_move_sign_1s
+      - mid_move_sign_3s
+      - mid_move_sign_15s
+      - mid_move_sign_30s
+      leakage_only_cols:
+      - resolved_side
+      - resolved_side_label
+      - flip_happened_after_t
+      - terminal_delta_to_strike
+      - terminal_margin_to_strike
+      - hold_to_close_edge_vs_mid
+      - resolved_ts_ns
+      - winning_asset_id
+      - mid_move_1s
+      - mid_move_3s
+      - mid_move_5s
+      - mid_move_15s
+      - mid_move_30s
+      - mid_move_sign_1s
+      - mid_move_sign_3s
+      - mid_move_sign_5s
+      - mid_move_sign_15s
+      - mid_move_sign_30s
+      - max_favorable_excursion_5s
+      - max_adverse_excursion_5s
+      - max_favorable_excursion_15s
+      - max_adverse_excursion_15s
+    split:
+      method: anchored_walkforward
+      config: config/splits/model_07_microstructure_direction_split_v1.yaml
+      unit: sequence
+      ordering_col: anchor_ts_ns
+      purge_days: 1
+      embargo_days: 0
+    algorithms:
+      baseline: logistic_regression
+      primary: lightgbm
+      deep: deeplob
+    evaluation:
+      metrics:
+      - log_loss
+      - brier_score
+      - direction_accuracy_by_horizon
+      - edge_vs_fair_resolution_model
+      gate: must_add_value_above_fair_resolution_layer
+    artifacts:
+      base_path: artifacts/model_07_microstructure_direction/
+      model_file: model.pkl
+      eval_report: eval_report.md
+      experiment_log: experiment_log.jsonl
+      calibration_file: calibration.pkl
+      feature_importance: feature_importance.json
+  model_08_move_size:
+    display_name: Token move-size model
+    model_id: model_08_move_size
+    phase: 8
+    status: baseline_trained
+    training_completed: '2026-05-11'
+    training_data_window: '2026-04-19..2026-05-06'
+    training_split: 'train=2026-04-19..2026-05-04 (~2.27M rows after NaN filter) | val=2026-05-05 | test=2026-05-06'
+    gate_result: CONDITIONAL_PASS
+    gate_note: >
+      LGBM Spearman rho=0.40 (pred|move| vs actual|move|); sign_acc=83.7% at pred>0.03;
+      gate edge LONG=+2.79% SHORT=-2.71% at pred>0.02 (n=14,571); raw MAE loses to
+      constant_zero by 0.0003 (expected on 50-60% zero-move target -- not a failure).
+      Correct use: threshold on pred|move| > 0.02, trade direction = sign(pred).
+      Use as volatility filter alongside Model 7 direction signal.
+      SUPERSEDED for volatility gating by Model 8b (binary classifier, AUC=0.80,
+      recall lift +78% at same precision -- see model_08b_big_move_classifier).
+    purpose: Distribution of absolute token price movement
+    roadmap_section: XIV Model 8
+    dataset:
+      family: microstructure_sequence_dataset
+      version: v1
+      variants:
+      - tabular
+      paths:
+        tabular: data/datasets/microstructure_sequence_dataset_v1_tabular/
+      schema_contract: config/schemas/microstructure_sequence_dataset_v1_schema.yaml
+      dataset_hash_required: true
+    feature_set:
+      version: v1
+      config: config/feature_sets/model_08_move_size_features_v1.yaml
+    target:
+      primary: mid_move_5s
+      auxiliary:
+      - max_favorable_excursion_5s
+      - max_adverse_excursion_5s
+      - max_favorable_excursion_15s
+      - max_adverse_excursion_15s
+      leakage_only_cols:
+      - resolved_side
+      - resolved_side_label
+      - flip_happened_after_t
+      - terminal_delta_to_strike
+      - terminal_margin_to_strike
+      - hold_to_close_edge_vs_mid
+      - resolved_ts_ns
+      - winning_asset_id
+      - mid_move_1s
+      - mid_move_3s
+      - mid_move_5s
+      - mid_move_15s
+      - mid_move_30s
+      - mid_move_sign_1s
+      - mid_move_sign_3s
+      - mid_move_sign_5s
+      - mid_move_sign_15s
+      - mid_move_sign_30s
+      - max_favorable_excursion_5s
+      - max_adverse_excursion_5s
+      - max_favorable_excursion_15s
+      - max_adverse_excursion_15s
+    split:
+      method: anchored_walkforward
+      config: config/splits/model_08_move_size_split_v1.yaml
+      unit: sequence
+      ordering_col: anchor_ts_ns
+      purge_days: 1
+      embargo_days: 0
+    algorithms:
+      baseline: linear_regression
+      primary: lightgbm
+    evaluation:
+      metrics:
+      - mae
+      - rmse
+      - quantile_loss_q10_q50_q90
+      - move_size_calibration
+      gate: must_beat_naive_vol_estimate
+    artifacts:
+      base_path: artifacts/model_08_move_size/
+      model_file: model.pkl
+      eval_report: eval_report.md
+      experiment_log: experiment_log.jsonl
+      calibration_file: calibration.pkl
+      feature_importance: feature_importance.json
+  model_08b_big_move_classifier:
+    display_name: Big-move binary classifier (volatility gate)
+    model_id: model_08b_big_move_classifier
+    phase: 8
+    status: baseline_trained
+    training_completed: '2026-05-12'
+    training_data_window: '2026-04-19..2026-05-06'
+    training_split: 'train=2026-04-19..2026-05-04 (~2.33M rows) | val=2026-05-05 | test=2026-05-06'
+    gate_result: PASS
+    gate_note: >
+      Binary reframing of Model 8: target = (|mid_move_5s|>=0.02). Test AUC=0.80,
+      Avg Precision=0.52 (2.25x base rate 0.23). Recall lift +78% over Model 8 v1
+      at same precision (~57%). At prob>=0.40: 21% of rows, 52% precision, 48% recall.
+      BTC vol features added but marginal (~+0.5pp). Replaces Model 8 v1 as the
+      preferred volatility gate; combine with Model 7 direction for entry signal.
+    purpose: Detect upcoming 5s volatility regime (big move yes/no) -- volatility gate
+    roadmap_section: XIV Model 8 (extension)
+    supersedes_for_volatility_gate: model_08_move_size
+    dataset:
+      family: microstructure_sequence_dataset
+      version: v1
+      variants:
+      - tabular
+      paths:
+        tabular: data/datasets/microstructure_sequence_dataset_v1_tabular/
+      schema_contract: config/schemas/microstructure_sequence_dataset_v1_schema.yaml
+      dataset_hash_required: true
+    feature_set:
+      version: v1_btc_augmented
+      base_features: 43  # Model 8 v1 base feature set
+      derived_features:
+      - btc_return_3s
+      - btc_return_5s
+      - btc_return_15s
+      - btc_abs_return_5s
+      - btc_abs_return_15s
+      - btc_realized_vol_30s
+      note: derived BTC features computed at load time from live_btc_usd per-market lookback
+    target:
+      primary: big_move_5s
+      definition: 'big_move_5s = (|mid_move_5s| >= 0.02)'
+      leakage_only_cols:
+      - resolved_side
+      - resolved_side_label
+      - flip_happened_after_t
+      - terminal_delta_to_strike
+      - terminal_margin_to_strike
+      - hold_to_close_edge_vs_mid
+      - resolved_ts_ns
+      - winning_asset_id
+      - mid_move_1s
+      - mid_move_3s
+      - mid_move_5s
+      - mid_move_15s
+      - mid_move_30s
+      - mid_move_sign_1s
+      - mid_move_sign_3s
+      - mid_move_sign_5s
+      - mid_move_sign_15s
+      - mid_move_sign_30s
+      - max_favorable_excursion_5s
+      - max_adverse_excursion_5s
+      - max_favorable_excursion_15s
+      - max_adverse_excursion_15s
+    split:
+      method: anchored_walkforward
+      unit: sequence
+      ordering_col: anchor_ts_ns
+      purge_days: 1
+      embargo_days: 0
+    algorithms:
+      primary: lightgbm
+    evaluation:
+      metrics:
+      - auc_roc
+      - average_precision
+      - precision_recall_curve
+      - recall_at_fixed_precision
+      gate: must_lift_avg_precision_above_base_rate_by_2x
+    artifacts:
+      base_path: artifacts/model_08b_big_move_classifier/
+      model_file: model.pkl
+      eval_report: docs/model_08b_big_move_classifier_report.md
+      ablation_results: ablation_btc.json
+  model_08c_maker_defense_v3:
+    display_name: Maker-defense v3 (event-time microstructure)
+    model_id: model_08c_maker_defense_v3
+    phase: 8
+    status: baseline_trained
+    training_completed: '2026-05-12'
+    training_data_window: '2026-04-19..2026-05-06'
+    dataset_source: microstructure_sequence_dataset_v1_event64
+    gate_result: PASS
+    gate_note: >
+      Upgrades v1 with 61 event-time features extracted from per-anchor L2
+      event lists (sub-millisecond granularity, 64 events per anchor).  On the
+      critical extreme_10c_5s detector: AUC 0.87->0.90, FPR@95%recall 0.46->0.36
+      (-9.7pp), FPR@99%recall 0.68->0.61 (-6.5pp).  Event-time alone is weaker
+      than aggregates alone, but agg+event-time combined wins decisively
+      across all three targets.  SUPERSEDES v1 as the deployed maker defense.
+    purpose: Sub-millisecond event-time detection of dramatic moves for maker withdrawal
+    roadmap_section: XIV Model 8 (operational extension v3)
+    supersedes: model_08c_maker_defense
+    sub_models:
+      extreme_10c_5s_v3:
+        target: '|mid_move_5s| >= 0.10'
+        pos_rate_test: 0.0143
+        auc_test: 0.9009
+        ap_test: 0.2167
+        operating_points:
+          hard_stop_99pct_recall:
+            threshold: 0.00167
+            recall: 0.99
+            fpr: 0.6107
+          hard_stop_95pct_recall:
+            threshold: 0.00423
+            recall: 0.95
+            fpr: 0.3615
+            description: recommended default; catches 95% of 10c+ jumps, defensive 37% of time
+          hard_stop_90pct_recall:
+            threshold: 0.00648
+            recall: 0.90
+            fpr: 0.2775
+      severe_7c_3s_v3:
+        target: '|mid_move_3s| >= 0.07'
+        pos_rate_test: 0.0479
+        auc_test: 0.8313
+        ap_test: 0.2660
+      moderate_5c_5s_v3:
+        target: '|mid_move_5s| >= 0.05'
+        pos_rate_test: 0.0710
+        auc_test: 0.8472
+        ap_test: 0.3268
+    artifacts:
+      base_path: artifacts/model_08c_maker_defense_v3_eventtime/
+      training_script: train_maker_defense_v3_eventtime.py
+      report: docs/model_08c_v3_eventtime_report.md
+  model_08c_maker_defense:
+    display_name: Maker-defense classifier (dramatic-move early warning)
+    model_id: model_08c_maker_defense
+    phase: 8
+    status: baseline_trained
+    training_completed: '2026-05-12'
+    training_data_window: '2026-04-19..2026-05-06'
+    training_split: 'train=2026-04-19..2026-05-04 (~2.33M rows) | val=2026-05-05 | test=2026-05-06'
+    gate_result: PASS
+    gate_note: >
+      Three asymmetric-cost classifiers for hybrid maker/taker bot.  PRIMARY
+      extreme_10c_5s (|mid_move_5s|>=0.10): AUC=0.87, 10.2x lift, 99% recall
+      achievable at 62% FPR.  Detects catastrophic 10c+ jumps that would cause
+      adverse fills on resting maker orders.  Designed for "miss = catastrophe,
+      false alarm = cheap" decision regime.
+    purpose: Early-warning detection of dramatic moves for maker order withdrawal
+    roadmap_section: XIV Model 8 (operational extension)
+    sub_models:
+      extreme_10c_5s:
+        target: '|mid_move_5s| >= 0.10'
+        pos_rate_test: 0.0143
+        auc_test: 0.8734
+        ap_test: 0.1460
+        operating_points:
+          hard_stop_99pct_recall:
+            threshold: 0.0021
+            recall: 0.9903
+            fpr: 0.6203
+            description: cancel all resting orders, taker-only for next 5s
+      severe_7c_3s:
+        target: '|mid_move_3s| >= 0.07'
+        pos_rate_test: 0.0486
+        auc_test: 0.8131
+        ap_test: 0.2484
+        operating_points:
+          early_warn_95pct_recall:
+            threshold: 0.0126
+            recall: 0.95
+            fpr: 0.6328
+      moderate_5c_5s:
+        target: '|mid_move_5s| >= 0.05'
+        pos_rate_test: 0.0708
+        auc_test: 0.8296
+        ap_test: 0.2733
+        operating_points:
+          soft_caution_95pct_recall:
+            threshold: 0.0234
+            recall: 0.95
+            fpr: 0.5108
+    artifacts:
+      base_path: artifacts/model_08c_maker_defense/
+      protocol_doc: docs/model_08c_maker_defense_protocol.md
+  model_09_regime_encoder:
+    display_name: BTC regime encoder
+    model_id: model_09_regime_encoder
+    phase: 9
+    status: not_started
+    purpose: Shared latent BTC market state (trend/chop/jump-risk)
+    roadmap_section: XIV Model 9
+    dataset:
+      family: market_interval_dataset
+      version: v1
+      variants:
+      - preopen
+      paths:
+        preopen: data/datasets/market_interval_dataset_v1_preopen/
+      schema_contract: config/schemas/market_interval_dataset_v1_schema.yaml
+      dataset_hash_required: true
+    feature_set:
+      version: v1
+      config: config/feature_sets/model_09_regime_encoder_features_v1.yaml
+    target:
+      primary: regime_label
+      note: regime_label is derived/constructed and is not a raw column.
+      leakage_only_cols:
+      - resolved_side
+      - resolved_side_label
+      - flip_happened_after_t
+      - terminal_delta_to_strike
+      - terminal_margin_to_strike
+      - hold_to_close_edge_vs_mid
+      - resolved_ts_ns
+      - winning_asset_id
+    split:
+      method: anchored_walkforward
+      config: config/splits/model_09_regime_encoder_split_v1.yaml
+      unit: market
+      ordering_col: market_open_ts_ns
+      purge_days: 1
+      embargo_days: 0
+    algorithms:
+      baseline: hmm
+      primary: gru_encoder
+    evaluation:
+      metrics:
+      - downstream_model_improvement
+      - regime_stability_across_days
+      gate: must_improve_downstream_models
+    artifacts:
+      base_path: artifacts/model_09_regime_encoder/
+      model_file: model.pkl
+      eval_report: eval_report.md
+      experiment_log: experiment_log.jsonl
+      embedding_file: embeddings.parquet
+  model_10_action_policy:
+    display_name: Action / execution policy
+    model_id: model_10_action_policy
+    phase: 10
+    status: not_started
+    purpose: Final trading decision over quote/cancel/taker-emergency actions
+    roadmap_section: XIV Model 10
+    dataset:
+      family: execution_intent_dataset
+      version: v2_enriched
+      note: v2 enriched dataset does not exist yet; built after upstream models are
+        trained.
+      paths:
+        default: data/datasets/execution_intent_dataset_v2_enriched/
+      dataset_hash_required: true
+    feature_set:
+      version: v1
+      config: config/feature_sets/model_10_action_policy_features_v1.yaml
+    target:
+      primary: action_label
+      note: action_label is derived from outcomes and model outputs.
+      leakage_only_cols:
+      - resolved_side
+      - resolved_side_label
+      - flip_happened_after_t
+      - terminal_delta_to_strike
+      - terminal_margin_to_strike
+      - hold_to_close_edge_vs_mid
+      - resolved_ts_ns
+      - winning_asset_id
+      - cancel_request_ts_ns
+      - cancel_effective_ts_ns
+      - replace_requested
+      - replace_request_ts_ns
+      - replace_effective_ts_ns
+      - replaced
+      - replace_post_only_rejected
+      - submitted
+      - post_only_rejected
+      - post_only_crossed_book
+      - filled
+      - full_fill
+      - partial_fill
+      - fill_uncertain
+      - fill_ts_ns
+      - last_fill_ts_ns
+      - time_to_fill_s
+      - time_to_last_fill_s
+      - fill_count
+      - fill_price
+      - fill_size
+      - fill_notional
+      - maker_fill
+      - taker_fill
+      - cancelled
+      - cancel_effective
+      - fees_paid
+      - rebate_earned
+      - gross_pnl_to_close
+      - net_pnl_to_close
+      - markout_1s
+      - markout_3s
+      - markout_5s
+      - markout_15s
+      - markout_to_close
+      - markout_1s_available
+      - markout_3s_available
+      - markout_5s_available
+      - markout_15s_available
+      - markout_to_close_available
+      - adverse_selection_5s
+      - toxic_fill_5s
+    split:
+      method: anchored_walkforward
+      config: config/splits/model_10_action_policy_split_v1.yaml
+      unit: intent
+      ordering_col: order_ts_ns
+      purge_days: 1
+      embargo_days: 0
+    algorithms:
+      baseline: rule_engine
+      primary: weighted_score_aggregation
+      advanced: bandit
+    evaluation:
+      metrics:
+      - replay_paper_pnl
+      - fee_adjusted_edge
+      - adverse_fill_rate
+      - inventory_stress
+      gate: must_pass_replay_paper_mode
+    artifacts:
+      base_path: artifacts/model_10_action_policy/
+      model_file: model.pkl
+      eval_report: eval_report.md
+      experiment_log: experiment_log.jsonl
+      calibration_file: calibration.pkl
+      feature_importance: feature_importance.json
