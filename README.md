@@ -1,6 +1,6 @@
 # When a Trading Edge Disappears
 
-[![tests](https://github.com/Herz1c/BitcoinMicrostructureResearch-public/actions/workflows/tests.yml/badge.svg)](https://github.com/Herz1c/BitcoinMicrostructureResearch-public/actions/workflows/tests.yml)
+[![tests](https://github.com/Herz1c/WhenATradingEdgeDisappears/actions/workflows/tests.yml/badge.svg)](https://github.com/Herz1c/WhenATradingEdgeDisappears/actions/workflows/tests.yml)
 
 An independent high school research project on Bitcoin five minute prediction markets,
 conducted from April through August 2026. I built a recording and modelling system across

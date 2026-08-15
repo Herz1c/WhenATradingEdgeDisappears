@@ -53,9 +53,9 @@ dependencies = [
 ]
 
 [project.urls]
-Homepage = "https://github.com/Herz1c/BitcoinMicrostructureResearch-public"
-Results = "https://github.com/Herz1c/BitcoinMicrostructureResearch-public/blob/main/docs/RESULTS.md"
-Methodology = "https://github.com/Herz1c/BitcoinMicrostructureResearch-public/blob/main/docs/METHODOLOGY.md"
+Homepage = "https://github.com/Herz1c/WhenATradingEdgeDisappears"
+Results = "https://github.com/Herz1c/WhenATradingEdgeDisappears/blob/main/docs/RESULTS.md"
+Methodology = "https://github.com/Herz1c/WhenATradingEdgeDisappears/blob/main/docs/METHODOLOGY.md"
 
 [project.optional-dependencies]
 pandas = [
